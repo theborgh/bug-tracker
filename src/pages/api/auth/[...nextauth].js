@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import DiscordProvider from "next-auth/providers/discord";
 import EmailProvider from "next-auth/providers/email";
+import { log } from "console";
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -26,6 +27,12 @@ export const authOptions = {
     //   from: process.env.EMAIL_FROM,
     // }),
   ],
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log(`user ${user.email} has signed in`);
+      return true;
+    },
+  },
 };
 
 export default NextAuth(authOptions);
