@@ -29,6 +29,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           createdAt: true,
           updatedAt: true,
         }
+      },
+      developers: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        }
       }
     }
   });
