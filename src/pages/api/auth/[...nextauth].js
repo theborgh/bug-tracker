@@ -2,7 +2,9 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import DiscordProvider from "next-auth/providers/discord";
 import EmailProvider from "next-auth/providers/email";
-import { log } from "console";
+import { PrismaClient } from ".prisma/client";
+
+const prisma = new PrismaClient();
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -31,6 +33,16 @@ export const authOptions = {
     async signIn({ user, account, profile, email, credentials }) {
       console.log(`user ${user.email} has signed in`);
       return true;
+    },
+
+    async session({ session, user }) {
+      session.user.id = "testingStuff";
+      const res = await prisma.user.findUnique({
+        where: { email: session.user.email },
+      });
+      session.user.id = res.id;
+
+      return session;
     },
   },
 };

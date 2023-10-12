@@ -66,10 +66,17 @@ export default function ProjectDetails() {
     fetchData();
   }, [router.query.id]);
 
-  const isOwner =
-    sessionData && sessionData.user && sessionData?.user.id === data?.ownerId;
+  const isOwner = sessionData?.user?.id === data?.ownerId;
 
-  if (!data) return <div className="">loading</div>;
+  console.log(
+    "isOwner? ",
+    isOwner,
+    sessionData,
+    sessionData?.user?.id,
+    data?.ownerId
+  );
+
+  if (!data) return <div className="">loading...</div>;
 
   return (
     <main className="grid min-h-screen grid-cols-5 gap-x-8 p-11">
