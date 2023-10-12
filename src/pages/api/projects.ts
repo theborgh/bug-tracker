@@ -20,10 +20,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         select: {
           id: true,
           title: true,
+          markdown: true,
           priority: true,
           status: true,
           minutesToComplete: true,
           reportingUserId: true,
+          assignedToUserId: true,
+          createdAt: true,
+          updatedAt: true,
         }
       }
     }
