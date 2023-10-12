@@ -12,6 +12,8 @@ import PriorityButton, {
   selectedPrioritiesType,
 } from "@/components/priorityButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
+import SortDropdown from "@/components/projectDetails/SortDropdown";
+import type { bugSortingType } from "@/utils/sorting";
 
 interface ProjectData {
   id: string;
@@ -56,6 +58,8 @@ export default function ProjectDetails() {
   const [selectedPriorities, setSelectedPriorities] =
     useState<selectedPrioritiesType>(["CRITICAL", "HIGH", "MEDIUM", "LOW"]);
 
+  const [sortBy, setSortBy] = useState<bugSortingType>("recent");
+
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(`/api/projects?id=${router.query.id}`);
@@ -68,14 +72,6 @@ export default function ProjectDetails() {
 
   const isOwner = sessionData?.user?.id === data?.ownerId;
 
-  console.log(
-    "isOwner? ",
-    isOwner,
-    sessionData,
-    sessionData?.user?.id,
-    data?.ownerId
-  );
-
   if (!data) return <div className="">loading...</div>;
 
   return (
@@ -84,7 +80,7 @@ export default function ProjectDetails() {
         <div className="flex items-center justify-between rounded-xl bg-slate-800 px-6 py-5">
           <div className="flex items-center justify-between gap-6">
             <h1 className="text-hm text-white font-medium">{data.name}</h1>
-            {/* <SortDropdown sort={sortBy} setSort={setSortBy} /> */}
+            <SortDropdown sort={sortBy} setSort={setSortBy} />
           </div>
           <Link
             href={`./${router.query.id as string}/new`}
