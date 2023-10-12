@@ -38,6 +38,9 @@ interface ProjectData {
       minutesToComplete: number;
       reportingUserId: string;
       assignedToUserId: string;
+      commentCount: {
+        comments: number;
+      };
       createdAt: Date;
       updatedAt: string;
     }
@@ -98,7 +101,7 @@ export default function ProjectDetails() {
                 description={bug.markdown}
                 author={bug.reportingUserId ?? "anonymous"}
                 // assignee={bug.assignedToUserId ?? "unassigned"}
-                // n_comments={bug._count.comments}
+                commentCount={bug?.commentCount?.comments}
                 createdAt={bug.createdAt}
                 priority={
                   Priorities?.find((item) => item.value === bug.priority) ?? {

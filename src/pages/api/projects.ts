@@ -26,6 +26,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           minutesToComplete: true,
           reportingUserId: true,
           assignedToUserId: true,
+          _count: { select: { comments: true } },
           createdAt: true,
           updatedAt: true,
         }
