@@ -43,8 +43,6 @@ export default function BugCard({
 }: BugCardProps) {
   const { data: userData } = useSession();
 
-  console.log("created at:", createdAt);
-
   return (
     <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4">
       <div className="">

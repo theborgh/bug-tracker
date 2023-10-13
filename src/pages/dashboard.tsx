@@ -2,11 +2,11 @@ import LoginButton from "@/components/LoginButton";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import ProjectCard from "@/components/ProjectCard";
 
 interface ProjectData {
   id: string;
   name: string;
-  createdAt: string;
   updatedAt: string;
 }
 
@@ -38,22 +38,32 @@ export default function Dashboard() {
   return (
     <div>
       <LoginButton />
-      <h2>My owned projects</h2>
-      {ownedProjects?.map((project) => (
-        <Link key={project.id} href={`/project/${project.id}`}>
-          <div key={project.id}>
-            <p>{project.name}</p>
-          </div>
-        </Link>
-      ))}
-      <h2>Project I&apos;m assigned to</h2>
-      {assignedToProjects?.map((project) => (
-        <Link key={project.id} href={`/project/${project.id}`}>
-          <div key={project.id}>
-            <p>{project.name}</p>
-          </div>
-        </Link>
-      ))}
+      <h2>My projects</h2>
+      <div className="flex gap-4">
+        {ownedProjects?.map((project) => (
+          <Link key={project.id} href={`/project/${project.id}`}>
+            <ProjectCard
+              id={project.id}
+              name={project.name}
+              updatedAt={project.updatedAt}
+            />
+          </Link>
+        ))}
+      </div>
+      <h2>Projects I&apos;m assigned to</h2>
+
+      <div className="flex flex-wrap gap-4">
+        {assignedToProjects?.map((project) => (
+          <Link key={project.id} href={`/project/${project.id}`}>
+            <ProjectCard
+              id={project.id}
+              name={project.name}
+              updatedAt={project.updatedAt}
+            />
+          </Link>
+        ))}
+      </div>
+
       <h2>Bugs assigned to me</h2>
     </div>
   );
