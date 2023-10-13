@@ -97,6 +97,8 @@ export default function ProjectDetails() {
             {data.bugs.map((bug) => (
               <BugCard
                 id={bug.id}
+                projectOwnerId={data.ownerId}
+                projectDevelopers={data.developers}
                 title={bug.title}
                 description={bug.markdown}
                 author={bug.reportingUserId ?? "anonymous"}

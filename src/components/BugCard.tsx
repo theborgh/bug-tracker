@@ -6,9 +6,17 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { useSession } from "next-auth/react";
 import formatDistance from "date-fns/formatDistance";
+import StatusDropdown from "./projectDetails/StatusDropdown";
+import { getNameLetters } from "@/utils/data";
 
 type BugCardProps = {
   id: string;
+  projectOwnerId: string;
+  projectDevelopers: {
+    id: string;
+    name: string;
+    image: string;
+  }[];
   title: string;
   author: string;
   assignee?: { id: string; name: string | null; image: string | null } | null;
@@ -22,6 +30,8 @@ type BugCardProps = {
 
 export default function BugCard({
   id,
+  projectOwnerId,
+  projectDevelopers,
   title,
   author,
   assignee,
@@ -53,25 +63,27 @@ export default function BugCard({
       <p className="mb-4 text-sm text-white text-opacity-75">{description}</p>
       <div className="flex items-center justify-between">
         STATUS DROPDOWN
-        {/* <StatusDropdown
+        <StatusDropdown
           bugTitle={title}
           bugId={id}
           status={status}
           assigneId={assignee?.id}
+          projectOwnerId={projectOwnerId}
+          projectDevelopers={projectDevelopers}
         />
         {assignee ? (
           <Avatar title={assignee?.name ?? "anonymous"}>
             <AvatarImage src={assignee?.image ?? ""} />
             <AvatarFallback>
-              {" "}
               {getNameLetters(assignee?.name ?? "")}
             </AvatarFallback>
           </Avatar>
         ) : userData?.user.id === projectOwnerId ? (
-          <AssignBugToDev bugTitle={title} bugId={id}>
-            <UserPlusIcon className="h-6 w-6" />
-          </AssignBugToDev>
-        ) : null} */}
+          <>AssignBugToDev</>
+        ) : // <AssignBugToDev bugTitle={title} bugId={id}>
+        //   <UserPlusIcon className="h-6 w-6" />
+        // </AssignBugToDev>
+        null}
       </div>
     </div>
   );
