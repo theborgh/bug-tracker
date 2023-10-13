@@ -18,7 +18,7 @@ interface SimpleBugCardProps {
   author: string;
   description: string;
   updatedAt: Date;
-  priority: { value: Priority; stroke: string };
+  priority: string;
   _count: { comments: number };
   status: Status;
 }
