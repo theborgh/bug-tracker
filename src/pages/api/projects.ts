@@ -3,46 +3,36 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
-// Fetch project with specified id
+// Fetch all projects owned by the user or where the user is a developer
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query as { id: string };
-  console.log('projects.ts api: id is', id);
+  const { ownedBy } = req.query as { ownedBy: string };
+  const { assignedTo } = req.query as { assignedTo: string };
 
-  const project = await prisma.project.findUnique({ 
-    where: { id },
-    select: {
-      id: true,
-      name: true,
-      ownerId: true,
-      createdAt: true,
-      updatedAt: true,
-      bugs: {
-        select: {
-          id: true,
-          title: true,
-          markdown: true,
-          priority: true,
-          status: true,
-          minutesToComplete: true,
-          reportingUserId: true,
-          assignedToUserId: true,
-          _count: { select: { comments: true } },
-          createdAt: true,
-          updatedAt: true,
-        }
-      },
-      developers: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          image: true,
-        }
+  if (ownedBy && !assignedTo) {
+    const projects = await prisma.project.findMany({
+      where: { ownerId: ownedBy },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
       }
-    }
-  });
+    });
 
-  console.log('projects.ts api: project is', project);
+    res.json(projects);
+  } else if (!ownedBy && assignedTo) {
+    const projects = await prisma.project.findMany({
+      where: { developers: { some: { id: assignedTo } } },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+      }
+    });
 
-  res.json(project);
+    res.json(projects);
+  } else {
+    res.status(400).json({ message: 'Invalid query parameters' });
+  }
 }

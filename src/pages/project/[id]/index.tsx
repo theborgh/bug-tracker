@@ -65,7 +65,7 @@ export default function ProjectDetails() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`/api/projects?id=${router.query.id}`);
+      const res = await fetch(`/api/projectDetails?id=${router.query.id}`);
       const data = await res.json();
       setData(data);
     };
