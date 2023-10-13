@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Priorities } from "@/utils/data";
 import { Status } from "@prisma/client";
 import EmptyState from "@/components/projectDetails/EmptyState";
-import BugCard from "@/components/BugCard";
+import { BugCard } from "@/components/BugCard";
 import SidebarCard from "@/components/SidebarCard";
 import StatusButton, { selectedStatusType } from "@/components/StatusButton";
 import PriorityButton, {

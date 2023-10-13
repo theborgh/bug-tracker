@@ -28,7 +28,7 @@ type BugCardProps = {
   status: Status;
 };
 
-export default function BugCard({
+export function BugCard({
   id,
   projectOwnerId,
   projectDevelopers,
@@ -55,7 +55,7 @@ export default function BugCard({
         </div>
         <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
           {formatDistance(new Date(createdAt), new Date(), { addSuffix: true })}{" "}
-          - Reported by {author} - {commentCount} Comments
+          - Reported by {author} - {commentCount} comments
         </p>
       </div>
       <p className="mb-4 text-sm text-white text-opacity-75">{description}</p>
@@ -82,6 +82,56 @@ export default function BugCard({
         //   <UserPlusIcon className="h-6 w-6" />
         // </AssignBugToDev>
         null}
+      </div>
+    </div>
+  );
+}
+
+export type SimpleBugCardProps = {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  updatedAt: Date;
+  priority: string;
+  commentCount: number;
+  status: Status;
+};
+
+export function SimpleBugCard({
+  id,
+  title,
+  author,
+  description,
+  updatedAt,
+  priority,
+  commentCount,
+  status,
+}: SimpleBugCardProps) {
+  return (
+    <div className="flex justify-between rounded-md bg-gray-800 py-3 px-4 w-64">
+      <div className="">
+        <div className="flex justify-between">
+          <h3 className="text-hs text-white font-medium line-clamp-1">
+            {title}
+          </h3>
+          <p className="mb-4 text-sm text-white text-opacity-75">
+            {description}
+          </p>
+        </div>
+        <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
+          last updated{" "}
+          {formatDistance(new Date(updatedAt), new Date(), { addSuffix: true })}
+        </p>
+        <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
+          Reported by {author} - {commentCount} comments
+        </p>
+        <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
+          Priority: {priority}
+        </p>
+        <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
+          Status: {status}
+        </p>
       </div>
     </div>
   );

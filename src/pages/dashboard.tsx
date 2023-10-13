@@ -3,11 +3,24 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
+import { SimpleBugCard } from "@/components/BugCard";
+import { Priority, Status } from "@prisma/client";
 
 interface ProjectData {
   id: string;
   name: string;
   updatedAt: string;
+}
+
+interface SimpleBugCardProps {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  updatedAt: Date;
+  priority: { value: Priority; stroke: string };
+  _count: { comments: number };
+  status: Status;
 }
 
 export default function Dashboard() {
@@ -17,6 +30,9 @@ export default function Dashboard() {
   const [assignedToProjects, setAssignedToProjects] = useState<
     ProjectData[] | null
   >(null);
+  const [assignedToMeBugs, setAssignedToMeBugs] = useState<
+    SimpleBugCardProps[] | null
+  >();
   const { data: sessionData } = useSession();
 
   useEffect(() => {
@@ -30,6 +46,12 @@ export default function Dashboard() {
       );
       const data2 = await res2.json();
       setAssignedToProjects(data2);
+
+      const res3 = await fetch(`/api/bugs?assignedTo=${sessionData?.user.id}`);
+      const data3 = await res3.json();
+      setAssignedToMeBugs(data3);
+
+      console.log(data3);
     };
 
     fetchData();
@@ -65,6 +87,22 @@ export default function Dashboard() {
       </div>
 
       <h2>Bugs assigned to me</h2>
+      <div className="flex flex-wrap gap-4">
+        {assignedToMeBugs?.map((bug) => (
+          <Link key={bug.id} href={`/bug/${bug.id}`}>
+            <SimpleBugCard
+              id={bug.id}
+              title={bug.title}
+              author={bug.author}
+              description={bug.description}
+              updatedAt={bug.updatedAt}
+              priority={bug.priority}
+              commentCount={bug._count?.comments ?? 0}
+              status={bug.status}
+            />
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
