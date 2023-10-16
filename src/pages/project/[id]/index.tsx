@@ -81,7 +81,7 @@ export default function ProjectDetails() {
   return (
     <main className="flex">
       <Sidebar loggedUser={sessionData?.user} />
-      <div className="grid min-h-screen grid-cols-5 gap-x-8 p-11">
+      <div className="grid min-h-screen grid-cols-5 gap-x-8 p-11 bg-gray-900">
         <div className="col-span-4">
           <div className="flex items-center justify-between rounded-xl bg-slate-800 px-6 py-5">
             <div className="flex items-center justify-between gap-6">

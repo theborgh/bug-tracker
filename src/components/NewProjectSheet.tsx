@@ -19,16 +19,20 @@ type DeveloperType = {
 export default function NewProjectSheet() {
   const { data: sessionData } = useSession();
   const [projectName, setProjectName] = useState("");
-  const [developers, setDevelopers] = useState<DeveloperType[]>([]);
+  const [projectDevelopers, setProjectDevelopers] = useState<DeveloperType[]>(
+    []
+  );
+  const [allDevelopers, setAllDevelopers] = useState<DeveloperType[]>([]);
 
   const isLoading = false;
   const isError = false;
 
   useEffect(() => {
     const fetchData = async () => {
-      // const res = await fetch(`/api/users`);
-      // const data = await res.json();
-      console.log("TODO: fetch data from /api/users");
+      const res = await fetch(`/api/users`);
+      const data = await res.json();
+
+      setAllDevelopers(data);
     };
 
     fetchData();
@@ -79,11 +83,11 @@ export default function NewProjectSheet() {
             </div>
           </form>
 
-          {developers.length > 0 && (
-            <p className="mb-3 mt-3">Developers list</p>
+          {projectDevelopers.length > 0 && (
+            <p className="mb-3 mt-3">New project developers</p>
           )}
 
-          {developers.map((developer) => (
+          {projectDevelopers.map((developer) => (
             <li
               key={developer.id}
               className="mb-2 flex justify-between text-bodym"
@@ -97,8 +101,10 @@ export default function NewProjectSheet() {
               </div>
               <MinusIcon
                 onClick={() =>
-                  setDevelopers([
-                    ...developers.filter((dev) => dev.id !== developer.id),
+                  setProjectDevelopers([
+                    ...projectDevelopers.filter(
+                      (dev) => dev.id !== developer.id
+                    ),
                   ])
                 }
                 className="h-6 w-6 cursor-pointer hover:opacity-50"
@@ -106,7 +112,36 @@ export default function NewProjectSheet() {
             </li>
           ))}
 
-          <p className="mt-3 mb-3">Team members previously added to projects</p>
+          <p className="mt-3 mb-3">Add existing developers</p>
+
+          {!isLoading &&
+            !isError &&
+            allDevelopers.length > 0 &&
+            allDevelopers
+              .filter(
+                (dev) =>
+                  !projectDevelopers.some((projDev) => projDev.id === dev.id)
+              )
+              .map((developer) => (
+                <li
+                  key={developer.id}
+                  className="mb-2 flex justify-between text-bodym"
+                >
+                  <div className="flex">
+                    <Avatar className="mr-4 h-6 w-6">
+                      <AvatarImage src={developer?.image ?? ""} />
+                      <AvatarFallback>{developer.name}</AvatarFallback>
+                    </Avatar>
+                    {developer.name}
+                  </div>
+                  <PlusIcon
+                    onClick={() =>
+                      setProjectDevelopers([...projectDevelopers, developer])
+                    }
+                    className="h-6 w-6 cursor-pointer hover:opacity-50"
+                  />
+                </li>
+              ))}
         </div>
       </SheetContent>
     </Sheet>
