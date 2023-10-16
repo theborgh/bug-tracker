@@ -3,26 +3,23 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
-// Fetch all bugs assigned to the developer with the specified id
+// Fetch all info used in the sidebar
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query as { id: string };
 
   try {
-  const bugs = await prisma.bug.findMany({
-    where: { assignedToUserId: id },
+  const results = await prisma.user.findUnique({
+    where: { id },
     select: {
       id: true,
-      title: true,
-      markdown: true,
-      priority: true,
-      status: true,
-      reportingUserId: true,
-      _count: { select: { comments: true } },
-      updatedAt: true,
+      name: true,
+      ownedProjects: { select: { id: true, name: true } },
+      developerOnProjects: { select: { id: true, name: true } },
+      assignedBugs: { select: { id: true, title: true } },
     }
   });
 
-    res.json(bugs);
+    res.json(results);
 } catch (e) {
   console.error("Error querying the database:", e);
 } finally {

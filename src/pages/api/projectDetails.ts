@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query as { id: string };
 
+  try {
   const project = await prisma.project.findUnique({ 
     where: { id },
     select: {
@@ -42,4 +43,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   });
 
   res.json(project);
+} catch (e) {
+  console.error("Error querying the database:", e);
+} finally {
+  await prisma.$disconnect();
+}
 }

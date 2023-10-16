@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Squares2X2Icon } from "@heroicons/react/24/solid";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
@@ -19,6 +19,20 @@ export default function Sidebar({
       })
     | undefined;
 }) {
+  const [sidebarData, setSidebarData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`/api/sidebar?id=${loggedUser?.id}`);
+      const data = await res.json();
+      setSidebarData(data);
+
+      console.log("sidebar data:", data);
+    };
+
+    fetchData();
+  }, [loggedUser?.id]);
+
   const isLoading = false;
   const isError = false;
 
@@ -54,10 +68,36 @@ export default function Sidebar({
           <div className="">
             <NewProjectSheet />
           </div>
-          <div className="mt-5 text-hsb uppercase">My work (#bugs)</div>
-          <div>{!isLoading && !isError && "mybugs"}</div>
-          <div className="mt-5 text-hsb uppercase">My projects (#projects)</div>
-          <div>{!isLoading && !isError && "projectList"}</div>
+          <div className="mt-5 text-hsb uppercase">
+            My work ({sidebarData?.assignedBugs?.length})
+          </div>
+          <div>
+            {!isLoading &&
+              !isError &&
+              sidebarData?.assignedBugs?.map((bug) => (
+                <div key={bug.id}>{bug.title}</div>
+              ))}
+          </div>
+          <div className="mt-5 text-hsb uppercase">
+            My projects ({sidebarData?.ownedProjects?.length})
+          </div>
+          <div>
+            {!isLoading &&
+              !isError &&
+              sidebarData?.ownedProjects?.map((proj) => (
+                <div key={proj.id}>{proj.name}</div>
+              ))}
+          </div>
+          <div className="mt-5 text-hsb uppercase">
+            Assigned projects ({sidebarData?.developerOnProjects?.length})
+          </div>
+          <div>
+            {!isLoading &&
+              !isError &&
+              sidebarData?.developerOnProjects?.map((proj) => (
+                <div key={proj.id}>{proj.name}</div>
+              ))}
+          </div>
         </div>
         <div className="flex-row m-0 mb-6 self-center justify-center">
           <div className="flex justify-center">
