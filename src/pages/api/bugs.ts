@@ -8,24 +8,24 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   const { id } = req.query as { id: string };
 
   try {
-  const bugs = await prisma.bug.findMany({
-    where: { assignedToUserId: id },
-    select: {
-      id: true,
-      title: true,
-      markdown: true,
-      priority: true,
-      status: true,
-      reportingUserId: true,
-      _count: { select: { comments: true } },
-      updatedAt: true,
-    }
-  });
+    const bugs = await prisma.bug.findMany({
+      where: { assignedToUserId: id },
+      select: {
+        id: true,
+        title: true,
+        markdown: true,
+        priority: true,
+        status: true,
+        reportingUserId: true,
+        _count: { select: { comments: true } },
+        updatedAt: true,
+      }
+    });
 
-    res.json(bugs);
-} catch (e) {
-  console.error("Error querying the database:", e);
-} finally {
-  await prisma.$disconnect();
-}
+      res.json(bugs);
+  } catch (e) {
+    console.error("Error querying the database:", e);
+  } finally {
+    await prisma.$disconnect();
+  }
 }

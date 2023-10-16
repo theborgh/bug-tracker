@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import formatDistance from "date-fns/formatDistance";
 import StatusDropdown from "./projectDetails/StatusDropdown";
 import { getNameLetters } from "@/utils/data";
+import { useState } from "react";
 
 type BugCardProps = {
   id: string;
@@ -42,6 +43,11 @@ export function BugCard({
   status,
 }: BugCardProps) {
   const { data: userData } = useSession();
+  const [bugStatus, setBugStatus] = useState<Status>(status);
+
+  const updateBugStatus = async (newStatus: Status) => {
+    setBugStatus(newStatus);
+  };
 
   return (
     <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4">
@@ -60,14 +66,14 @@ export function BugCard({
       </div>
       <p className="mb-4 text-sm text-white text-opacity-75">{description}</p>
       <div className="flex items-center justify-between">
-        STATUS DROPDOWN
         <StatusDropdown
           bugTitle={title}
           bugId={id}
-          status={status}
+          status={bugStatus}
           assigneId={assignee?.id}
           projectOwnerId={projectOwnerId}
           projectDevelopers={projectDevelopers}
+          handleBugStatusChange={updateBugStatus}
         />
         {assignee ? (
           <Avatar title={assignee?.name ?? "anonymous"}>
@@ -87,6 +93,7 @@ export function BugCard({
   );
 }
 
+// Simplified version, for the dashboard
 export type SimpleBugCardProps = {
   id: string;
   title: string;

@@ -16,6 +16,7 @@ type StatusDropdownProps = {
     name: string;
     image: string;
   }[];
+  handleBugStatusChange: (newStatus: Status) => void;
 };
 
 const StatusDropdown = ({
@@ -25,12 +26,25 @@ const StatusDropdown = ({
   bugTitle,
   projectOwnerId,
   projectDevelopers,
+  handleBugStatusChange,
 }: StatusDropdownProps) => {
   const { data: sessionData } = useSession();
 
-  // add mutate bug status code here
-  const mutate = (mutateObj) => {
-    console.log("mutating. status:", mutateObj.status, "bugId:", bugId);
+  const updateStatus = async (newStatus: Status) => {
+    const response = await fetch(`/api/bug/${bugId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      handleBugStatusChange(newStatus);
+      console.log(data, newStatus);
+    }
   };
 
   const readonly =
@@ -76,7 +90,7 @@ const StatusDropdown = ({
                   key={status.value}
                   value={status.value}
                   onSelect={() => {
-                    mutate({ status: status.value, bugId });
+                    updateStatus(status.value);
                   }}
                   className={`my-1 cursor-pointer text-center capitalize outline-none transition hover:text-gray-500`}
                 >
