@@ -26,8 +26,6 @@ export default function Sidebar({
       const res = await fetch(`/api/sidebar?id=${loggedUser?.id}`);
       const data = await res.json();
       setSidebarData(data);
-
-      console.log("sidebar data:", data);
     };
 
     fetchData();
@@ -40,7 +38,7 @@ export default function Sidebar({
   if (isError) return <div className="">error</div>;
 
   return (
-    <div className="flex w-[60rem] flex-col border-r border-sidebar-border bg-slate-800">
+    <div className="flex w-[600px] flex-col border-r border-sidebar-border bg-slate-800">
       <Image
         priority
         src="../logo.svg"
@@ -75,7 +73,9 @@ export default function Sidebar({
             {!isLoading &&
               !isError &&
               sidebarData?.assignedBugs?.map((bug) => (
-                <div key={bug.id}>{bug.title}</div>
+                <Link key={bug.id} href={`/project/${bug.id}`}>
+                  <div>{bug.name}</div>
+                </Link>
               ))}
           </div>
           <div className="mt-5 text-hsb uppercase">
@@ -85,7 +85,9 @@ export default function Sidebar({
             {!isLoading &&
               !isError &&
               sidebarData?.ownedProjects?.map((proj) => (
-                <div key={proj.id}>{proj.name}</div>
+                <Link key={proj.id} href={`/project/${proj.id}`}>
+                  <div>{proj.name}</div>
+                </Link>
               ))}
           </div>
           <div className="mt-5 text-hsb uppercase">
@@ -95,7 +97,9 @@ export default function Sidebar({
             {!isLoading &&
               !isError &&
               sidebarData?.developerOnProjects?.map((proj) => (
-                <div key={proj.id}>{proj.name}</div>
+                <Link key={proj.id} href={`/project/${proj.id}`}>
+                  <div>{proj.name}</div>
+                </Link>
               ))}
           </div>
         </div>
