@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Command as CommandPrimitive } from "cmdk";
 import { CommandInput, CommandList } from "@/components/ui/Command";
 import NewProjectSheet from "./NewProjectSheet";
+import LoginButton from "./LoginButton";
 
 export default function Sidebar({
   loggedUser,
@@ -58,13 +59,18 @@ export default function Sidebar({
           <div className="mt-5 text-hsb uppercase">My projects (#projects)</div>
           <div>{!isLoading && !isError && "projectList"}</div>
         </div>
-        <div className="m-0 mb-6 self-center">
-          <Link href={"/dashboard"}>
-            <Avatar title="avatar">
-              <AvatarImage src={loggedUser?.image ?? ""} />
-              <AvatarFallback>{loggedUser?.name}</AvatarFallback>
-            </Avatar>
-          </Link>
+        <div className="flex-row m-0 mb-6 self-center justify-center">
+          <div className="flex justify-center">
+            <Link href={"/dashboard"}>
+              <Avatar title="avatar">
+                <AvatarImage src={loggedUser?.image ?? ""} />
+                <AvatarFallback>{loggedUser?.name}</AvatarFallback>
+              </Avatar>
+            </Link>
+          </div>
+          <div className="flex justify-center">
+            <LoginButton />
+          </div>
         </div>
       </div>
     </div>
