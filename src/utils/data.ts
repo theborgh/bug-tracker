@@ -3,20 +3,17 @@ import type { Status } from "@prisma/client";
 export const Priorities = [
   {
     value: "CRITICAL" as const,
-    stroke: "stroke-red-500",
-    background: "bg-red-500",
+    stroke: "red",
   },
   {
     value: "HIGH" as const,
-    stroke: "stroke-orange-500",
-    background: "bg-orange-500",
+    stroke: "orange",
   },
   {
     value: "MEDIUM" as const,
-    stroke: "stroke-yellow-500",
-    background: "bg-yellow-500",
+    stroke: "yellow",
   },
-  { value: "LOW" as const, stroke: "stroke-white", background: "bg-white" },
+  { value: "LOW" as const, stroke: "white" },
 ];
 
 export const defaultStatuses = [

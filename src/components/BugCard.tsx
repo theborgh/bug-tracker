@@ -49,6 +49,8 @@ export function BugCard({
     setBugStatus(newStatus);
   };
 
+  console.log("title", title, "priority", priority);
+
   return (
     <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4">
       <div className="">
@@ -56,7 +58,8 @@ export function BugCard({
           <h3 className="text-hs font-medium line-clamp-1">{title}</h3>
           <ShieldExclamationIcon
             title={priority.value}
-            className={`h-8 w-8 ${priority.stroke} `}
+            className={`h-8 w-8`}
+            stroke={priority.stroke}
           />
         </div>
         <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
