@@ -38,19 +38,30 @@ export default function NewProjectSheet() {
     fetchData();
   }, []);
 
-  const addMutate = async () => {
-    console.log("addMutate");
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    addMutate();
+    const body = {
+      name: projectName,
+      developers: projectDevelopers.map((dev) => dev.id),
+      ownerId: sessionData?.user.id,
+    };
+
+    fetch("/api/projects", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    setProjectName("");
+    setProjectDevelopers([]);
   };
 
   return (
     <Sheet>
-      <SheetTrigger>New project</SheetTrigger>
+      <SheetTrigger>Create new project</SheetTrigger>
       <SheetContent className="rounded-tl-large rounded-bl-large bg-slate-700">
         <SheetHeader>
           <h1 className="mb-8 text-3xl text-white">Add New Project</h1>
@@ -60,10 +71,12 @@ export default function NewProjectSheet() {
             <div className="text-sm">Title</div>
             <div className="mb-5 flex items-center gap-4">
               <input
-                className="custom-input"
+                className="custom-input text-black"
                 type="text"
                 placeholder="Enter project name"
                 onChange={(e) => setProjectName(e.target.value)}
+                minLength={3}
+                required
               />
               <button type="submit" className="btn-blue whitespace-nowrap">
                 Create project
