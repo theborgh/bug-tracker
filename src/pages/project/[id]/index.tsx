@@ -54,15 +54,21 @@ export default function ProjectDetails() {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const [data, setData] = useState<ProjectData | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<selectedStatusType>([
-    "CLOSED",
-    "INPROGRESS",
-    "TESTING",
-    "TODO",
-    "UNASSIGNED",
-  ]);
+  const [statusFilters, setStasusFilters] = useState({
+    CLOSED: false,
+    INPROGRESS: true,
+    TESTING: true,
+    TODO: true,
+    UNASSIGNED: true,
+  });
   const [selectedPriorities, setSelectedPriorities] =
     useState<selectedPrioritiesType>(["CRITICAL", "HIGH", "MEDIUM", "LOW"]);
+  const filteredBugs = data?.bugs.filter((bug) => {
+    return (
+      statusFilters[bug.status] &&
+      selectedPriorities.includes(bug.priority as any)
+    );
+  });
 
   const [sortBy, setSortBy] = useState<bugSortingType>("recent");
 
@@ -79,6 +85,16 @@ export default function ProjectDetails() {
   const isOwner = sessionData?.user?.id === data?.ownerId;
 
   if (!data) return <div className="">loading...</div>;
+
+  const handleStatusFilterClick = (
+    status: selectedStatusType,
+    selected: boolean
+  ) => {
+    setStasusFilters((prev) => ({
+      ...prev,
+      [status]: !selected,
+    }));
+  };
 
   return (
     <main className="flex">
@@ -99,7 +115,7 @@ export default function ProjectDetails() {
           </div>
           {data.bugs.length > 0 ? (
             <div className="mt-4 grid grid-cols-3 gap-x-5 gap-y-5">
-              {data.bugs.map((bug) => (
+              {filteredBugs?.map((bug) => (
                 <BugCard
                   id={bug.id}
                   projectOwnerId={data.ownerId}
@@ -133,22 +149,22 @@ export default function ProjectDetails() {
         </div>
         <div className="">
           <SidebarCard
-            title="Bug Status"
+            title="Status filter"
             className="flex flex-wrap gap-2 text-white"
           >
-            {Object.values(Status).map((item) => (
-              <li key={item}>
+            {Object.values(Status).map((stat) => (
+              <li key={stat}>
                 <StatusButton
-                  statusValue={item}
-                  setSelectedStatus={setSelectedStatus}
-                  isSelected={selectedStatus.includes(item)}
+                  statusValue={stat}
+                  handleClick={handleStatusFilterClick}
+                  isSelected={statusFilters[stat]}
                 >
-                  {item.toLowerCase()}
+                  {stat.toLowerCase()}
                 </StatusButton>
               </li>
             ))}
           </SidebarCard>
-          <SidebarCard title="Bug Priority" className="space-y-1 text-white">
+          <SidebarCard title="Priority filter" className="space-y-1 text-white">
             {Priorities.map(({ value, background }) => (
               <PriorityButton
                 count={data.bugs.filter((bug) => bug.priority === value).length}

@@ -1,40 +1,29 @@
-import type { Dispatch, SetStateAction } from "react";
 import { forwardRef } from "react";
 
-export type selectedStatusType = (
+export type selectedStatusType =
   | "UNASSIGNED"
   | "TODO"
   | "INPROGRESS"
   | "TESTING"
-  | "CLOSED"
-)[];
+  | "CLOSED";
 
 interface StatusButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isSelected: boolean;
-  setSelectedStatus: Dispatch<SetStateAction<selectedStatusType>>;
-  statusValue: "UNASSIGNED" | "TODO" | "INPROGRESS" | "TESTING" | "CLOSED";
+  handleClick: (status: selectedStatusType, selected: boolean) => void;
+  statusValue: selectedStatusType;
 }
 
 const StatusButton = forwardRef<HTMLButtonElement, StatusButtonProps>(
-  (
-    { className, isSelected, setSelectedStatus, statusValue, ...props },
-    ref
-  ) => {
+  ({ className, isSelected, handleClick, statusValue, ...props }, ref) => {
+    const handleStatusClick = () => {
+      handleClick(statusValue, isSelected);
+    };
+
     return (
       <button
         ref={ref}
-        onClick={() => {
-          if (isSelected) {
-            setSelectedStatus((selectedStatus) =>
-              selectedStatus.filter((item) => item !== statusValue)
-            );
-          } else {
-            setSelectedStatus((selectedStatus) =>
-              selectedStatus.concat(statusValue)
-            );
-          }
-        }}
+        onClick={handleStatusClick}
         {...props}
         className={
           "rounded-[10px] px-3  py-2 text-[0.8125rem] font-bold capitalize transition duration-300 hover:bg-slate-700 " +
