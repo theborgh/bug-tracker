@@ -33,7 +33,6 @@ const NewBug: NextPage = () => {
     };
 
     fetchProjects();
-    console.log("projects fetched: ", projects);
   }, [sessionData?.user.id]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

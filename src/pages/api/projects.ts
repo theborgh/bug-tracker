@@ -39,7 +39,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           res.json(developedProjects);
           break;
         case 'all':
-          console.log('all');
           const allProjects = await prisma.project.findMany({
             where: {
               OR: [
@@ -52,8 +51,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
               name: true,
             }
           });
-
-          console.log(allProjects);
   
           res.json(allProjects);
           break;
