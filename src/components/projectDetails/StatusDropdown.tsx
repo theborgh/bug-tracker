@@ -61,62 +61,44 @@ const StatusDropdown = ({
     label: "Unassigned",
   };
 
-  // If the user is not the owner of the project, or the bug is not unassigned, don't show the dropdown
-  if (status !== "UNASSIGNED" || sessionData?.user.id !== projectOwnerId)
-    return (
-      <DropdownMenu.Root
-        open={open}
-        onOpenChange={(open) => setOpen(readonly ? false : open)}
-      >
-        <DropdownMenu.Trigger asChild>
-          <button
-            disabled={readonly}
-            className={`rounded-[4px] ${
-              readonly ? "cursor-default" : "cursor-pointer"
-            } transition hover:bg-opacity-75 ${
-              selectedStatusObject.background
-            } options w-28 py-1.5 text-center
-          text-sm capitalize`}
-          >
-            {selectedStatusObject.label}
-          </button>
-        </DropdownMenu.Trigger>
-
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content className="my-2 w-28 rounded-lg border border-white border-opacity-10 bg-gray-800 p-3 text-sm font-medium text-white">
-            <DropdownMenu.RadioGroup>
-              {Statuses.map((status) => (
-                <DropdownMenu.RadioItem
-                  key={status.value}
-                  value={status.value}
-                  onSelect={() => {
-                    updateStatus(status.value);
-                  }}
-                  className={`my-1 cursor-pointer text-center capitalize outline-none transition hover:text-gray-500`}
-                >
-                  {status.label}
-                </DropdownMenu.RadioItem>
-              ))}
-            </DropdownMenu.RadioGroup>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
-    );
-
-  // If the user is the owner of the project, and the bug is unassigned, show the AssignBugToDev component
   return (
-    <AssignBugToDev
-      bugTitle={bugTitle}
-      bugId={bugId}
-      projectDevelopers={projectDevelopers}
+    <DropdownMenu.Root
+      open={open}
+      onOpenChange={(open) => setOpen(readonly ? false : open)}
     >
-      <span
-        className={`inline-block cursor-pointer rounded-[4px] transition hover:bg-opacity-75 ${selectedStatusObject.background} options text-centerz w-28 py-1.5
-    text-sm capitalize`}
-      >
-        {selectedStatusObject.label}
-      </span>
-    </AssignBugToDev>
+      <DropdownMenu.Trigger asChild>
+        <button
+          disabled={readonly}
+          className={`rounded-[4px] ${
+            readonly ? "cursor-default" : "cursor-pointer"
+          } transition hover:bg-opacity-75 ${
+            selectedStatusObject.background
+          } options w-28 py-1.5 text-center
+          text-sm capitalize`}
+        >
+          {selectedStatusObject.label}
+        </button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content className="my-2 w-28 rounded-lg border border-white border-opacity-10 bg-gray-800 p-3 text-sm font-medium text-white">
+          <DropdownMenu.RadioGroup>
+            {Statuses.map((status) => (
+              <DropdownMenu.RadioItem
+                key={status.value}
+                value={status.value}
+                onSelect={() => {
+                  updateStatus(status.value);
+                }}
+                className={`my-1 cursor-pointer text-center capitalize outline-none transition hover:text-gray-500`}
+              >
+                {status.label}
+              </DropdownMenu.RadioItem>
+            ))}
+          </DropdownMenu.RadioGroup>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 };
 

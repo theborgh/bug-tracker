@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import PlusIcon from "@heroicons/react/24/outline/PlusIcon";
 import MinusIcon from "@heroicons/react/24/outline/MinusIcon";
@@ -18,6 +19,7 @@ type DeveloperType = {
 
 export default function NewProjectSheet() {
   const { data: sessionData } = useSession();
+  const router = useRouter();
   const [projectName, setProjectName] = useState("");
   const [projectDevelopers, setProjectDevelopers] = useState<DeveloperType[]>(
     []
@@ -38,7 +40,7 @@ export default function NewProjectSheet() {
     fetchData();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const body = {
@@ -47,7 +49,7 @@ export default function NewProjectSheet() {
       ownerId: sessionData?.user.id,
     };
 
-    fetch("/api/projects", {
+    const res = await fetch("/api/projects", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,8 +57,12 @@ export default function NewProjectSheet() {
       body: JSON.stringify(body),
     });
 
+    const data = await res.json();
+
     setProjectName("");
     setProjectDevelopers([]);
+
+    router.push(`/project/${data.id}`);
   };
 
   return (
@@ -71,7 +77,7 @@ export default function NewProjectSheet() {
             <div className="text-sm">Title</div>
             <div className="mb-5 flex items-center gap-4">
               <input
-                className="custom-input text-black"
+                className="custom-input text-white"
                 type="text"
                 placeholder="Enter project name"
                 onChange={(e) => setProjectName(e.target.value)}

@@ -46,15 +46,6 @@ const NewBug: NextPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(
-      "submitting: ",
-      title,
-      description,
-      priority,
-      selectedProject,
-      sessionData?.user.id
-    );
-
     const res = await fetch("/api/bugs", {
       method: "POST",
       headers: {
@@ -162,7 +153,7 @@ const NewBug: NextPage = () => {
               className="custom-input"
               rows={20}
               placeholder="Bug description and steps to reproduce..."
-              minLength={20}
+              minLength={10}
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
