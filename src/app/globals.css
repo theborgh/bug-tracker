@@ -34,3 +34,20 @@
 .bg-closed {
   @apply bg-white text-gray-800;
 }
+
+/* Bug priority filter colors, cannot be applied dynamically */
+.bg-low-priority {
+  @apply bg-white;
+}
+
+.bg-medium-priority {
+  @apply bg-yellow-500;
+}
+
+.bg-high-priority {
+  @apply bg-orange-500;
+}
+
+.bg-critical-priority {
+  @apply bg-red-500;
+}
