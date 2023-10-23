@@ -2,7 +2,6 @@ import { useState } from "react";
 import type { Status } from "@prisma/client";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useSession } from "next-auth/react";
-import AssignBugToDev from "./AssignBugToDev";
 import { defaultStatuses } from "@/utils/data";
 
 type StatusDropdownProps = {

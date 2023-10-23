@@ -66,7 +66,7 @@ export function BugCard({
             {title}
           </h3>
           <ShieldExclamationIcon
-            title={priority.value}
+            title={`${priority.value.toLocaleLowerCase()} priority`}
             className={`h-8 w-8`}
             stroke={priority.stroke}
           />

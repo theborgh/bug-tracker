@@ -23,18 +23,18 @@ export const defaultStatuses = [
   {
     value: "UNASSIGNED" as Status,
     label: "Unassigned",
-    background: "bg-slate-900",
+    background: "bg-unassigned",
   },
-  { value: "TODO" as Status, label: "Todo", background: "bg-violet-800" },
+  { value: "TODO" as Status, label: "Todo", background: "bg-todo" },
   {
     value: "INPROGRESS" as Status,
-    background: "bg-sky-600",
+    background: "bg-inprogress",
     label: "In Progress",
   },
-  { value: "TESTING" as Status, background: "bg-teal-600", label: "Testing" },
+  { value: "TESTING" as Status, background: "bg-testing", label: "Testing" },
   {
     value: "CLOSED" as Status,
-    background: "bg-white text-gray-800",
+    background: "bg-closed",
     label: "Closed",
   },
 ];
