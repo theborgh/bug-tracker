@@ -8,7 +8,6 @@ import { useSession } from "next-auth/react";
 import formatDistance from "date-fns/formatDistance";
 import StatusDropdown from "./projectDetails/StatusDropdown";
 import { getNameLetters } from "@/utils/data";
-import { useState } from "react";
 import AssignBugToDev from "./projectDetails/AssignBugToDev";
 
 type BugCardProps = {
@@ -32,6 +31,7 @@ type BugCardProps = {
   priority: { value: Priority; stroke: string };
   commentCount: number;
   status: Status;
+  handleBugStatusChange: (bugId: string, newStatus: Status) => void;
 };
 
 export function BugCard({
@@ -46,13 +46,9 @@ export function BugCard({
   priority,
   commentCount,
   status,
+  handleBugStatusChange,
 }: BugCardProps) {
   const { data: userData } = useSession();
-  const [bugStatus, setBugStatus] = useState<Status>(status);
-
-  const updateBugStatus = async (newStatus: Status) => {
-    setBugStatus(newStatus);
-  };
 
   return (
     <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4 text-white">
@@ -79,13 +75,11 @@ export function BugCard({
       <p className="mb-4 text-sm text-white text-opacity-75">{description}</p>
       <div className="flex items-center justify-between">
         <StatusDropdown
-          bugTitle={title}
           bugId={id}
-          status={bugStatus}
+          status={status}
           assigneeId={assignedToDev?.id}
           projectOwnerId={projectOwnerId}
-          projectDevelopers={projectDevelopers}
-          handleBugStatusChange={updateBugStatus}
+          handleBugStatusChange={handleBugStatusChange}
         />
         {assignedToDev ? (
           <Avatar title={assignedToDev?.name ?? "anonymous"}>

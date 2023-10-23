@@ -8,23 +8,15 @@ type StatusDropdownProps = {
   bugId: string;
   assigneeId?: string;
   status: Status;
-  bugTitle: string;
   projectOwnerId: string;
-  projectDevelopers: {
-    id: string;
-    name: string;
-    image: string;
-  }[];
-  handleBugStatusChange: (newStatus: Status) => void;
+  handleBugStatusChange: (bugId: string, newStatus: Status) => void;
 };
 
 const StatusDropdown = ({
   bugId,
   status,
   assigneeId,
-  bugTitle,
   projectOwnerId,
-  projectDevelopers,
   handleBugStatusChange,
 }: StatusDropdownProps) => {
   const { data: sessionData } = useSession();
@@ -41,7 +33,7 @@ const StatusDropdown = ({
     const data = await response.json();
 
     if (response.ok) {
-      handleBugStatusChange(newStatus);
+      handleBugStatusChange(bugId, newStatus);
     }
   };
 

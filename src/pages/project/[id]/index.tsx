@@ -96,6 +96,27 @@ export default function ProjectDetails() {
     }));
   };
 
+  const changeBugStatus = (bugId: string, newStatus: Status) => {
+    setData((prev) => {
+      if (!prev) return null;
+
+      const newBugs = prev.bugs.map((bug) => {
+        if (bug.id === bugId) {
+          return {
+            ...bug,
+            status: newStatus,
+          };
+        }
+        return bug;
+      });
+
+      return {
+        ...prev,
+        bugs: newBugs,
+      };
+    });
+  };
+
   return (
     <main className="flex">
       <Sidebar loggedUser={sessionData?.user} />
@@ -139,6 +160,7 @@ export default function ProjectDetails() {
                     }
                   }
                   status={bug.status}
+                  handleBugStatusChange={changeBugStatus}
                   key={bug.id}
                 />
               ))}
