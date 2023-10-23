@@ -3,8 +3,6 @@ import Image from "next/image";
 import { Squares2X2Icon } from "@heroicons/react/24/solid";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import Link from "next/link";
-import { Command as CommandPrimitive } from "cmdk";
-import { CommandInput, CommandList } from "@/components/ui/Command";
 import NewProjectSheet from "./NewProjectSheet";
 import LoginButton from "./LoginButton";
 
@@ -39,23 +37,18 @@ export default function Sidebar({
 
   return (
     <div className="flex w-[600px] flex-col border-r border-sidebar-border bg-slate-800">
-      <Image
-        priority
-        src="../logo.svg"
-        alt="logo"
-        width={132}
-        height={60}
-        className="m-0 mt-6 self-center"
-      />
+      <Link href={"/"}>
+        <Image
+          priority
+          src="../logo.svg"
+          alt="logo"
+          width={132}
+          height={60}
+          className="m-0 mt-6 mx-auto"
+        />
+      </Link>
 
-      <div>
-        <CommandPrimitive>
-          <CommandInput placeholder="Quick Search..." />
-          <CommandList></CommandList>
-        </CommandPrimitive>
-      </div>
-
-      <div className="flex h-full flex-col justify-between text-gray-400">
+      <div className="flex h-full flex-col justify-between text-gray-400 mt-5">
         <div className="ml-4">
           <div className="">
             <Link href="/dashboard" className="mb-2 flex gap-2">

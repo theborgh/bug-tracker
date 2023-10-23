@@ -91,7 +91,7 @@ export default function ProjectDetails() {
               <SortDropdown sort={sortBy} setSort={setSortBy} />
             </div>
             <Link
-              href={`./${router.query.id as string}/new`}
+              href={`./${router.query.id as string}/newBug`}
               className="rounded-md bg-blue-900 px-5 py-3 text-bodym font-medium text-white transition duration-300 hover:bg-white hover:text-blue-900"
             >
               Report New Bug
