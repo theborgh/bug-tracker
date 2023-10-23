@@ -1,3 +1,6 @@
+import { Status } from "@prisma/client";
+import { Priorities } from "@/utils/data";
+
 export type bugSortingType =
   | "recent"
   | "oldest"
@@ -31,3 +34,53 @@ export function getBugSortLabel(sort: bugSortingType): string {
       return "Least Comments";
   }
 }
+
+interface Bug {
+    id: string;
+    title: string;
+    markdown: string;
+    priority: string;
+    status: Status;
+    minutesToComplete: number;
+    reportingUser: {
+      name: string;
+    };
+    assignedToUserId: string;
+    commentCount: {
+      comments: number;
+    };
+    createdAt: Date;
+    updatedAt: string;
+}
+
+export const sortByAllCriteria = (a: Bug, b: Bug, sortBy: string) => {
+    if (sortBy === "recent") {
+      return (
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    } else if (sortBy === "oldest") {
+      return (
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+    } else if (sortBy === "most-comments") {
+      return (
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+    } else if (sortBy === "least-comments") {
+      return (
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+    } else if (sortBy === "highest-priority") {
+      return (
+        Priorities.findIndex((el) => el.value === a.priority) -
+        Priorities.findIndex((el) => el.value === b.priority)
+      );
+    } else if (sortBy === "lowest-priority") {
+      return (
+        Priorities.findIndex((el) => el.value === b.priority) -
+        Priorities.findIndex((el) => el.value === a.priority)
+      );
+    } else {
+      return 0;
+    }
+  }

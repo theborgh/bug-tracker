@@ -13,7 +13,7 @@ import PriorityButton, {
 } from "@/components/priorityButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import SortDropdown from "@/components/projectDetails/SortDropdown";
-import type { bugSortingType } from "@/utils/sorting";
+import { sortByAllCriteria, type bugSortingType } from "@/utils/sorting";
 import Sidebar from "@/components/Sidebar";
 
 interface ProjectData {
@@ -74,37 +74,7 @@ export default function ProjectDetails() {
         statusFilters[bug.status] &&
         priorityFilters[bug.priority as selectedPriorityType]
     )
-    .sort((a, b) => {
-      if (sortBy === "recent") {
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      } else if (sortBy === "oldest") {
-        return (
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-      } else if (sortBy === "most-comments") {
-        return (
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-      } else if (sortBy === "least-comments") {
-        return (
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-      } else if (sortBy === "highest-priority") {
-        return (
-          Priorities.findIndex((el) => el.value === a.priority) -
-          Priorities.findIndex((el) => el.value === b.priority)
-        );
-      } else if (sortBy === "lowest-priority") {
-        return (
-          Priorities.findIndex((el) => el.value === b.priority) -
-          Priorities.findIndex((el) => el.value === a.priority)
-        );
-      } else {
-        return 0;
-      }
-    });
+    .sort((a, b) => sortByAllCriteria(a, b, sortBy));
 
   useEffect(() => {
     const fetchData = async () => {
