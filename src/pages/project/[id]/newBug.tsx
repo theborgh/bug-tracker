@@ -28,7 +28,6 @@ const NewBug: NextPage = () => {
     if (id) {
       setSelectedProject(id as string);
     }
-    console.log("id is: ", id);
   }, [id]);
 
   useEffect(() => {
@@ -44,10 +43,36 @@ const NewBug: NextPage = () => {
     fetchProjects();
   }, [selectedProject, sessionData?.user.id]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submitting data: ", e);
-    void push(`/project/${id as string}`);
+
+    console.log(
+      "submitting: ",
+      title,
+      description,
+      priority,
+      selectedProject,
+      sessionData?.user.id
+    );
+
+    const res = await fetch("/api/bugs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        markdown: description,
+        priority,
+        status: "UNASSIGNED",
+        projectId: selectedProject,
+        reportingUserId: sessionData?.user.id,
+      }),
+    });
+
+    if (res.status === 200) {
+      push(`/project/${selectedProject}`);
+    }
   };
 
   // if (isLoading) return <div className="">loading...</div>;
@@ -63,7 +88,13 @@ const NewBug: NextPage = () => {
               <label className="mb-2 block font-medium" htmlFor="">
                 Title
               </label>
-              <input placeholder="" type="text" className="custom-input" />
+              <input
+                placeholder="Enter a bug name"
+                type="text"
+                className="custom-input"
+                minLength={2}
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </div>
             <div className="flex-auto px-2">
               <label className="mb-2 block font-medium" htmlFor="">
@@ -130,10 +161,13 @@ const NewBug: NextPage = () => {
               id="description"
               className="custom-input"
               rows={20}
+              placeholder="Bug description and steps to reproduce..."
+              minLength={20}
+              onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
           <div className="ml-auto flex justify-end">
-            <Link href="/" className="btn mr-2">
+            <Link href={`/project/${id}`} className="btn mr-2">
               Cancel
             </Link>
             <button type="submit" className="btn-blue">
