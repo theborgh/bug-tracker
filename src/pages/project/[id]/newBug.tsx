@@ -12,14 +12,24 @@ interface ProjectData {
 }
 
 const NewBug: NextPage = () => {
-  const [priority, setPriority] = useState<Priority>("LOW");
-  const [projects, setProjects] = useState<ProjectData[]>([]);
   const {
     query: { id },
     push,
   } = useRouter();
+  const [projects, setProjects] = useState<ProjectData[]>([]);
+  const [title, setTitle] = useState<string>("");
+  const [selectedProject, setSelectedProject] = useState<string>("");
+  const [priority, setPriority] = useState<Priority>("LOW");
+  const [description, setDescription] = useState<string>("");
   const priorities: Priority[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
   const { data: sessionData } = useSession();
+
+  useEffect(() => {
+    if (id) {
+      setSelectedProject(id as string);
+    }
+    console.log("id is: ", id);
+  }, [id]);
 
   useEffect(() => {
     // fetch projects the user is assigned to the user
@@ -32,7 +42,7 @@ const NewBug: NextPage = () => {
     };
 
     fetchProjects();
-  }, [sessionData?.user.id]);
+  }, [selectedProject, sessionData?.user.id]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,8 +52,6 @@ const NewBug: NextPage = () => {
 
   // if (isLoading) return <div className="">loading...</div>;
   // if (!isValidProject) return <div className="">error</div>;
-
-  console.log("session user id: ", sessionData?.user.id);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
@@ -61,14 +69,20 @@ const NewBug: NextPage = () => {
               <label className="mb-2 block font-medium" htmlFor="">
                 Project
               </label>
-              <select className="custom-input">
+              <select
+                id="project"
+                name="project"
+                value={selectedProject}
+                onChange={(e) => setSelectedProject(e.target.value)}
+                className="custom-input"
+              >
                 {projects.filter((p) => p.ownerId === sessionData?.user.id)
                   .length && (
                   <optgroup label="My projects">
                     {projects
                       .filter((p) => p.ownerId === sessionData?.user.id)
                       .map((p) => (
-                        <option key={p.id} value={p.name}>
+                        <option key={p.id} value={p.id}>
                           {p.name}
                         </option>
                       ))}
@@ -80,7 +94,7 @@ const NewBug: NextPage = () => {
                     {projects
                       .filter((p) => p.ownerId !== sessionData?.user.id)
                       .map((p) => (
-                        <option key={p.id} value={p.name}>
+                        <option key={p.id} value={p.id}>
                           {p.name}
                         </option>
                       ))}
