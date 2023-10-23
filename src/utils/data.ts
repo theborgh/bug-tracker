@@ -4,16 +4,19 @@ export const Priorities = [
   {
     value: "CRITICAL" as const,
     stroke: "red",
+    background: "bg-red-500",
   },
   {
     value: "HIGH" as const,
     stroke: "orange",
+    background: "bg-orange-500",
   },
   {
     value: "MEDIUM" as const,
     stroke: "yellow",
+    background: "bg-yellow-500",
   },
-  { value: "LOW" as const, stroke: "white" },
+  { value: "LOW" as const, stroke: "white", background: "bg-white" },
 ];
 
 export const defaultStatuses = [

@@ -9,6 +9,7 @@ import formatDistance from "date-fns/formatDistance";
 import StatusDropdown from "./projectDetails/StatusDropdown";
 import { getNameLetters } from "@/utils/data";
 import { useState } from "react";
+import AssignBugToDev from "./projectDetails/AssignBugToDev";
 
 type BugCardProps = {
   id: string;
@@ -49,8 +50,6 @@ export function BugCard({
     setBugStatus(newStatus);
   };
 
-  console.log("title", title, "priority", priority);
-
   return (
     <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4">
       <div className="">
@@ -86,11 +85,14 @@ export function BugCard({
             </AvatarFallback>
           </Avatar>
         ) : userData?.user.id === projectOwnerId ? (
-          <>AssignBugToDev</>
-        ) : // <AssignBugToDev bugTitle={title} bugId={id}>
-        //   <UserPlusIcon className="h-6 w-6" />
-        // </AssignBugToDev>
-        null}
+          <AssignBugToDev
+            bugTitle={title}
+            bugId={id}
+            projectDevelopers={projectDevelopers}
+          >
+            <UserPlusIcon className="h-6 w-6" />
+          </AssignBugToDev>
+        ) : null}
       </div>
     </div>
   );

@@ -176,10 +176,11 @@ export default function ProjectDetails() {
                 {isOwner && <div>TODO: Assign bugs to dev</div>}
               </li>
             ))}
-            {data.developers.length === 0 && (
+
+            {!data.developers.length && (
               <li className="text-justify text-bodys leading-5 text-white text-opacity-75">
                 No developers are currently assigned to this project. To add a
-                developer, please click the &quot;Add Developer&quot; icon.
+                developer, click the &quot;Add Developer&quot; icon.
               </li>
             )}
           </SidebarCard>

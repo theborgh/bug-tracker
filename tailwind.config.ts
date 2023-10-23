@@ -32,6 +32,11 @@ const config: Config = {
       },
       colors: {
         "sidebar-border": "rgba(246, 240, 240, 0.16)",
+        "bug-status-unassigned": "#FCA5A5",
+        "bug-status-inprogress": "yellow",
+        "bug-status-todo": "red",
+        "bug-status-testing": "green",
+        "bug-status-closed": "white",
       },
       
     },

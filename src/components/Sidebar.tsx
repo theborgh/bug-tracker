@@ -72,7 +72,7 @@ export default function Sidebar({
           <div>
             {!isLoading &&
               !isError &&
-              sidebarData?.assignedBugs?.map((bug) => (
+              sidebarData?.assignedBugs?.map((bug: any) => (
                 <Link key={bug.id} href={`/project/${bug.id}`}>
                   <div>{bug.name}</div>
                 </Link>
@@ -84,7 +84,7 @@ export default function Sidebar({
           <div>
             {!isLoading &&
               !isError &&
-              sidebarData?.ownedProjects?.map((proj) => (
+              sidebarData?.ownedProjects?.map((proj: any) => (
                 <Link key={proj.id} href={`/project/${proj.id}`}>
                   <div>{proj.name}</div>
                 </Link>
@@ -96,7 +96,7 @@ export default function Sidebar({
           <div>
             {!isLoading &&
               !isError &&
-              sidebarData?.developerOnProjects?.map((proj) => (
+              sidebarData?.developerOnProjects?.map((proj: any) => (
                 <Link key={proj.id} href={`/project/${proj.id}`}>
                   <div>{proj.name}</div>
                 </Link>

@@ -43,7 +43,6 @@ const StatusDropdown = ({
 
     if (response.ok) {
       handleBugStatusChange(newStatus);
-      console.log(data, newStatus);
     }
   };
 
@@ -62,6 +61,7 @@ const StatusDropdown = ({
     label: "Unassigned",
   };
 
+  // If the user is not the owner of the project, or the bug is not unassigned, don't show the dropdown
   if (status !== "UNASSIGNED" || sessionData?.user.id !== projectOwnerId)
     return (
       <DropdownMenu.Root
@@ -102,6 +102,8 @@ const StatusDropdown = ({
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
     );
+
+  // If the user is the owner of the project, and the bug is unassigned, show the AssignBugToDev component
   return (
     <AssignBugToDev
       bugTitle={bugTitle}
