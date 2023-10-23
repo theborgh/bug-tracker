@@ -33,19 +33,49 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     }
   } else if (req.method === "GET") {
     try {
-      const bugs = await prisma.bug.findMany({
-        where: { assignedToUserId: id },
-        select: {
-          id: true,
-          title: true,
-          markdown: true,
-          priority: true,
-          status: true,
-          reportingUserId: true,
-          _count: { select: { comments: true } },
-          updatedAt: true,
-        },
-      });
+      const { type } = req.query as { type: string };
+
+      let bugs = [];
+
+      if (type === "open") {
+        bugs = await prisma.bug.findMany({
+          where: {
+            assignedToUserId: id,
+            status: {
+              not: "CLOSED"
+            }
+          },
+          select: {
+            id: true,
+            title: true,
+            markdown: true,
+            priority: true,
+            status: true,
+            reportingUserId: true,
+            _count: { select: { comments: true } },
+            updatedAt: true,
+          },
+        });
+      } else if (type === "all") {
+        bugs = await prisma.bug.findMany({
+          where: {
+            assignedToUserId: id,
+          },
+          select: {
+            id: true,
+            title: true,
+            markdown: true,
+            priority: true,
+            status: true,
+            reportingUserId: true,
+            _count: { select: { comments: true } },
+            updatedAt: true,
+          },
+        });
+      } else {
+        res.status(400).send("Invalid type");
+        return;
+      }
 
       res.json(bugs);
     } catch (e) {

@@ -49,7 +49,9 @@ export default function Dashboard() {
       const data2 = await res2.json();
       setAssignedToProjects(data2);
 
-      const res3 = await fetch(`/api/bugs?assignedTo=${sessionData?.user.id}`);
+      const res3 = await fetch(
+        `/api/bugs?assignedTo=${sessionData?.user.id}&type=open`
+      );
       const data3 = await res3.json();
       setAssignedToMeBugs(data3);
     };
