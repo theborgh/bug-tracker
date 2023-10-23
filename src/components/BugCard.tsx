@@ -55,7 +55,7 @@ export function BugCard({
   };
 
   return (
-    <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4">
+    <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4 text-white">
       <div className="">
         <div className="flex justify-between">
           <h3 className="text-hs font-medium line-clamp-1">{title}</h3>

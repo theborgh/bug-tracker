@@ -13,7 +13,7 @@ const SortDropdown = ({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className={`hover:underline`}>
+        <button className={`text-white hover:underline`}>
           Sort by: <span className="capitalize">{sort}</span>
         </button>
       </DropdownMenu.Trigger>

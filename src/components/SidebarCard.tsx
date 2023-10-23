@@ -12,7 +12,7 @@ export default function SidebarCard({
   topRight?: ReactNode;
 }) {
   return (
-    <div className="mb-6 rounded-xl bg-slate-800 px-6 py-4">
+    <div className="mb-6 rounded-xl bg-slate-800 px-6 py-4 text-white">
       <div className="mb-4 flex items-center justify-between">
         <h2 className=" text-hs">{title}</h2>
         {topRight}
