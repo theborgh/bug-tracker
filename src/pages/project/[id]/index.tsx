@@ -37,7 +37,9 @@ interface ProjectData {
       priority: string;
       status: Status;
       minutesToComplete: number;
-      reportingUserId: string;
+      reportingUser: {
+        name: string;
+      };
       assignedToUserId: string;
       commentCount: {
         comments: number;
@@ -104,7 +106,7 @@ export default function ProjectDetails() {
                   projectDevelopers={data.developers}
                   title={bug.title}
                   description={bug.markdown}
-                  author={bug.reportingUserId ?? "anonymous"}
+                  author={bug.reportingUser.name ?? "anonymous"}
                   assignedToDev={
                     bug.assignedToUserId
                       ? data.developers.find(

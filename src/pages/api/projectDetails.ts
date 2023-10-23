@@ -24,8 +24,12 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           priority: true,
           status: true,
           minutesToComplete: true,
-          reportingUserId: true,
           assignedToUserId: true,
+          reportingUser: {
+            select: {
+              name: true
+            }
+          },
           _count: { select: { comments: true } },
           createdAt: true,
           updatedAt: true,
