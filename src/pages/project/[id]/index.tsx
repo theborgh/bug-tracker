@@ -67,14 +67,44 @@ export default function ProjectDetails() {
     MEDIUM: true,
     LOW: true,
   });
-  const filteredBugs = data?.bugs.filter((bug) => {
-    return (
-      statusFilters[bug.status] &&
-      priorityFilters[bug.priority as selectedPriorityType]
-    );
-  });
-
   const [sortBy, setSortBy] = useState<bugSortingType>("recent");
+  const filteredBugs = data?.bugs
+    .filter(
+      (bug) =>
+        statusFilters[bug.status] &&
+        priorityFilters[bug.priority as selectedPriorityType]
+    )
+    .sort((a, b) => {
+      if (sortBy === "recent") {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      } else if (sortBy === "oldest") {
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      } else if (sortBy === "most-comments") {
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      } else if (sortBy === "least-comments") {
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      } else if (sortBy === "highest-priority") {
+        return (
+          Priorities.findIndex((el) => el.value === a.priority) -
+          Priorities.findIndex((el) => el.value === b.priority)
+        );
+      } else if (sortBy === "lowest-priority") {
+        return (
+          Priorities.findIndex((el) => el.value === b.priority) -
+          Priorities.findIndex((el) => el.value === a.priority)
+        );
+      } else {
+        return 0;
+      }
+    });
 
   useEffect(() => {
     const fetchData = async () => {
