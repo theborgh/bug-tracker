@@ -4,13 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import type { Priority } from "@prisma/client";
 
-const statuses = [
-  { value: "LOW", label: "Low" },
-  { value: "MEDIUM", label: "Medium" },
-  { value: "HIGH", label: "High" },
-  { value: "CRITICAL", label: "Critical" },
-];
-
 interface ProjectData {
   id: string;
   name: string;
@@ -19,12 +12,13 @@ interface ProjectData {
 }
 
 const NewBug: NextPage = () => {
-  const [open, setOpen] = useState(false);
+  const [priority, setPriority] = useState<Priority>("LOW");
   const {
     query: { id },
     push,
   } = useRouter();
   let projects: ProjectData[] = [];
+  const priorities: Priority[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
   useEffect(() => {
     // fetch projects the user is assigned to the user
@@ -64,7 +58,17 @@ const NewBug: NextPage = () => {
               <label className="mb-2 block font-medium" htmlFor="">
                 Priority
               </label>
-              <div className="">Select the status dropdown</div>
+              <select
+                className="custom-input"
+                value={priority}
+                onChange={(e) => setPriority(e.target.value as Priority)}
+              >
+                {priorities.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="mb-3">
