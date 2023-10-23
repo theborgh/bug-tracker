@@ -49,6 +49,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             select: {
               id: true,
               name: true,
+              ownerId: true,
             }
           });
   

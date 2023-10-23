@@ -8,8 +8,7 @@ import { useSession } from "next-auth/react";
 interface ProjectData {
   id: string;
   name: string;
-  createdAt: string;
-  updatedAt: string;
+  ownerId: string;
 }
 
 const NewBug: NextPage = () => {
@@ -44,6 +43,8 @@ const NewBug: NextPage = () => {
   // if (isLoading) return <div className="">loading...</div>;
   // if (!isValidProject) return <div className="">error</div>;
 
+  console.log("session user id: ", sessionData?.user.id);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
       <div className="container m-auto text-white">
@@ -61,11 +62,30 @@ const NewBug: NextPage = () => {
                 Project
               </label>
               <select className="custom-input">
-                {projects.map((p) => (
-                  <option key={p.id} value={p.name}>
-                    {p.name}
-                  </option>
-                ))}
+                {projects.filter((p) => p.ownerId === sessionData?.user.id)
+                  .length && (
+                  <optgroup label="My projects">
+                    {projects
+                      .filter((p) => p.ownerId === sessionData?.user.id)
+                      .map((p) => (
+                        <option key={p.id} value={p.name}>
+                          {p.name}
+                        </option>
+                      ))}
+                  </optgroup>
+                )}
+                {projects.filter((p) => p.ownerId !== sessionData?.user.id)
+                  .length && (
+                  <optgroup label="Assigned projects">
+                    {projects
+                      .filter((p) => p.ownerId !== sessionData?.user.id)
+                      .map((p) => (
+                        <option key={p.id} value={p.name}>
+                          {p.name}
+                        </option>
+                      ))}
+                  </optgroup>
+                )}
               </select>
             </div>
             <div className="flex-auto px-2">
