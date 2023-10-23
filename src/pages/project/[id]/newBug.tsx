@@ -3,6 +3,7 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { Priority } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
 interface ProjectData {
   id: string;
@@ -13,29 +14,37 @@ interface ProjectData {
 
 const NewBug: NextPage = () => {
   const [priority, setPriority] = useState<Priority>("LOW");
+  const [projects, setProjects] = useState<ProjectData[]>([]);
   const {
     query: { id },
     push,
   } = useRouter();
-  let projects: ProjectData[] = [];
   const priorities: Priority[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
+  const { data: sessionData } = useSession();
 
   useEffect(() => {
     // fetch projects the user is assigned to the user
     const fetchProjects = async () => {
-      const res = await fetch(`/api/projects`);
-      projects = await res.json();
+      const res = await fetch(
+        `/api/projects?userId=${sessionData?.user.id}&type=all`
+      );
+      const projects = await res.json();
+      setProjects(projects);
     };
 
     fetchProjects();
-  }, []);
+    console.log("projects fetched: ", projects);
+  }, [sessionData?.user.id]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("submitting data: ", e);
     void push(`/project/${id as string}`);
   };
+
   // if (isLoading) return <div className="">loading...</div>;
   // if (!isValidProject) return <div className="">error</div>;
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
       <div className="container m-auto text-white">
@@ -52,7 +61,13 @@ const NewBug: NextPage = () => {
               <label className="mb-2 block font-medium" htmlFor="">
                 Project
               </label>
-              <div>Select the project</div>
+              <select className="custom-input">
+                {projects.map((p) => (
+                  <option key={p.id} value={p.name}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="flex-auto px-2">
               <label className="mb-2 block font-medium" htmlFor="">

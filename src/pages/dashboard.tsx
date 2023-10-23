@@ -37,12 +37,14 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`/api/projects?ownedBy=${sessionData?.user.id}`);
+      const res = await fetch(
+        `/api/projects?userId=${sessionData?.user.id}&type=owner`
+      );
       const data = await res.json();
       setOwnedProjects(data);
 
       const res2 = await fetch(
-        `/api/projects?assignedTo=${sessionData?.user.id}`
+        `/api/projects?userId=${sessionData?.user.id}&type=developer`
       );
       const data2 = await res2.json();
       setAssignedToProjects(data2);
