@@ -21,7 +21,11 @@ type BugCardProps = {
   }[];
   title: string;
   author: string;
-  assignee?: { id: string; name: string | null; image: string | null } | null;
+  assignedToDev?: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  } | null;
 
   description: string;
   createdAt: Date;
@@ -36,7 +40,7 @@ export function BugCard({
   projectDevelopers,
   title,
   author,
-  assignee,
+  assignedToDev,
   createdAt,
   description,
   priority,
@@ -72,16 +76,16 @@ export function BugCard({
           bugTitle={title}
           bugId={id}
           status={bugStatus}
-          assigneId={assignee?.id}
+          assigneeId={assignedToDev?.id}
           projectOwnerId={projectOwnerId}
           projectDevelopers={projectDevelopers}
           handleBugStatusChange={updateBugStatus}
         />
-        {assignee ? (
-          <Avatar title={assignee?.name ?? "anonymous"}>
-            <AvatarImage src={assignee?.image ?? ""} />
+        {assignedToDev ? (
+          <Avatar title={assignedToDev?.name ?? "anonymous"}>
+            <AvatarImage src={assignedToDev?.image ?? ""} />
             <AvatarFallback>
-              {getNameLetters(assignee?.name ?? "")}
+              {getNameLetters(assignedToDev?.name ?? "")}
             </AvatarFallback>
           </Avatar>
         ) : userData?.user.id === projectOwnerId ? (

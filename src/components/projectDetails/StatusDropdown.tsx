@@ -7,7 +7,7 @@ import { defaultStatuses } from "@/utils/data";
 
 type StatusDropdownProps = {
   bugId: string;
-  assigneId?: string;
+  assigneeId?: string;
   status: Status;
   bugTitle: string;
   projectOwnerId: string;
@@ -22,7 +22,7 @@ type StatusDropdownProps = {
 const StatusDropdown = ({
   bugId,
   status,
-  assigneId,
+  assigneeId,
   bugTitle,
   projectOwnerId,
   projectDevelopers,
@@ -47,7 +47,7 @@ const StatusDropdown = ({
   };
 
   const readonly =
-    !sessionData || ![assigneId, projectOwnerId].includes(sessionData.user.id);
+    !sessionData || ![assigneeId, projectOwnerId].includes(sessionData.user.id);
   const isOwner = projectOwnerId === sessionData?.user.id;
   const Statuses = isOwner
     ? defaultStatuses

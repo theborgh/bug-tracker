@@ -105,7 +105,13 @@ export default function ProjectDetails() {
                   title={bug.title}
                   description={bug.markdown}
                   author={bug.reportingUserId ?? "anonymous"}
-                  // assignee={bug.assignedToUserId ?? "unassigned"}
+                  assignedToDev={
+                    bug.assignedToUserId
+                      ? data.developers.find(
+                          (dev) => dev.id === bug.assignedToUserId
+                        )
+                      : null
+                  }
                   commentCount={bug?.commentCount?.comments}
                   createdAt={bug.createdAt}
                   priority={
