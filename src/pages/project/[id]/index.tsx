@@ -9,7 +9,7 @@ import { BugCard } from "@/components/BugCard";
 import SidebarCard from "@/components/SidebarCard";
 import StatusButton, { selectedStatusType } from "@/components/StatusButton";
 import PriorityButton, {
-  selectedPrioritiesType,
+  selectedPriorityType,
 } from "@/components/priorityButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import SortDropdown from "@/components/projectDetails/SortDropdown";
@@ -61,12 +61,16 @@ export default function ProjectDetails() {
     TODO: true,
     UNASSIGNED: true,
   });
-  const [selectedPriorities, setSelectedPriorities] =
-    useState<selectedPrioritiesType>(["CRITICAL", "HIGH", "MEDIUM", "LOW"]);
+  const [priorityFilters, setPriorityFilters] = useState({
+    CRITICAL: true,
+    HIGH: true,
+    MEDIUM: true,
+    LOW: true,
+  });
   const filteredBugs = data?.bugs.filter((bug) => {
     return (
       statusFilters[bug.status] &&
-      selectedPriorities.includes(bug.priority as any)
+      priorityFilters[bug.priority as selectedPriorityType]
     );
   });
 
@@ -93,6 +97,16 @@ export default function ProjectDetails() {
     setStasusFilters((prev) => ({
       ...prev,
       [status]: !selected,
+    }));
+  };
+
+  const handlePriorityFilterClick = (
+    priority: selectedPriorityType,
+    selected: boolean
+  ) => {
+    setPriorityFilters((prev) => ({
+      ...prev,
+      [priority]: !selected,
     }));
   };
 
@@ -168,8 +182,8 @@ export default function ProjectDetails() {
             {Priorities.map(({ value, background }) => (
               <PriorityButton
                 count={data.bugs.filter((bug) => bug.priority === value).length}
-                isSelected={selectedPriorities.includes(value)}
-                setSelectedPriorities={setSelectedPriorities}
+                isSelected={priorityFilters[value]}
+                handleClick={handlePriorityFilterClick}
                 value={value}
                 color={background}
                 key={value}
