@@ -50,8 +50,6 @@ export default function Dashboard() {
       const res3 = await fetch(`/api/bugs?assignedTo=${sessionData?.user.id}`);
       const data3 = await res3.json();
       setAssignedToMeBugs(data3);
-
-      console.log(data3);
     };
 
     fetchData();

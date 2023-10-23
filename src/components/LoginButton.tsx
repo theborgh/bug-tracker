@@ -7,7 +7,11 @@ const LoginButton: React.FC = () => {
     <div className="flex flex-col items-center justify-center gap-4">
       <button
         className="rounded-full px-10 py-3 font-semibold transition"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
+        onClick={
+          sessionData
+            ? () => void signOut({ callbackUrl: "/" })
+            : () => void signIn()
+        }
       >
         {sessionData ? "Sign out" : "Sign in"}
       </button>
