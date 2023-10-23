@@ -35,7 +35,7 @@ export function getBugSortLabel(sort: bugSortingType): string {
   }
 }
 
-interface Bug {
+export interface Bug {
     id: string;
     title: string;
     markdown: string;

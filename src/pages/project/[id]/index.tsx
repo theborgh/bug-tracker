@@ -13,7 +13,11 @@ import PriorityButton, {
 } from "@/components/priorityButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import SortDropdown from "@/components/projectDetails/SortDropdown";
-import { sortByAllCriteria, type bugSortingType } from "@/utils/sorting";
+import {
+  sortByAllCriteria,
+  type bugSortingType,
+  type Bug,
+} from "@/utils/sorting";
 import Sidebar from "@/components/Sidebar";
 
 interface ProjectData {
@@ -29,25 +33,7 @@ interface ProjectData {
       image: string;
     }
   ];
-  bugs: [
-    {
-      id: string;
-      title: string;
-      markdown: string;
-      priority: string;
-      status: Status;
-      minutesToComplete: number;
-      reportingUser: {
-        name: string;
-      };
-      assignedToUserId: string;
-      commentCount: {
-        comments: number;
-      };
-      createdAt: Date;
-      updatedAt: string;
-    }
-  ];
+  bugs: Bug[];
 }
 
 export default function ProjectDetails() {
