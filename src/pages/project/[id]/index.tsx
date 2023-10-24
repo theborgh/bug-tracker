@@ -130,9 +130,9 @@ export default function ProjectDetails() {
   return (
     <main className="flex bg-gray-900">
       <Sidebar loggedUser={sessionData?.user} />
-      <div className="grid min-h-screen grid-cols-5 gap-x-8 p-11 ">
-        <div className="col-span-4">
-          <div className="flex items-center justify-between rounded-xl bg-slate-800 px-6 py-5">
+      <div className="flex flex-1 min-h-screen m-5">
+        <div className="flex flex-wrap title-and-bug-container mr-3">
+          <div className="flex w-full grow-0 items-center justify-between rounded-xl bg-slate-800 px-6 py-5 bug-title-container">
             <div className="flex items-center justify-between gap-6">
               <h1 className="text-hm text-white font-medium">
                 {projectData?.data?.name}
@@ -146,44 +146,49 @@ export default function ProjectDetails() {
               Report New Bug
             </Link>
           </div>
-          {projectData.loading ? (
-            <p>Loading project bugs...</p>
-          ) : projectData.error ? (
-            <p>Error: {projectData.error.message}</p>
-          ) : (projectData.data?.bugs?.length ?? 0) > 0 ? (
-            <div className="mt-4 grid grid-cols-3 gap-x-5 gap-y-5">
-              {filteredBugs?.map((bug) => (
-                <BugCard
-                  id={bug.id}
-                  projectOwnerId={projectData.data?.ownerId || ""}
-                  projectDevelopers={projectData.data?.developers || []}
-                  title={bug.title}
-                  description={bug.markdown}
-                  author={bug.reportingUser.name ?? "anonymous"}
-                  assignedToDev={
-                    bug.assignedToUserId
-                      ? projectData.data?.developers.find(
-                          (dev) => dev.id === bug.assignedToUserId
-                        )
-                      : null
-                  }
-                  commentCount={bug?._count.comments ?? 0}
-                  createdAt={bug.createdAt}
-                  priority={
-                    Priorities?.find((item) => item.value === bug.priority) ?? {
-                      value: "LOW",
-                      stroke: "stroke-white",
+
+          <div className="bug-container">
+            {projectData.loading ? (
+              <p>Loading project bugs...</p>
+            ) : projectData.error ? (
+              <p>Error: {projectData.error.message}</p>
+            ) : (projectData.data?.bugs?.length ?? 0) > 0 ? (
+              <div className="mt-4 flex flex-wrap gap-3">
+                {filteredBugs?.map((bug) => (
+                  <BugCard
+                    id={bug.id}
+                    projectOwnerId={projectData.data?.ownerId || ""}
+                    projectDevelopers={projectData.data?.developers || []}
+                    title={bug.title}
+                    description={bug.markdown}
+                    author={bug.reportingUser.name ?? "anonymous"}
+                    assignedToDev={
+                      bug.assignedToUserId
+                        ? projectData.data?.developers.find(
+                            (dev) => dev.id === bug.assignedToUserId
+                          )
+                        : null
                     }
-                  }
-                  status={bug.status}
-                  handleBugStatusChange={changeBugStatus}
-                  key={bug.id}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyState />
-          )}
+                    commentCount={bug?._count.comments ?? 0}
+                    createdAt={bug.createdAt}
+                    priority={
+                      Priorities?.find(
+                        (item) => item.value === bug.priority
+                      ) ?? {
+                        value: "LOW",
+                        stroke: "stroke-white",
+                      }
+                    }
+                    status={bug.status}
+                    handleBugStatusChange={changeBugStatus}
+                    key={bug.id}
+                  />
+                ))}
+              </div>
+            ) : (
+              <EmptyState />
+            )}
+          </div>
         </div>
         <div className="">
           <SidebarCard

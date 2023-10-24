@@ -51,7 +51,7 @@ export function BugCard({
   const { data: userData } = useSession();
 
   return (
-    <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4 text-white">
+    <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4 text-white w-72">
       <div className="">
         <div className="flex justify-between">
           <h3
