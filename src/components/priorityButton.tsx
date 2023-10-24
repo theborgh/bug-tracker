@@ -7,9 +7,7 @@ export default function PriorityButton({
   color,
   isSelected,
   handleClick,
-  count,
 }: {
-  count: number;
   value: selectedPriorityType;
   color: string;
   isSelected: boolean;
@@ -31,7 +29,6 @@ export default function PriorityButton({
           {value.toLowerCase()}
         </button>
       </div>
-      <div className="text-hxs">{count}</div>
     </li>
   );
 }

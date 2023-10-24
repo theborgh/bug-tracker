@@ -205,10 +205,6 @@ export default function ProjectDetails() {
           <SidebarCard title="Priority filter" className="space-y-1 text-white">
             {Priorities.map(({ value, background }) => (
               <PriorityButton
-                count={
-                  projectData.data?.bugs.filter((bug) => bug.priority === value)
-                    .length || 0
-                }
                 isSelected={priorityFilters[value]}
                 handleClick={handlePriorityFilterClick}
                 value={value}
