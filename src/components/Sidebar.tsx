@@ -6,6 +6,7 @@ import Link from "next/link";
 import NewProjectSheet from "./NewProjectSheet";
 import LoginButton from "./LoginButton";
 import { FetchState } from "@/utils/fetch";
+import getConfig from "next/config";
 
 export default function Sidebar({
   loggedUser,
@@ -23,6 +24,7 @@ export default function Sidebar({
     loading: true,
     error: null,
   });
+  const { publicRuntimeConfig } = getConfig();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +45,7 @@ export default function Sidebar({
       <Link href={"/dashboard"}>
         <Image
           priority
-          src="../logo.svg"
+          src={`${publicRuntimeConfig.baseUrl}/logo.svg`}
           alt="logo"
           width={132}
           height={60}
