@@ -78,50 +78,68 @@ export default function Dashboard() {
   }, [sessionData?.user.id]);
 
   return (
-    <div className="bg-gray-900">
+    <div className="min-h-screen bg-gray-900 text-white">
       <LoginButton />
-      <h2 className="text-white">My projects</h2>
+      <h2 className="text-2xl">My projects</h2>
       <div className="flex gap-4">
-        {ownedProjects?.data?.map((project) => (
-          <Link key={project.id} href={`/project/${project.id}`}>
-            <ProjectCard
-              id={project.id}
-              name={project.name}
-              updatedAt={project.updatedAt}
-            />
-          </Link>
-        ))}
-      </div>
-      <h2 className="text-white">Projects I&apos;m assigned to</h2>
-
-      <div className="flex flex-wrap gap-4">
-        {assignedToProjects?.data?.map((project) => (
-          <Link key={project.id} href={`/project/${project.id}`}>
-            <ProjectCard
-              id={project.id}
-              name={project.name}
-              updatedAt={project.updatedAt}
-            />
-          </Link>
-        ))}
+        {ownedProjects.loading ? (
+          <p>Loading my projects...</p>
+        ) : ownedProjects.error ? (
+          <p>Error: {ownedProjects.error.message}</p>
+        ) : (
+          ownedProjects.data?.map((project) => (
+            <Link key={project.id} href={`/project/${project.id}`}>
+              <ProjectCard
+                id={project.id}
+                name={project.name}
+                updatedAt={project.updatedAt}
+              />
+            </Link>
+          ))
+        )}
       </div>
 
-      <h2 className="text-white">Bugs assigned to me</h2>
+      <h2 className="text-2xl">Projects I&apos;m assigned to</h2>
       <div className="flex flex-wrap gap-4">
-        {assignedToMeBugs?.data?.map((bug) => (
-          <Link key={bug.id} href={`/bug/${bug.id}`}>
-            <SimpleBugCard
-              id={bug.id}
-              title={bug.title}
-              author={bug.author}
-              description={bug.description}
-              updatedAt={bug.updatedAt}
-              priority={bug.priority}
-              commentCount={bug._count?.comments ?? 0}
-              status={bug.status}
-            />
-          </Link>
-        ))}
+        {assignedToProjects.loading ? (
+          <p>Loading assigned projects...</p>
+        ) : assignedToProjects.error ? (
+          <p>Error: {assignedToProjects.error.message}</p>
+        ) : (
+          assignedToProjects.data?.map((project) => (
+            <Link key={project.id} href={`/project/${project.id}`}>
+              <ProjectCard
+                id={project.id}
+                name={project.name}
+                updatedAt={project.updatedAt}
+              />
+            </Link>
+          ))
+        )}
+      </div>
+
+      <h2 className="text-2xl">Bugs assigned to me</h2>
+      <div className="flex flex-wrap gap-4">
+        {assignedToMeBugs.loading ? (
+          <p>Loading assigned bugs...</p>
+        ) : assignedToMeBugs.error ? (
+          <p>Error: {assignedToMeBugs.error.message}</p>
+        ) : (
+          assignedToMeBugs?.data?.map((bug) => (
+            <Link key={bug.id} href={`/bug/${bug.id}`}>
+              <SimpleBugCard
+                id={bug.id}
+                title={bug.title}
+                author={bug.author}
+                description={bug.description}
+                updatedAt={bug.updatedAt}
+                priority={bug.priority}
+                commentCount={bug._count?.comments ?? 0}
+                status={bug.status}
+              />
+            </Link>
+          ))
+        )}
       </div>
     </div>
   );
