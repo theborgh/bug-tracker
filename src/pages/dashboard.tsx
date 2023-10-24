@@ -5,6 +5,7 @@ import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
 import { SimpleBugCard } from "@/components/BugCard";
 import { Status } from "@prisma/client";
+import Sidebar from "@/components/Sidebar";
 
 interface ProjectData {
   id: string;
@@ -78,68 +79,71 @@ export default function Dashboard() {
   }, [sessionData?.user.id]);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <LoginButton />
-      <h2 className="text-2xl">My projects</h2>
-      <div className="flex gap-4">
-        {ownedProjects.loading ? (
-          <p>Loading my projects...</p>
-        ) : ownedProjects.error ? (
-          <p>Error: {ownedProjects.error.message}</p>
-        ) : (
-          ownedProjects.data?.map((project) => (
-            <Link key={project.id} href={`/project/${project.id}`}>
-              <ProjectCard
-                id={project.id}
-                name={project.name}
-                updatedAt={project.updatedAt}
-              />
-            </Link>
-          ))
-        )}
-      </div>
+    <div className="min-h-screen bg-gray-900 text-white flex">
+      <Sidebar loggedUser={sessionData?.user} />
+      <div className="flex-row mx-5">
+        <h1 className="text-4xl text-center mt-3">Dashboard</h1>
+        <h2 className="text-2xl my-3">My projects</h2>
+        <div className="flex gap-4 ml">
+          {ownedProjects.loading ? (
+            <p>Loading my projects...</p>
+          ) : ownedProjects.error ? (
+            <p>Error: {ownedProjects.error.message}</p>
+          ) : (
+            ownedProjects.data?.map((project) => (
+              <Link key={project.id} href={`/project/${project.id}`}>
+                <ProjectCard
+                  id={project.id}
+                  name={project.name}
+                  updatedAt={project.updatedAt}
+                />
+              </Link>
+            ))
+          )}
+        </div>
 
-      <h2 className="text-2xl">Projects I&apos;m assigned to</h2>
-      <div className="flex flex-wrap gap-4">
-        {assignedToProjects.loading ? (
-          <p>Loading assigned projects...</p>
-        ) : assignedToProjects.error ? (
-          <p>Error: {assignedToProjects.error.message}</p>
-        ) : (
-          assignedToProjects.data?.map((project) => (
-            <Link key={project.id} href={`/project/${project.id}`}>
-              <ProjectCard
-                id={project.id}
-                name={project.name}
-                updatedAt={project.updatedAt}
-              />
-            </Link>
-          ))
-        )}
-      </div>
+        <h2 className="text-2xl my-3">Projects I&apos;m assigned to</h2>
+        <div className="flex flex-wrap gap-4">
+          {assignedToProjects.loading ? (
+            <p>Loading assigned projects...</p>
+          ) : assignedToProjects.error ? (
+            <p>Error: {assignedToProjects.error.message}</p>
+          ) : (
+            assignedToProjects.data?.map((project) => (
+              <Link key={project.id} href={`/project/${project.id}`}>
+                <ProjectCard
+                  id={project.id}
+                  name={project.name}
+                  updatedAt={project.updatedAt}
+                />
+              </Link>
+            ))
+          )}
+        </div>
 
-      <h2 className="text-2xl">Bugs assigned to me</h2>
-      <div className="flex flex-wrap gap-4">
-        {assignedToMeBugs.loading ? (
-          <p>Loading assigned bugs...</p>
-        ) : assignedToMeBugs.error ? (
-          <p>Error: {assignedToMeBugs.error.message}</p>
-        ) : (
-          assignedToMeBugs?.data?.map((bug) => (
-            <Link key={bug.id} href={`/bug/${bug.id}`}>
-              <SimpleBugCard
-                id={bug.id}
-                title={bug.title}
-                author={bug.author}
-                description={bug.description}
-                updatedAt={bug.updatedAt}
-                priority={bug.priority}
-                commentCount={bug._count?.comments ?? 0}
-                status={bug.status}
-              />
-            </Link>
-          ))
-        )}
+        <h2 className="text-2xl my-3">Bugs assigned to me</h2>
+        <div className="flex flex-wrap gap-4">
+          {assignedToMeBugs.loading ? (
+            <p>Loading assigned bugs...</p>
+          ) : assignedToMeBugs.error ? (
+            <p>Error: {assignedToMeBugs.error.message}</p>
+          ) : (
+            assignedToMeBugs?.data?.map((bug) => (
+              <Link key={bug.id} href={`/bug/${bug.id}`}>
+                <SimpleBugCard
+                  id={bug.id}
+                  title={bug.title}
+                  author={bug.author}
+                  description={bug.description}
+                  updatedAt={bug.updatedAt}
+                  priority={bug.priority}
+                  commentCount={bug._count?.comments ?? 0}
+                  status={bug.status}
+                />
+              </Link>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
