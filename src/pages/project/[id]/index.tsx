@@ -130,7 +130,7 @@ export default function ProjectDetails() {
   return (
     <main className="flex bg-gray-900">
       <Sidebar loggedUser={sessionData?.user} />
-      <div className="flex-1 min-h-screen m-5">
+      <div className="flex-1 m-5">
         <div className="flex">
           <div className="flex-1 flex-wrap title-and-bugs-container mr-3">
             <div className="flex w-full grow-0 items-center justify-between rounded-xl bg-slate-800 px-6 py-5 bug-title-container">
