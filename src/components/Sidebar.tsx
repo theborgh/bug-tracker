@@ -26,7 +26,7 @@ export default function Sidebar({
       setSidebarData(data);
     };
 
-    fetchData();
+    if (loggedUser?.id) fetchData();
   }, [loggedUser?.id]);
 
   const isLoading = false;

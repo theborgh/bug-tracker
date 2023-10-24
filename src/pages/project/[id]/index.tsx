@@ -78,7 +78,7 @@ export default function ProjectDetails() {
       }
     };
 
-    fetchData();
+    if (router.query.id) fetchData();
   }, [router.query.id]);
 
   const isOwner = sessionData?.user?.id === projectData?.data?.ownerId;
