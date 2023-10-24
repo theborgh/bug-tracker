@@ -80,7 +80,7 @@ export default function Sidebar({
             ) : (
               sidebarData.data?.assignedBugs?.map((bug: any) => (
                 <Link key={bug.id} href={`/bug/${bug.id}`}>
-                  <div>{bug.name}</div>
+                  <div>{bug.title}</div>
                 </Link>
               ))
             )}
