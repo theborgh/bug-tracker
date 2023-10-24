@@ -10,6 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import PlusIcon from "@heroicons/react/24/outline/PlusIcon";
 import { getNameLetters } from "@/utils/data";
+import { Status } from "@prisma/client";
 
 type AssignBugToDevProps = {
   bugTitle: string;
@@ -19,6 +20,7 @@ type AssignBugToDevProps = {
     name: string;
     image: string;
   }[];
+  handleBugStatusChange: (bugId: string, newStatus: Status) => void;
   children: ReactNode;
 };
 export default function AssignBugToDev({
@@ -26,10 +28,9 @@ export default function AssignBugToDev({
   bugId,
   bugTitle,
   projectDevelopers,
+  handleBugStatusChange,
 }: AssignBugToDevProps) {
   const mutate = async (bugId: string, assignedToUserId: string) => {
-    console.log("Assigning bug to developer");
-
     try {
       const response = await fetch(`/api/bug/${bugId}`, {
         method: "PATCH",
@@ -41,7 +42,7 @@ export default function AssignBugToDev({
       if (!response.ok) {
         throw new Error("Failed to assign bug to developer");
       }
-      console.log("Bug assigned successfully");
+      handleBugStatusChange(bugId, "TODO");
     } catch (error) {
       console.error(error);
     }

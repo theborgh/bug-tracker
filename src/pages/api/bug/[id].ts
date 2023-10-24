@@ -10,6 +10,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
   try {
     let bug;
+
     if (status) {
       bug = await prisma.bug.update({
         where: { id },
@@ -18,7 +19,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     } else if (assignedToUserId) {
       bug = await prisma.bug.update({
         where: { id },
-        data: { assignedToUserId },
+        data: { assignedToUserId, status: "TODO" },
       });
     } else {
       throw new Error("Invalid request body");

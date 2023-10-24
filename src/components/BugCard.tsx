@@ -51,7 +51,7 @@ export function BugCard({
   const { data: userData } = useSession();
 
   return (
-    <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4 text-white w-72">
+    <div className="flex flex-col justify-between rounded-md bg-gray-800 py-3 px-4 text-white w-80">
       <div className="">
         <div className="flex justify-between">
           <h3
@@ -94,6 +94,7 @@ export function BugCard({
             bugTitle={title}
             bugId={id}
             projectDevelopers={projectDevelopers}
+            handleBugStatusChange={handleBugStatusChange}
           >
             <UserPlusIcon className="h-6 w-6" />
           </AssignBugToDev>
