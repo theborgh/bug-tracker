@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import type { Priority } from "@prisma/client";
 import { useSession } from "next-auth/react";
+import Sidebar from "@/components/Sidebar";
 
 interface ProjectData {
   id: string;
@@ -67,102 +68,105 @@ const NewBug: NextPage = () => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
-      <div className="container m-auto text-white">
-        <h1 className="mb-8 text-5xl text-white">Report a bug</h1>
-        <form action="POST" onSubmit={(e) => handleSubmit(e)}>
-          <div className="mb-4 flex flex-row">
-            <div className="flex-auto pr-2">
-              <label className="mb-2 block font-medium" htmlFor="">
-                Title
-              </label>
-              <input
-                placeholder="Enter a bug name"
-                type="text"
-                className="custom-input"
-                minLength={2}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+    <main className="flex">
+      <Sidebar loggedUser={sessionData?.user} />
+      <div className="flex-1 min-h-screen flex-col items-center justify-center bg-gray-900 w-full p-8">
+        <div className="container m-auto text-white">
+          <h1 className="mb-8 text-5xl text-white">Report a new bug</h1>
+          <form action="POST" onSubmit={(e) => handleSubmit(e)}>
+            <div className="mb-4 flex flex-row">
+              <div className="flex-auto pr-2">
+                <label className="mb-2 block font-medium" htmlFor="">
+                  Title
+                </label>
+                <input
+                  placeholder="Enter a bug name"
+                  type="text"
+                  className="custom-input"
+                  minLength={2}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
+              <div className="flex-auto px-2">
+                <label className="mb-2 block font-medium" htmlFor="">
+                  Project
+                </label>
+                <select
+                  id="project"
+                  name="project"
+                  value={selectedProject}
+                  onChange={(e) => setSelectedProject(e.target.value)}
+                  className="custom-input"
+                >
+                  {projects.filter((p) => p.ownerId === sessionData?.user.id)
+                    .length && (
+                    <optgroup label="My projects">
+                      {projects
+                        .filter((p) => p.ownerId === sessionData?.user.id)
+                        .map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.name}
+                          </option>
+                        ))}
+                    </optgroup>
+                  )}
+                  {projects.filter((p) => p.ownerId !== sessionData?.user.id)
+                    .length && (
+                    <optgroup label="Assigned projects">
+                      {projects
+                        .filter((p) => p.ownerId !== sessionData?.user.id)
+                        .map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.name}
+                          </option>
+                        ))}
+                    </optgroup>
+                  )}
+                </select>
+              </div>
+              <div className="flex-auto px-2">
+                <label className="mb-2 block font-medium" htmlFor="">
+                  Priority
+                </label>
+                <select
+                  className="custom-input"
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value as Priority)}
+                >
+                  {priorities.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div className="flex-auto px-2">
-              <label className="mb-2 block font-medium" htmlFor="">
-                Project
-              </label>
-              <select
-                id="project"
-                name="project"
-                value={selectedProject}
-                onChange={(e) => setSelectedProject(e.target.value)}
-                className="custom-input"
+            <div className="mb-3">
+              <label
+                className="mb-2 block font-medium text-white"
+                htmlFor="description"
               >
-                {projects.filter((p) => p.ownerId === sessionData?.user.id)
-                  .length && (
-                  <optgroup label="My projects">
-                    {projects
-                      .filter((p) => p.ownerId === sessionData?.user.id)
-                      .map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name}
-                        </option>
-                      ))}
-                  </optgroup>
-                )}
-                {projects.filter((p) => p.ownerId !== sessionData?.user.id)
-                  .length && (
-                  <optgroup label="Assigned projects">
-                    {projects
-                      .filter((p) => p.ownerId !== sessionData?.user.id)
-                      .map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name}
-                        </option>
-                      ))}
-                  </optgroup>
-                )}
-              </select>
-            </div>
-            <div className="flex-auto px-2">
-              <label className="mb-2 block font-medium" htmlFor="">
-                Priority
+                Description
               </label>
-              <select
+              <textarea
+                id="description"
                 className="custom-input"
-                value={priority}
-                onChange={(e) => setPriority(e.target.value as Priority)}
-              >
-                {priorities.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
+                rows={20}
+                placeholder="Bug description and steps to reproduce..."
+                minLength={10}
+                onChange={(e) => setDescription(e.target.value)}
+              ></textarea>
             </div>
-          </div>
-          <div className="mb-3">
-            <label
-              className="mb-2 block font-medium text-white"
-              htmlFor="description"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              className="custom-input"
-              rows={20}
-              placeholder="Bug description and steps to reproduce..."
-              minLength={10}
-              onChange={(e) => setDescription(e.target.value)}
-            ></textarea>
-          </div>
-          <div className="ml-auto flex justify-end">
-            <Link href={`/project/${id}`} className="btn mr-2">
-              Cancel
-            </Link>
-            <button type="submit" className="btn-blue">
-              Submit
-            </button>
-          </div>
-        </form>
+            <div className="ml-auto flex justify-end">
+              <Link href={`/project/${id}`} className="btn mr-2">
+                Cancel
+              </Link>
+              <button type="submit" className="btn-blue">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </main>
   );
