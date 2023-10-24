@@ -20,7 +20,7 @@ type AssignBugToDevProps = {
     name: string;
     image: string;
   }[];
-  handleBugStatusChange: (bugId: string, newStatus: Status) => void;
+  handleBugAssignment: (bugId: string, assignedToId: string) => void;
   children: ReactNode;
 };
 export default function AssignBugToDev({
@@ -28,7 +28,7 @@ export default function AssignBugToDev({
   bugId,
   bugTitle,
   projectDevelopers,
-  handleBugStatusChange,
+  handleBugAssignment,
 }: AssignBugToDevProps) {
   const mutate = async (bugId: string, assignedToUserId: string) => {
     try {
@@ -42,7 +42,7 @@ export default function AssignBugToDev({
       if (!response.ok) {
         throw new Error("Failed to assign bug to developer");
       }
-      handleBugStatusChange(bugId, "TODO");
+      handleBugAssignment(bugId, assignedToUserId);
     } catch (error) {
       console.error(error);
     }

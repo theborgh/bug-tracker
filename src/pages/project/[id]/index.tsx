@@ -127,6 +127,31 @@ export default function ProjectDetails() {
     });
   };
 
+  const changeBugAssignee = (bugId: string, assignedToId: string) => {
+    setProjectData((prev) => {
+      if (!prev.data) return { data: null, loading: true, error: null };
+
+      const newBugs = prev.data.bugs.map((bug) => {
+        if (bug.id === bugId) {
+          return {
+            ...bug,
+            status: Status.TODO,
+            assignedToUserId: assignedToId,
+          };
+        }
+        return bug;
+      });
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          bugs: [...newBugs],
+        },
+      };
+    });
+  };
+
   return (
     <main className="flex bg-gray-900">
       <Sidebar loggedUser={sessionData?.user} />
@@ -182,6 +207,7 @@ export default function ProjectDetails() {
                       }
                       status={bug.status}
                       handleBugStatusChange={changeBugStatus}
+                      handleBugAssignment={changeBugAssignee}
                       key={bug.id}
                     />
                   ))}

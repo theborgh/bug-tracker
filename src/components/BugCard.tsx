@@ -32,6 +32,7 @@ type BugCardProps = {
   commentCount: number;
   status: Status;
   handleBugStatusChange: (bugId: string, newStatus: Status) => void;
+  handleBugAssignment: (bugId: string, assignedToId: string) => void;
 };
 
 export function BugCard({
@@ -47,6 +48,7 @@ export function BugCard({
   commentCount,
   status,
   handleBugStatusChange,
+  handleBugAssignment,
 }: BugCardProps) {
   const { data: userData } = useSession();
 
@@ -94,7 +96,7 @@ export function BugCard({
             bugTitle={title}
             bugId={id}
             projectDevelopers={projectDevelopers}
-            handleBugStatusChange={handleBugStatusChange}
+            handleBugAssignment={handleBugAssignment}
           >
             <UserPlusIcon className="h-6 w-6" />
           </AssignBugToDev>
