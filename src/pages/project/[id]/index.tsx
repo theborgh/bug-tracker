@@ -130,126 +130,131 @@ export default function ProjectDetails() {
   return (
     <main className="flex bg-gray-900">
       <Sidebar loggedUser={sessionData?.user} />
-      <div className="flex flex-1 min-h-screen m-5">
-        <div className="flex flex-wrap title-and-bug-container mr-3">
-          <div className="flex w-full grow-0 items-center justify-between rounded-xl bg-slate-800 px-6 py-5 bug-title-container">
-            <div className="flex items-center justify-between gap-6">
-              <h1 className="text-hm text-white font-medium">
-                {projectData?.data?.name}
-              </h1>
-              <SortDropdown sort={sortBy} setSort={setSortBy} />
-            </div>
-            <Link
-              href={`./${router.query.id as string}/newBug`}
-              className="rounded-md bg-blue-900 px-5 py-3 text-bodym font-medium text-white transition duration-300 hover:bg-white hover:text-blue-900"
-            >
-              Report New Bug
-            </Link>
-          </div>
-
-          <div className="bug-container">
-            {projectData.loading ? (
-              <p>Loading project bugs...</p>
-            ) : projectData.error ? (
-              <p>Error: {projectData.error.message}</p>
-            ) : (projectData.data?.bugs?.length ?? 0) > 0 ? (
-              <div className="mt-4 flex flex-wrap gap-3">
-                {filteredBugs?.map((bug) => (
-                  <BugCard
-                    id={bug.id}
-                    projectOwnerId={projectData.data?.ownerId || ""}
-                    projectDevelopers={projectData.data?.developers || []}
-                    title={bug.title}
-                    description={bug.markdown}
-                    author={bug.reportingUser.name ?? "anonymous"}
-                    assignedToDev={
-                      bug.assignedToUserId
-                        ? projectData.data?.developers.find(
-                            (dev) => dev.id === bug.assignedToUserId
-                          )
-                        : null
-                    }
-                    commentCount={bug?._count.comments ?? 0}
-                    createdAt={bug.createdAt}
-                    priority={
-                      Priorities?.find(
-                        (item) => item.value === bug.priority
-                      ) ?? {
-                        value: "LOW",
-                        stroke: "stroke-white",
-                      }
-                    }
-                    status={bug.status}
-                    handleBugStatusChange={changeBugStatus}
-                    key={bug.id}
-                  />
-                ))}
+      <div className="flex-1 min-h-screen m-5">
+        <div className="flex">
+          <div className="flex-1 flex-wrap title-and-bugs-container mr-3">
+            <div className="flex w-full grow-0 items-center justify-between rounded-xl bg-slate-800 px-6 py-5 bug-title-container">
+              <div className="flex items-center justify-between gap-6">
+                <h1 className="text-hm text-white font-medium">
+                  {projectData?.data?.name}
+                </h1>
+                <SortDropdown sort={sortBy} setSort={setSortBy} />
               </div>
-            ) : (
-              <EmptyState />
-            )}
-          </div>
-        </div>
-        <div className="">
-          <SidebarCard
-            title="Status filter"
-            className="flex flex-wrap gap-2 text-white"
-          >
-            {Object.values(Status).map((stat) => (
-              <li key={stat}>
-                <StatusButton
-                  statusValue={stat}
-                  handleClick={handleStatusFilterClick}
-                  isSelected={statusFilters[stat]}
-                >
-                  {stat.toLowerCase()}
-                </StatusButton>
-              </li>
-            ))}
-          </SidebarCard>
-          <SidebarCard title="Priority filter" className="space-y-1 text-white">
-            {Priorities.map(({ value, background }) => (
-              <PriorityButton
-                isSelected={priorityFilters[value]}
-                handleClick={handlePriorityFilterClick}
-                value={value}
-                color={background}
-                key={value}
-              />
-            ))}
-          </SidebarCard>
-          <SidebarCard
-            title="Developers"
-            className="space-y-3 text-white"
-            // TODO
-            topRight={isOwner && <div>TODO: Project owner panel</div>}
-          >
-            {projectData.data?.developers.map((developer) => (
-              <li
-                key={developer.id}
-                className="flex justify-between text-bodym"
+              <Link
+                href={`./${router.query.id as string}/newBug`}
+                className="rounded-md bg-blue-900 px-5 py-3 text-bodym font-medium text-white transition duration-300 hover:bg-white hover:text-blue-900"
               >
-                <div className="flex">
-                  <Avatar className="mr-4 h-6 w-6">
-                    <AvatarImage src={developer?.image ?? ""} />
-                    <AvatarFallback>
-                      {/* TODO */}
-                      <div>TODO: DEV INITIALS</div>
-                    </AvatarFallback>
-                  </Avatar>
-                  {developer.name}
-                </div>
-                {isOwner && <div>TODO: Assign bugs to dev</div>}
-              </li>
-            ))}
+                Report New Bug
+              </Link>
+            </div>
 
-            {!projectData.data?.developers.length && (
-              <li className="text-justify text-bodys leading-5 text-white text-opacity-75">
-                No developers are currently assigned to this project. To add a
-                developer, click the &quot;Add Developer&quot; icon.
-              </li>
-            )}
-          </SidebarCard>
+            <div className="bug-container">
+              {projectData.loading ? (
+                <p>Loading project bugs...</p>
+              ) : projectData.error ? (
+                <p>Error: {projectData.error.message}</p>
+              ) : (projectData.data?.bugs?.length ?? 0) > 0 ? (
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {filteredBugs?.map((bug) => (
+                    <BugCard
+                      id={bug.id}
+                      projectOwnerId={projectData.data?.ownerId || ""}
+                      projectDevelopers={projectData.data?.developers || []}
+                      title={bug.title}
+                      description={bug.markdown}
+                      author={bug.reportingUser.name ?? "anonymous"}
+                      assignedToDev={
+                        bug.assignedToUserId
+                          ? projectData.data?.developers.find(
+                              (dev) => dev.id === bug.assignedToUserId
+                            )
+                          : null
+                      }
+                      commentCount={bug?._count.comments ?? 0}
+                      createdAt={bug.createdAt}
+                      priority={
+                        Priorities?.find(
+                          (item) => item.value === bug.priority
+                        ) ?? {
+                          value: "LOW",
+                          stroke: "stroke-white",
+                        }
+                      }
+                      status={bug.status}
+                      handleBugStatusChange={changeBugStatus}
+                      key={bug.id}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState />
+              )}
+            </div>
+          </div>
+          <div className="sidecards-container flex-col w-[250px]">
+            <SidebarCard
+              title="Status filter"
+              className="flex flex-wrap gap-1 text-white"
+            >
+              {Object.values(Status).map((stat) => (
+                <li key={stat}>
+                  <StatusButton
+                    statusValue={stat}
+                    handleClick={handleStatusFilterClick}
+                    isSelected={statusFilters[stat]}
+                  >
+                    {stat.toLowerCase()}
+                  </StatusButton>
+                </li>
+              ))}
+            </SidebarCard>
+            <SidebarCard
+              title="Priority filter"
+              className="space-y-1 text-white"
+            >
+              {Priorities.map(({ value, background }) => (
+                <PriorityButton
+                  isSelected={priorityFilters[value]}
+                  handleClick={handlePriorityFilterClick}
+                  value={value}
+                  color={background}
+                  key={value}
+                />
+              ))}
+            </SidebarCard>
+            <SidebarCard
+              title="Developers"
+              className="space-y-3 text-white"
+              // TODO
+              topRight={isOwner && <div>TODO: Project owner panel</div>}
+            >
+              {projectData.data?.developers.map((developer) => (
+                <li
+                  key={developer.id}
+                  className="flex justify-between text-bodym"
+                >
+                  <div className="flex">
+                    <Avatar className="mr-4 h-6 w-6">
+                      <AvatarImage src={developer?.image ?? ""} />
+                      <AvatarFallback>
+                        {/* TODO */}
+                        <div>TODO: DEV INITIALS</div>
+                      </AvatarFallback>
+                    </Avatar>
+                    {developer.name}
+                  </div>
+                  {isOwner && <div>TODO: Assign bugs to dev</div>}
+                </li>
+              ))}
+
+              {!projectData.data?.developers.length && (
+                <li className="text-justify text-bodys leading-5 text-white text-opacity-75">
+                  No developers are currently assigned to this project. To add a
+                  developer, click the &quot;Add Developer&quot; icon.
+                </li>
+              )}
+            </SidebarCard>
+          </div>
         </div>
       </div>
     </main>
