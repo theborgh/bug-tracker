@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import Link from "next/link";
 import NewProjectSheet from "./NewProjectSheet";
 import LoginButton from "./LoginButton";
+import { FetchState } from "@/utils/fetch";
 
 export default function Sidebar({
   loggedUser,
@@ -17,23 +18,25 @@ export default function Sidebar({
       })
     | undefined;
 }) {
-  const [sidebarData, setSidebarData] = useState<any>(null);
+  const [sidebarData, setSidebarData] = useState<FetchState<any>>({
+    data: null,
+    loading: true,
+    error: null,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`/api/sidebar?id=${loggedUser?.id}`);
-      const data = await res.json();
-      setSidebarData(data);
+      try {
+        const res = await fetch(`/api/sidebar?id=${loggedUser?.id}`);
+        const data = await res.json();
+        setSidebarData({ data: data, loading: false, error: null });
+      } catch (error: any) {
+        setSidebarData({ data: null, loading: false, error: error });
+      }
     };
 
     if (loggedUser?.id) fetchData();
   }, [loggedUser?.id]);
-
-  const isLoading = false;
-  const isError = false;
-
-  if (isLoading) return <div className="">loading</div>;
-  if (isError) return <div className="">error</div>;
 
   return (
     <div className="flex w-[600px] flex-col border-r border-sidebar-border bg-slate-800">
@@ -60,40 +63,70 @@ export default function Sidebar({
             <NewProjectSheet />
           </div>
           <div className="mt-5 text-hsb uppercase">
-            My work ({sidebarData?.assignedBugs?.length})
+            My work (
+            {sidebarData.loading
+              ? "loading..."
+              : sidebarData.error
+              ? "error"
+              : sidebarData.data?.assignedBugs?.length}
+            )
           </div>
           <div>
-            {!isLoading &&
-              !isError &&
-              sidebarData?.assignedBugs?.map((bug: any) => (
-                <Link key={bug.id} href={`/project/${bug.id}`}>
+            {sidebarData.loading ? (
+              <div>Loading...</div>
+            ) : sidebarData.error ? (
+              <div>Error: {sidebarData.error.message}</div>
+            ) : (
+              sidebarData.data?.assignedBugs?.map((bug: any) => (
+                <Link key={bug.id} href={`/bug/${bug.id}`}>
                   <div>{bug.name}</div>
                 </Link>
-              ))}
+              ))
+            )}
           </div>
           <div className="mt-5 text-hsb uppercase">
-            My projects ({sidebarData?.ownedProjects?.length})
+            My projects (
+            {sidebarData.loading
+              ? "loading..."
+              : sidebarData.error
+              ? "error"
+              : sidebarData.data?.ownedProjects?.length}
+            )
           </div>
           <div>
-            {!isLoading &&
-              !isError &&
-              sidebarData?.ownedProjects?.map((proj: any) => (
+            {sidebarData.loading ? (
+              <div>Loading...</div>
+            ) : sidebarData.error ? (
+              <div>Error: {sidebarData.error.message}</div>
+            ) : (
+              sidebarData.data?.ownedProjects?.map((proj: any) => (
                 <Link key={proj.id} href={`/project/${proj.id}`}>
                   <div>{proj.name}</div>
                 </Link>
-              ))}
+              ))
+            )}
           </div>
           <div className="mt-5 text-hsb uppercase">
-            Assigned projects ({sidebarData?.developerOnProjects?.length})
+            Assigned projects (
+            {sidebarData.loading
+              ? "loading..."
+              : sidebarData.error
+              ? "error"
+              : sidebarData.data?.developerOnProjects?.length}
+            )
           </div>
           <div>
-            {!isLoading &&
-              !isError &&
-              sidebarData?.developerOnProjects?.map((proj: any) => (
+            {sidebarData.loading ? (
+              <div>Loading...</div>
+            ) : sidebarData.error ? (
+              <div>Error: {sidebarData.error.message}</div>
+            ) : (
+              sidebarData.data?.developerOnProjects?.map((proj: any) => (
                 <Link key={proj.id} href={`/project/${proj.id}`}>
                   <div>{proj.name}</div>
                 </Link>
-              ))}
+              ))
+            )}
           </div>
         </div>
         <div className="flex-row m-0 mb-6 self-center justify-center">

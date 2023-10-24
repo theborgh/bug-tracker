@@ -46,8 +46,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     }
   });
 
-  console.log(project?.bugs[0]._count);
-
   res.json(project);
 } catch (e) {
   console.error("Error querying the database:", e);

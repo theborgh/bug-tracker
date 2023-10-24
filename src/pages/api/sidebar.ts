@@ -20,9 +20,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   });
 
     res.json(results);
-} catch (e) {
-  console.error("Error querying the database:", e);
-} finally {
-  await prisma.$disconnect();
-}
+  } catch (e) {
+    console.error("Error querying the database:", e);
+  } finally {
+    await prisma.$disconnect();
+  }
 }
