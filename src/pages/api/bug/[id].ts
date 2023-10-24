@@ -1,36 +1,58 @@
-import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// PATCH bug
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query as { id: string };
-  const { status, assignedToUserId } = req.body;
 
-  try {
-    let bug;
+  if (req.method === "PATCH") {
+    const { status, assignedToUserId } = req.body;
 
-    if (status) {
-      bug = await prisma.bug.update({
-        where: { id },
-        data: { status },
-      });
-    } else if (assignedToUserId) {
-      bug = await prisma.bug.update({
-        where: { id },
-        data: { assignedToUserId, status: "TODO" },
-      });
-    } else {
-      throw new Error("Invalid request body");
+    try {
+      let bug;
+
+      if (status) {
+        bug = await prisma.bug.update({
+          where: { id },
+          data: { status },
+        });
+      } else if (assignedToUserId) {
+        bug = await prisma.bug.update({
+          where: { id },
+          data: { assignedToUserId, status: "TODO" },
+        });
+      } else {
+        throw new Error("Invalid request body");
+      }
+
+      res.json(bug);
+    } catch (e) {
+      console.error("Error querying the database:", e);
+      res.status(500).json({ error: "Error querying the database" });
+    } finally {
+      await prisma.$disconnect();
     }
+  } else if (req.method === "GET") {
+    console.log("GET");
+    try {
+      const bug = await prisma.bug.findUnique({
+        where: { id },
+      });
 
-    res.json(bug);
-  } catch (e) {
-    console.error("Error querying the database:", e);
-    res.status(500).json({ error: "Error querying the database" });
-  } finally {
-    await prisma.$disconnect();
+      if (!bug) {
+        res.status(404).json({ error: "Bug not found" });
+      } else {
+        res.json(bug);
+      }
+      console.log(bug);
+    } catch (e) {
+      console.error("Error querying the database:", e);
+      res.status(500).json({ error: "Error querying the database" });
+    } finally {
+      await prisma.$disconnect();
+    }
+  } else {
+    res.status(405).json({ error: "Method not allowed" });
   }
 }
-
