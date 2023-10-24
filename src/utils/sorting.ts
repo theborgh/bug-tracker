@@ -46,8 +46,8 @@ export interface Bug {
       name: string;
     };
     assignedToUserId: string;
-    commentCount: {
-      comments: number;
+    _count: { 
+      comments: number 
     };
     createdAt: Date;
     updatedAt: string;

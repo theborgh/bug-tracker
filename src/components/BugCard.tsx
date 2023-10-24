@@ -69,7 +69,8 @@ export function BugCard({
         </div>
         <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
           {formatDistance(new Date(createdAt), new Date(), { addSuffix: true })}{" "}
-          - Reported by {author} - {commentCount} comments
+          - Reported by {author} - {commentCount}{" "}
+          {commentCount === 1 ? "comment" : "comments"}
         </p>
       </div>
       <p className="mb-4 text-sm text-white text-opacity-75">{description}</p>

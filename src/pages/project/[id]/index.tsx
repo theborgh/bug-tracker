@@ -167,7 +167,7 @@ export default function ProjectDetails() {
                         )
                       : null
                   }
-                  commentCount={bug?.commentCount?.comments}
+                  commentCount={bug?._count.comments ?? 0}
                   createdAt={bug.createdAt}
                   priority={
                     Priorities?.find((item) => item.value === bug.priority) ?? {
