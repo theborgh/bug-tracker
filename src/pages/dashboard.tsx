@@ -139,6 +139,11 @@ export default function Dashboard() {
             ))
           )}
         </div>
+
+        <h2 className="text-2xl my-3">Settings</h2>
+        <div className="text-lg">
+          You can change your user settings <strong>here</strong>
+        </div>
       </div>
     </div>
   );
