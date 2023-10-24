@@ -18,6 +18,7 @@ import {
   type bugSortingType,
   type Bug,
 } from "@/utils/sorting";
+import { FetchState } from "@/utils/fetch";
 import Sidebar from "@/components/Sidebar";
 
 interface ProjectData {
@@ -39,7 +40,11 @@ interface ProjectData {
 export default function ProjectDetails() {
   const { data: sessionData } = useSession();
   const router = useRouter();
-  const [data, setData] = useState<ProjectData | null>(null);
+  const [projectData, setProjectData] = useState<FetchState<ProjectData>>({
+    data: null,
+    loading: true,
+    error: null,
+  });
   const [statusFilters, setStasusFilters] = useState({
     CLOSED: false,
     INPROGRESS: true,
@@ -54,7 +59,7 @@ export default function ProjectDetails() {
     LOW: true,
   });
   const [sortBy, setSortBy] = useState<bugSortingType>("recent");
-  const filteredBugs = data?.bugs
+  const filteredBugs = projectData.data?.bugs
     .filter(
       (bug) =>
         statusFilters[bug.status] &&
@@ -64,17 +69,19 @@ export default function ProjectDetails() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`/api/projectDetails?id=${router.query.id}`);
-      const data = await res.json();
-      setData(data);
+      try {
+        const res = await fetch(`/api/projectDetails?id=${router.query.id}`);
+        const data = await res.json();
+        setProjectData({ data, loading: false, error: null });
+      } catch (error: any) {
+        setProjectData({ data: null, loading: false, error });
+      }
     };
 
     fetchData();
   }, [router.query.id]);
 
-  const isOwner = sessionData?.user?.id === data?.ownerId;
-
-  if (!data) return <div className="">loading...</div>;
+  const isOwner = sessionData?.user?.id === projectData?.data?.ownerId;
 
   const handleStatusFilterClick = (
     status: selectedStatusType,
@@ -97,10 +104,10 @@ export default function ProjectDetails() {
   };
 
   const changeBugStatus = (bugId: string, newStatus: Status) => {
-    setData((prev) => {
-      if (!prev) return null;
+    setProjectData((prev) => {
+      if (!prev.data) return { data: null, loading: true, error: null };
 
-      const newBugs = prev.bugs.map((bug) => {
+      const newBugs = prev.data.bugs.map((bug) => {
         if (bug.id === bugId) {
           return {
             ...bug,
@@ -112,19 +119,24 @@ export default function ProjectDetails() {
 
       return {
         ...prev,
-        bugs: newBugs,
+        data: {
+          ...prev.data,
+          bugs: [...newBugs],
+        },
       };
     });
   };
 
   return (
-    <main className="flex">
+    <main className="flex bg-gray-900">
       <Sidebar loggedUser={sessionData?.user} />
-      <div className="grid min-h-screen grid-cols-5 gap-x-8 p-11 bg-gray-900">
+      <div className="grid min-h-screen grid-cols-5 gap-x-8 p-11 ">
         <div className="col-span-4">
           <div className="flex items-center justify-between rounded-xl bg-slate-800 px-6 py-5">
             <div className="flex items-center justify-between gap-6">
-              <h1 className="text-hm text-white font-medium">{data.name}</h1>
+              <h1 className="text-hm text-white font-medium">
+                {projectData?.data?.name}
+              </h1>
               <SortDropdown sort={sortBy} setSort={setSortBy} />
             </div>
             <Link
@@ -134,19 +146,23 @@ export default function ProjectDetails() {
               Report New Bug
             </Link>
           </div>
-          {data.bugs.length > 0 ? (
+          {projectData.loading ? (
+            <p>Loading project bugs...</p>
+          ) : projectData.error ? (
+            <p>Error: {projectData.error.message}</p>
+          ) : (projectData.data?.bugs?.length ?? 0) > 0 ? (
             <div className="mt-4 grid grid-cols-3 gap-x-5 gap-y-5">
               {filteredBugs?.map((bug) => (
                 <BugCard
                   id={bug.id}
-                  projectOwnerId={data.ownerId}
-                  projectDevelopers={data.developers}
+                  projectOwnerId={projectData.data?.ownerId || ""}
+                  projectDevelopers={projectData.data?.developers || []}
                   title={bug.title}
                   description={bug.markdown}
                   author={bug.reportingUser.name ?? "anonymous"}
                   assignedToDev={
                     bug.assignedToUserId
-                      ? data.developers.find(
+                      ? projectData.data?.developers.find(
                           (dev) => dev.id === bug.assignedToUserId
                         )
                       : null
@@ -189,7 +205,10 @@ export default function ProjectDetails() {
           <SidebarCard title="Priority filter" className="space-y-1 text-white">
             {Priorities.map(({ value, background }) => (
               <PriorityButton
-                count={data.bugs.filter((bug) => bug.priority === value).length}
+                count={
+                  projectData.data?.bugs.filter((bug) => bug.priority === value)
+                    .length || 0
+                }
                 isSelected={priorityFilters[value]}
                 handleClick={handlePriorityFilterClick}
                 value={value}
@@ -204,7 +223,7 @@ export default function ProjectDetails() {
             // TODO
             topRight={isOwner && <div>TODO: Project owner panel</div>}
           >
-            {data.developers.map((developer) => (
+            {projectData.data?.developers.map((developer) => (
               <li
                 key={developer.id}
                 className="flex justify-between text-bodym"
@@ -223,7 +242,7 @@ export default function ProjectDetails() {
               </li>
             ))}
 
-            {!data.developers.length && (
+            {!projectData.data?.developers.length && (
               <li className="text-justify text-bodys leading-5 text-white text-opacity-75">
                 No developers are currently assigned to this project. To add a
                 developer, click the &quot;Add Developer&quot; icon.

@@ -6,6 +6,7 @@ import ProjectCard from "@/components/ProjectCard";
 import { SimpleBugCard } from "@/components/BugCard";
 import { Status } from "@prisma/client";
 import Sidebar from "@/components/Sidebar";
+import { FetchState } from "@/utils/fetch";
 
 interface ProjectData {
   id: string;
@@ -22,12 +23,6 @@ interface SimpleBugCardProps {
   priority: string;
   _count: { comments: number };
   status: Status;
-}
-
-interface FetchState<T> {
-  data: T | null;
-  loading: boolean;
-  error: Error | null;
 }
 
 export default function Dashboard() {
