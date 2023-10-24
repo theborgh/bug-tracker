@@ -76,10 +76,10 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
       <Sidebar loggedUser={sessionData?.user} />
-      <div className="flex-row mx-5">
+      <div className="flex-row mx-5 flex-1">
         <h1 className="text-4xl text-center mt-3">Dashboard</h1>
         <h2 className="text-2xl my-3">My projects</h2>
-        <div className="flex gap-4 ml">
+        <div className="flex flex-wrap gap-4 ml">
           {ownedProjects.loading ? (
             <p>Loading my projects...</p>
           ) : ownedProjects.error ? (

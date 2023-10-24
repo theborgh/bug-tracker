@@ -39,7 +39,7 @@ export default function Sidebar({
   }, [loggedUser?.id]);
 
   return (
-    <div className="flex flex-col border-r border-sidebar-border bg-slate-800">
+    <div className="flex flex-col w-[300px] border-r border-sidebar-border bg-slate-800">
       <Link href={"/dashboard"}>
         <Image
           priority
