@@ -34,16 +34,16 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   } else if (req.method === "GET") {
     try {
       const { type } = req.query as { type: string };
-
       let bugs = [];
 
       if (type === "open") {
         bugs = await prisma.bug.findMany({
           where: {
-            assignedToUserId: id,
-            status: {
+            AND: [ {
+            assignedToUserId: req.query.assignedTo as string },
+            {status: {
               not: "CLOSED"
-            }
+            }}]
           },
           select: {
             id: true,

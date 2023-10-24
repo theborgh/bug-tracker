@@ -70,7 +70,7 @@ export default function Dashboard() {
       }
     };
 
-    fetchData();
+    if (sessionData?.user.id) fetchData();
   }, [sessionData?.user.id]);
 
   return (

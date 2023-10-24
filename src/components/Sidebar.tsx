@@ -30,6 +30,7 @@ export default function Sidebar({
         const res = await fetch(`/api/sidebar?id=${loggedUser?.id}`);
         const data = await res.json();
         setSidebarData({ data: data, loading: false, error: null });
+        console.log(data.assignedBugs);
       } catch (error: any) {
         setSidebarData({ data: null, loading: false, error: error });
       }
@@ -39,7 +40,7 @@ export default function Sidebar({
   }, [loggedUser?.id]);
 
   return (
-    <div className="flex w-[600px] flex-col border-r border-sidebar-border bg-slate-800">
+    <div className="flex w-[300px] flex-col border-r border-sidebar-border bg-slate-800">
       <Link href={"/"}>
         <Image
           priority
