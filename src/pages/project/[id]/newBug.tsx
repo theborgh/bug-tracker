@@ -66,9 +66,6 @@ const NewBug: NextPage = () => {
     }
   };
 
-  // if (isLoading) return <div className="">loading...</div>;
-  // if (!isValidProject) return <div className="">error</div>;
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
       <div className="container m-auto text-white">

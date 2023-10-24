@@ -269,7 +269,6 @@ export default function ProjectDetails() {
                     </Avatar>
                     {developer.name}
                   </div>
-                  {isOwner && <div>TODO: Assign bugs to dev</div>}
                 </li>
               ))}
 

@@ -9,6 +9,7 @@ import formatDistance from "date-fns/formatDistance";
 import StatusDropdown from "./projectDetails/StatusDropdown";
 import { getNameLetters } from "@/utils/data";
 import AssignBugToDev from "./projectDetails/AssignBugToDev";
+import Link from "next/link";
 
 type BugCardProps = {
   id: string;
@@ -61,7 +62,7 @@ export function BugCard({
             aria-label={title}
             title={title}
           >
-            {title}
+            <Link href={`/bug/${id}`}>{title}</Link>
           </h3>
           <ShieldExclamationIcon
             title={`${priority.value.toLocaleLowerCase()} priority`}
