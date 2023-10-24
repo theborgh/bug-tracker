@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
 import { SimpleBugCard } from "@/components/BugCard";
-import { Priority, Status } from "@prisma/client";
+import { Status } from "@prisma/client";
 
 interface ProjectData {
   id: string;
@@ -23,48 +23,66 @@ interface SimpleBugCardProps {
   status: Status;
 }
 
+interface FetchState<T> {
+  data: T | null;
+  loading: boolean;
+  error: Error | null;
+}
+
 export default function Dashboard() {
-  const [ownedProjects, setOwnedProjects] = useState<ProjectData[] | null>(
-    null
+  const [ownedProjects, setOwnedProjects] = useState<FetchState<ProjectData[]>>(
+    { data: null, loading: true, error: null }
   );
   const [assignedToProjects, setAssignedToProjects] = useState<
-    ProjectData[] | null
-  >(null);
+    FetchState<ProjectData[]>
+  >({ data: null, loading: true, error: null });
   const [assignedToMeBugs, setAssignedToMeBugs] = useState<
-    SimpleBugCardProps[] | null
-  >();
+    FetchState<SimpleBugCardProps[]>
+  >({ data: null, loading: true, error: null });
   const { data: sessionData } = useSession();
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        `/api/projects?userId=${sessionData?.user.id}&type=owner`
-      );
-      const data = await res.json();
-      setOwnedProjects(data);
+      try {
+        const res = await fetch(
+          `/api/projects?userId=${sessionData?.user.id}&type=owner`
+        );
+        const data = await res.json();
+        setOwnedProjects({ data, loading: false, error: null });
+      } catch (error: any) {
+        setOwnedProjects({ data: null, loading: false, error });
+      }
 
-      const res2 = await fetch(
-        `/api/projects?userId=${sessionData?.user.id}&type=developer`
-      );
-      const data2 = await res2.json();
-      setAssignedToProjects(data2);
+      try {
+        const res2 = await fetch(
+          `/api/projects?userId=${sessionData?.user.id}&type=developer`
+        );
+        const data2 = await res2.json();
+        setAssignedToProjects({ data: data2, loading: false, error: null });
+      } catch (error: any) {
+        setAssignedToProjects({ data: null, loading: false, error });
+      }
 
-      const res3 = await fetch(
-        `/api/bugs?assignedTo=${sessionData?.user.id}&type=open`
-      );
-      const data3 = await res3.json();
-      setAssignedToMeBugs(data3);
+      try {
+        const res3 = await fetch(
+          `/api/bugs?assignedTo=${sessionData?.user.id}&type=open`
+        );
+        const data3 = await res3.json();
+        setAssignedToMeBugs({ data: data3, loading: false, error: null });
+      } catch (error: any) {
+        setAssignedToMeBugs({ data: null, loading: false, error });
+      }
     };
 
     fetchData();
   }, [sessionData?.user.id]);
 
   return (
-    <div>
+    <div className="bg-gray-900">
       <LoginButton />
-      <h2>My projects</h2>
+      <h2 className="text-white">My projects</h2>
       <div className="flex gap-4">
-        {ownedProjects?.map((project) => (
+        {ownedProjects?.data?.map((project) => (
           <Link key={project.id} href={`/project/${project.id}`}>
             <ProjectCard
               id={project.id}
@@ -74,10 +92,10 @@ export default function Dashboard() {
           </Link>
         ))}
       </div>
-      <h2>Projects I&apos;m assigned to</h2>
+      <h2 className="text-white">Projects I&apos;m assigned to</h2>
 
       <div className="flex flex-wrap gap-4">
-        {assignedToProjects?.map((project) => (
+        {assignedToProjects?.data?.map((project) => (
           <Link key={project.id} href={`/project/${project.id}`}>
             <ProjectCard
               id={project.id}
@@ -88,9 +106,9 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <h2>Bugs assigned to me</h2>
+      <h2 className="text-white">Bugs assigned to me</h2>
       <div className="flex flex-wrap gap-4">
-        {assignedToMeBugs?.map((bug) => (
+        {assignedToMeBugs?.data?.map((bug) => (
           <Link key={bug.id} href={`/bug/${bug.id}`}>
             <SimpleBugCard
               id={bug.id}
