@@ -53,6 +53,11 @@ const BugPage: NextPage = () => {
     if (id) fetchData();
   }, [id]);
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("form submitted with data: ", e.target);
+  };
+
   return (
     <main className="flex">
       <Sidebar loggedUser={sessionData?.user} />
@@ -78,6 +83,8 @@ const BugPage: NextPage = () => {
           )}
         </div>
 
+        <h2 className="text-2xl mt-2">Comments</h2>
+
         {bugData.loading ? (
           <div>loading...</div>
         ) : bugData.error ? (
@@ -92,6 +99,22 @@ const BugPage: NextPage = () => {
             </div>
           ))
         )}
+
+        <h2 className="text-2xl mt-2">Add a comment</h2>
+
+        <form onSubmit={handleSubmit} className="flex-col">
+          <textarea
+            id="markdown"
+            className="bg-slate-800 font-bold rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-3/4"
+            rows={3}
+            placeholder="Add a comment..."
+            minLength={10}
+            onChange={(e) => console.log(e.target.value)}
+          ></textarea>
+          <button type="submit" className="btn-blue">
+            Submit
+          </button>
+        </form>
       </div>
     </main>
   );
