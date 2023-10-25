@@ -38,6 +38,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     try {
       const bug = await prisma.bug.findUnique({
         where: { id },
+        include: {
+          comments: true,
+        },
       });
 
       if (!bug) {

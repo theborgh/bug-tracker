@@ -2,12 +2,33 @@ import { useState, useEffect } from "react";
 import { type NextPage } from "next";
 import { FetchState } from "@/utils/fetch";
 import { useRouter } from "next/router";
-import type { Bug } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
+import { Status, Priority } from "@prisma/client";
+
+interface Comment {
+  authorId: string;
+  id: string;
+  bugId: string;
+  markdown: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface BugData {
+  id: string;
+  title: string;
+  markdown: string;
+  createdAt: string;
+  updatedAt: string;
+  status: Status;
+  priority: Priority;
+  projectId: string;
+  comments: Comment[];
+}
 
 const BugPage: NextPage = () => {
-  const [bugData, setBugData] = useState<FetchState<Bug>>({
+  const [bugData, setBugData] = useState<FetchState<BugData>>({
     data: null,
     loading: true,
     error: null,
@@ -62,7 +83,14 @@ const BugPage: NextPage = () => {
         ) : bugData.error ? (
           <div>error</div>
         ) : (
-          "Comments"
+          bugData.data?.comments.map((comment) => (
+            <div key={comment.id} className="bg-gray-800 w-3/4 p-3 mt-3">
+              <div className="text-gray-400 text-sm">
+                {new Date(comment.createdAt).toLocaleString()}
+              </div>
+              <div>{comment.markdown}</div>
+            </div>
+          ))
         )}
       </div>
     </main>
