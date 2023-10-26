@@ -51,3 +51,6 @@
 .bg-critical-priority {
   @apply bg-red-500;
 }
+
+.mention-style {
+}

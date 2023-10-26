@@ -28,6 +28,7 @@
     "prisma": "^5.3.1",
     "react": "latest",
     "react-dom": "latest",
+    "react-mentions": "^4.4.10",
     "sass": "^1.68.0",
     "tailwind-merge": "^1.14.0"
   },
@@ -35,6 +36,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/react-mentions": "^4.1.11",
     "autoprefixer": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",

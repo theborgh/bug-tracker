@@ -6,10 +6,12 @@ import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
 import { Status, Priority } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
+import { MentionsInput, Mention } from "react-mentions";
 import { getNameLetters } from "@/utils/data";
 import StatusDropdown from "@/components/projectDetails/StatusDropdown";
 import formatDistance from "date-fns/formatDistance";
 import Link from "next/link";
+import styles from "./styles";
 
 interface Comment {
   authorId: string;
@@ -64,6 +66,13 @@ const BugPage: NextPage = () => {
     push,
   } = useRouter();
   const { data: sessionData } = useSession();
+
+  const developers = [
+    { id: 1, display: "John Doe" },
+    { id: 2, display: "Jane Smith" },
+    { id: 3, display: "Bob Johnson" },
+    // Add more developers as needed
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -221,15 +230,23 @@ const BugPage: NextPage = () => {
         <h2 className="text-2xl mt-2">Add a comment</h2>
 
         <form onSubmit={handleSubmit} className="flex-col">
-          <textarea
-            id="markdown"
-            className="bg-slate-800 font-bold rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-full"
-            rows={3}
-            placeholder="Add a comment..."
-            minLength={1}
+          <MentionsInput
             value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
-          ></textarea>
+            className="bg-slate-800 rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-full mb-2"
+            placeholder="Add a comment (type @ to mention another developer on the project)"
+            style={styles}
+          >
+            <Mention
+              trigger="@"
+              data={developers}
+              displayTransform={(id, display) => `@${display}`}
+              className="hidden"
+              appendSpaceOnAdd={true}
+              markup="@[__display__]"
+            />
+          </MentionsInput>
+
           <button type="submit" className="btn-blue">
             Submit
           </button>
