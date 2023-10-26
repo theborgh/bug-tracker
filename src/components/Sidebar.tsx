@@ -7,6 +7,11 @@ import NewProjectSheet from "./NewProjectSheet";
 import LoginButton from "./LoginButton";
 import { FetchState } from "@/utils/fetch";
 import getConfig from "next/config";
+import {
+  BugAntIcon,
+  FolderOpenIcon,
+  PencilSquareIcon,
+} from "@heroicons/react/24/solid";
 
 export default function Sidebar({
   loggedUser,
@@ -57,14 +62,15 @@ export default function Sidebar({
         <div className="ml-4">
           <div className="">
             <Link href="/dashboard" className="mb-2 flex gap-2">
-              <Squares2X2Icon className="h-6 w-6" />
+              <Squares2X2Icon className="h-7 w-7" />
               Dashboard
             </Link>
           </div>
-          <div className="">
+          <div className="flex gap-1">
+            <PencilSquareIcon className="h-7 w-7" />
             <NewProjectSheet />
           </div>
-          <div className="mt-5 text-hsb uppercase">
+          <div className="mt-5 mb-2 text-hsb uppercase">
             My work (
             {sidebarData.loading
               ? "loading..."
@@ -80,13 +86,19 @@ export default function Sidebar({
               <div>Error: {sidebarData.error.message}</div>
             ) : (
               sidebarData.data?.assignedBugs?.map((bug: any) => (
-                <Link key={bug.id} href={`/bug/${bug.id}`}>
+                <Link
+                  key={bug.id}
+                  href={`/bug/${bug.id}`}
+                  className="flex gap-1"
+                >
+                  <BugAntIcon className="h-5 w-5" />
                   <div>{bug.title}</div>
                 </Link>
               ))
             )}
           </div>
-          <div className="mt-5 text-hsb uppercase">
+
+          <div className="mt-5 mb-2 text-hsb uppercase">
             My projects (
             {sidebarData.loading
               ? "loading..."
@@ -102,13 +114,18 @@ export default function Sidebar({
               <div>Error: {sidebarData.error.message}</div>
             ) : (
               sidebarData.data?.ownedProjects?.map((proj: any) => (
-                <Link key={proj.id} href={`/project/${proj.id}`}>
+                <Link
+                  key={proj.id}
+                  href={`/project/${proj.id}`}
+                  className="flex gap-1"
+                >
+                  <FolderOpenIcon className="h-5 w-5" />
                   <div>{proj.name}</div>
                 </Link>
               ))
             )}
           </div>
-          <div className="mt-5 text-hsb uppercase">
+          <div className="mt-5 mb-2 text-hsb uppercase">
             Assigned projects (
             {sidebarData.loading
               ? "loading..."
@@ -136,7 +153,12 @@ export default function Sidebar({
                     )
                 )
                 .map((proj: any) => (
-                  <Link key={proj.id} href={`/project/${proj.id}`}>
+                  <Link
+                    key={proj.id}
+                    href={`/project/${proj.id}`}
+                    className="flex gap-1"
+                  >
+                    <FolderOpenIcon className="h-5 w-5" />
                     <div>{proj.name}</div>
                   </Link>
                 ))
