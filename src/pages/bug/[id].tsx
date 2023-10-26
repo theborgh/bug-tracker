@@ -58,6 +58,7 @@ const BugPage: NextPage = () => {
     loading: true,
     error: null,
   });
+  const [markdown, setMarkdown] = useState("");
   const {
     query: { id },
     push,
@@ -70,7 +71,6 @@ const BugPage: NextPage = () => {
         const res = await fetch(`/api/bug/${id}`);
         const data = await res.json();
         setBugData({ data, loading: false, error: null });
-        console.log(data);
       } catch (error: any) {
         setBugData({ data: null, loading: false, error: error });
       }
@@ -81,17 +81,45 @@ const BugPage: NextPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("form submitted with data: ", e.target);
+
+    try {
+      const res = await fetch(`/api/comments`, {
+        method: "POST",
+        body: JSON.stringify({ id, markdown, authorId: sessionData?.user?.id }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setBugData((prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            comments: [
+              ...prev.data.comments,
+              {
+                ...data,
+                author: {
+                  id: sessionData?.user?.id,
+                  name: sessionData?.user?.name,
+                  image: sessionData?.user?.image,
+                },
+              } as Comment,
+            ],
+          },
+        }));
+        setMarkdown("");
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   const handleBugStatusChange = (bugId: string, newStatus: Status) => {
-    console.log(
-      "bug status changed to: ",
-      newStatus,
-      " current data: ",
-      bugData.data
-    );
-
     setBugData((prev) => ({
       ...prev,
       data: {
@@ -198,8 +226,8 @@ const BugPage: NextPage = () => {
             className="bg-slate-800 font-bold rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-full"
             rows={3}
             placeholder="Add a comment..."
-            minLength={10}
-            onChange={(e) => console.log(e.target.value)}
+            minLength={1}
+            onChange={(e) => setMarkdown(e.target.value)}
           ></textarea>
           <button type="submit" className="btn-blue">
             Submit
