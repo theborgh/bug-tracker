@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import { Status, Priority } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { getNameLetters } from "@/utils/data";
+import StatusDropdown from "@/components/projectDetails/StatusDropdown";
 import formatDistance from "date-fns/formatDistance";
 import Link from "next/link";
 
@@ -36,6 +37,7 @@ interface BugData {
   project: {
     name: string;
     id: string;
+    ownerId: string;
   };
   assignedTo: {
     id: string;
@@ -82,6 +84,23 @@ const BugPage: NextPage = () => {
     console.log("form submitted with data: ", e.target);
   };
 
+  const handleBugStatusChange = (bugId: string, newStatus: Status) => {
+    console.log(
+      "bug status changed to: ",
+      newStatus,
+      " current data: ",
+      bugData.data
+    );
+
+    setBugData((prev) => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        status: newStatus,
+      },
+    }));
+  };
+
   return (
     <main className="flex">
       <Sidebar loggedUser={sessionData?.user} />
@@ -122,11 +141,14 @@ const BugPage: NextPage = () => {
           )}
         </h1>
 
-        <div className="text-center">
-          <div className="flex">
-            <div>Status:</div>
-            <div>status dropdown</div>
-          </div>
+        <div className="text-center mt-2">
+          <StatusDropdown
+            bugId={bugData.data?.id ?? ""}
+            status={bugData.data?.status ?? Status.TODO}
+            assigneeId={bugData.data?.assignedTo?.id ?? ""}
+            projectOwnerId={bugData.data?.project?.ownerId ?? ""}
+            handleBugStatusChange={handleBugStatusChange}
+          />
         </div>
 
         <h2 className="text-2xl my-2">Bug description</h2>
