@@ -48,6 +48,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 },
               },
             },
+            orderBy: {
+              createdAt: 'asc',
+            },
           },
         },
       });
@@ -57,7 +60,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       } else {
         res.json(bug);
       }
-      console.log(bug);
     } catch (e) {
       console.error("Error querying the database:", e);
       res.status(500).json({ error: "Error querying the database" });

@@ -5,9 +5,17 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
 import { Status, Priority } from "@prisma/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
+import { getNameLetters } from "@/utils/data";
+import formatDistance from "date-fns/formatDistance";
 
 interface Comment {
   authorId: string;
+  author: {
+    id: string;
+    name: string;
+    image: string;
+  };
   id: string;
   bugId: string;
   markdown: string;
@@ -94,9 +102,20 @@ const BugPage: NextPage = () => {
           bugData.data?.comments.map((comment) => (
             <div key={comment.id} className="bg-gray-800 w-3/4 p-3 mt-3">
               <div className="text-gray-400 text-sm">
-                {new Date(comment.createdAt).toLocaleString()}
+                from {comment.author.name},{" "}
+                {formatDistance(new Date(comment.createdAt), new Date(), {
+                  addSuffix: true,
+                })}
               </div>
-              <div>{comment.markdown}</div>
+              <div className="flex gap-4 mt-2">
+                <Avatar title={comment.author.name ?? "anonymous"}>
+                  <AvatarImage src={comment.author.image ?? ""} />
+                  <AvatarFallback>
+                    {getNameLetters(comment.author.name ?? "")}
+                  </AvatarFallback>
+                </Avatar>
+                <div>{comment.markdown}</div>
+              </div>
             </div>
           ))
         )}
