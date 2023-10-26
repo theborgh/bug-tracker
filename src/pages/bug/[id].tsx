@@ -174,19 +174,18 @@ const BugPage: NextPage = () => {
                   "unassigned"
                 )}
               </div>
+              <div className="text-center mt-2">
+                <StatusDropdown
+                  bugId={bugData.data?.id ?? ""}
+                  status={bugData.data?.status ?? Status.TODO}
+                  assigneeId={bugData.data?.assignedTo?.id ?? ""}
+                  projectOwnerId={bugData.data?.project?.ownerId ?? ""}
+                  handleBugStatusChange={handleBugStatusChange}
+                />
+              </div>
             </div>
           )}
         </h1>
-
-        <div className="text-center mt-2">
-          <StatusDropdown
-            bugId={bugData.data?.id ?? ""}
-            status={bugData.data?.status ?? Status.TODO}
-            assigneeId={bugData.data?.assignedTo?.id ?? ""}
-            projectOwnerId={bugData.data?.project?.ownerId ?? ""}
-            handleBugStatusChange={handleBugStatusChange}
-          />
-        </div>
 
         <h2 className="text-2xl my-2">Bug description</h2>
         <div className="bg-gray-800 w-full p-3">
