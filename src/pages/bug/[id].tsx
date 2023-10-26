@@ -37,6 +37,16 @@ interface BugData {
     name: string;
     id: string;
   };
+  assignedTo: {
+    id: string;
+    name: string;
+    image: string;
+  };
+  reportingUser: {
+    id: string;
+    name: string;
+    image: string;
+  };
   comments: Comment[];
 }
 
@@ -76,7 +86,7 @@ const BugPage: NextPage = () => {
     <main className="flex">
       <Sidebar loggedUser={sessionData?.user} />
       <div className="flex-1 min-h-screen flex-col items-center bg-gray-900 text-white w-full p-8">
-        <h1 className="mb-8 text-4xl mt-5 text-center">
+        <h1 className="text-4xl mt-5 text-center">
           {bugData.loading ? (
             <div>loading...</div>
           ) : bugData.error ? (
@@ -98,11 +108,26 @@ const BugPage: NextPage = () => {
                   {
                     addSuffix: true,
                   }
+                )}{" "}
+                by {bugData.data?.reportingUser?.name ?? "anonymous"},{" "}
+                {bugData.data?.assignedTo?.id ? (
+                  <div>
+                    assigned to {bugData.data?.assignedTo?.name ?? "anonymous"}
+                  </div>
+                ) : (
+                  "unassigned"
                 )}
               </div>
             </div>
           )}
         </h1>
+
+        <div className="text-center">
+          <div className="flex">
+            <div>Status:</div>
+            <div>status dropdown</div>
+          </div>
+        </div>
 
         <h2 className="text-2xl my-2">Bug description</h2>
         <div className="bg-gray-800 w-full p-3">
@@ -123,7 +148,7 @@ const BugPage: NextPage = () => {
           <div>error</div>
         ) : (
           bugData.data?.comments.map((comment) => (
-            <div key={comment.id} className="bg-gray-800 w-full p-3 mt-3">
+            <div key={comment.id} className="bg-gray-800 w-full p-3 mt-3 ml-3">
               <div className="text-gray-400 text-sm">
                 from {comment.author.name},{" "}
                 {formatDistance(new Date(comment.createdAt), new Date(), {

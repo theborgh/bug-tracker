@@ -58,6 +58,18 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
               name: true,
             },
           },
+          assignedTo: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          reportingUser: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
 
