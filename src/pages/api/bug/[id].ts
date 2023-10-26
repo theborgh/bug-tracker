@@ -34,12 +34,21 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       await prisma.$disconnect();
     }
   } else if (req.method === "GET") {
-    console.log("GET");
     try {
       const bug = await prisma.bug.findUnique({
         where: { id },
         include: {
-          comments: true,
+          comments: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          },
         },
       });
 

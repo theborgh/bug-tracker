@@ -45,6 +45,7 @@ const BugPage: NextPage = () => {
         const res = await fetch(`/api/bug/${id}`);
         const data = await res.json();
         setBugData({ data, loading: false, error: null });
+        console.log(data);
       } catch (error: any) {
         setBugData({ data: null, loading: false, error: error });
       }
