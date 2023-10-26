@@ -227,6 +227,7 @@ const BugPage: NextPage = () => {
             rows={3}
             placeholder="Add a comment..."
             minLength={1}
+            value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
           ></textarea>
           <button type="submit" className="btn-blue">
