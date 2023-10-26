@@ -114,7 +114,12 @@ export default function Sidebar({
               ? "loading..."
               : sidebarData.error
               ? "error"
-              : sidebarData.data?.developerOnProjects?.length}
+              : sidebarData.data?.developerOnProjects.filter(
+                  (proj) =>
+                    !sidebarData.data?.ownedProjects.some(
+                      (p) => p.id === proj.id
+                    )
+                ).length}
             )
           </div>
           <div>
@@ -123,11 +128,18 @@ export default function Sidebar({
             ) : sidebarData.error ? (
               <div>Error: {sidebarData.error.message}</div>
             ) : (
-              sidebarData.data?.developerOnProjects?.map((proj: any) => (
-                <Link key={proj.id} href={`/project/${proj.id}`}>
-                  <div>{proj.name}</div>
-                </Link>
-              ))
+              sidebarData.data?.developerOnProjects
+                .filter(
+                  (proj) =>
+                    !sidebarData.data?.ownedProjects.some(
+                      (p) => p.id === proj.id
+                    )
+                )
+                .map((proj: any) => (
+                  <Link key={proj.id} href={`/project/${proj.id}`}>
+                    <div>{proj.name}</div>
+                  </Link>
+                ))
             )}
           </div>
         </div>

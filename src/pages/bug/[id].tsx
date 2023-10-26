@@ -40,6 +40,10 @@ interface BugData {
     name: string;
     id: string;
     ownerId: string;
+    developers: {
+      id: string;
+      name: string;
+    }[];
   };
   assignedTo: {
     id: string;
@@ -67,12 +71,12 @@ const BugPage: NextPage = () => {
   } = useRouter();
   const { data: sessionData } = useSession();
 
-  const developers = [
-    { id: 1, display: "John Doe" },
-    { id: 2, display: "Jane Smith" },
-    { id: 3, display: "Bob Johnson" },
-    // Add more developers as needed
-  ];
+  // const developers = [
+  //   { id: 1, display: "John Doe" },
+  //   { id: 2, display: "Jane Smith" },
+  //   { id: 3, display: "Bob Johnson" },
+  //   // Add more developers as needed
+  // ]
 
   useEffect(() => {
     const fetchData = async () => {
@@ -238,7 +242,12 @@ const BugPage: NextPage = () => {
           >
             <Mention
               trigger="@"
-              data={developers}
+              data={
+                bugData.data?.project?.developers.map((dev) => ({
+                  id: dev.id,
+                  display: dev.name,
+                })) || []
+              }
               displayTransform={(id, display) => `@${display}`}
               className="hidden"
               appendSpaceOnAdd={true}
