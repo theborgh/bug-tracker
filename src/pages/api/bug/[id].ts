@@ -52,6 +52,12 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
               createdAt: 'asc',
             },
           },
+          project: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
 

@@ -8,6 +8,7 @@ import { Status, Priority } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { getNameLetters } from "@/utils/data";
 import formatDistance from "date-fns/formatDistance";
+import Link from "next/link";
 
 interface Comment {
   authorId: string;
@@ -32,6 +33,10 @@ interface BugData {
   status: Status;
   priority: Priority;
   projectId: string;
+  project: {
+    name: string;
+    id: string;
+  };
   comments: Comment[];
 }
 
@@ -71,18 +76,36 @@ const BugPage: NextPage = () => {
     <main className="flex">
       <Sidebar loggedUser={sessionData?.user} />
       <div className="flex-1 min-h-screen flex-col items-center bg-gray-900 text-white w-full p-8">
-        <h1 className="mb-8 text-4xl mt-5">
+        <h1 className="mb-8 text-4xl mt-5 text-center">
           {bugData.loading ? (
             <div>loading...</div>
           ) : bugData.error ? (
             <div>error</div>
           ) : (
-            bugData.data?.title
+            <div>
+              <div>Bug: {bugData.data?.title}</div>
+              <Link
+                className="text-2xl"
+                href={`/project/${bugData.data?.projectId}`}
+              >
+                {bugData.data?.project?.name} project
+              </Link>
+              <div className="text-lg">
+                created{" "}
+                {formatDistance(
+                  new Date(bugData.data?.createdAt || ""),
+                  new Date(),
+                  {
+                    addSuffix: true,
+                  }
+                )}
+              </div>
+            </div>
           )}
         </h1>
 
-        <div className="bg-gray-800 w-3/4 p-3">
-          {" "}
+        <h2 className="text-2xl my-2">Bug description</h2>
+        <div className="bg-gray-800 w-full p-3">
           {bugData.loading ? (
             <div>loading...</div>
           ) : bugData.error ? (
@@ -100,7 +123,7 @@ const BugPage: NextPage = () => {
           <div>error</div>
         ) : (
           bugData.data?.comments.map((comment) => (
-            <div key={comment.id} className="bg-gray-800 w-3/4 p-3 mt-3">
+            <div key={comment.id} className="bg-gray-800 w-full p-3 mt-3">
               <div className="text-gray-400 text-sm">
                 from {comment.author.name},{" "}
                 {formatDistance(new Date(comment.createdAt), new Date(), {
@@ -125,7 +148,7 @@ const BugPage: NextPage = () => {
         <form onSubmit={handleSubmit} className="flex-col">
           <textarea
             id="markdown"
-            className="bg-slate-800 font-bold rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-3/4"
+            className="bg-slate-800 font-bold rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-full"
             rows={3}
             placeholder="Add a comment..."
             minLength={10}
