@@ -8,6 +8,9 @@ import Sidebar from "@/components/Sidebar";
 import { UserPlusIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import AssignBugToDev from "@/components/projectDetails/AssignBugToDev";
 import { FetchState } from "@/utils/fetch";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
+import { getNameLetters } from "@/utils/data";
+import { set } from "date-fns";
 
 interface ProjectData {
   id: string;
@@ -37,7 +40,11 @@ const NewBug: NextPage = () => {
   const [title, setTitle] = useState<string>("");
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [priority, setPriority] = useState<Priority>("LOW");
-  const [assignedDev, setAssignedDev] = useState<string | null>(null);
+  const [assignedDev, setAssignedDev] = useState<Developer>({
+    id: "",
+    name: "",
+    image: "",
+  });
   const [description, setDescription] = useState<string>("");
   const priorities: Priority[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
   const { data: sessionData } = useSession();
@@ -67,8 +74,12 @@ const NewBug: NextPage = () => {
         const res = await fetch(
           `/api/getDevelopers?projectId=${selectedProject}`
         );
-        const projects = await res.json();
-        setProjectDevelopers({ data: projects, loading: false, error: null });
+        const devs = await res.json();
+        setProjectDevelopers({ data: devs, loading: false, error: null });
+
+        // Reset the assigned dev if it's not in the list of devs for the newly selected project
+        if (!devs.some((dev) => dev.id === assignedDev.id))
+          setAssignedDev({ id: "", name: "", image: "" });
       } catch (error: any) {
         setProjectDevelopers({ data: null, loading: false, error });
       }
@@ -100,7 +111,13 @@ const NewBug: NextPage = () => {
   };
 
   const handleBugAssignment = (bugId: string, assignedToId: string) => {
-    setAssignedDev(assignedToId);
+    setAssignedDev(
+      projectDevelopers.data?.find((d) => d.id === assignedToId) ?? {
+        id: "",
+        name: "",
+        image: "",
+      }
+    );
   };
 
   return (
@@ -202,7 +219,16 @@ const NewBug: NextPage = () => {
                       projectDevelopers={projectDevelopers.data ?? []}
                       handleBugAssignment={handleBugAssignment}
                     >
-                      <UserPlusIcon className="h-8 w-8" />
+                      {assignedDev.id ? (
+                        <Avatar title={assignedDev?.name ?? "anonymous"}>
+                          <AvatarImage src={assignedDev?.image ?? ""} />
+                          <AvatarFallback>
+                            {getNameLetters(assignedDev?.name ?? "")}
+                          </AvatarFallback>
+                        </Avatar>
+                      ) : (
+                        <UserPlusIcon className="h-8 w-8" />
+                      )}
                     </AssignBugToDev>
                   </div>
                 )}
