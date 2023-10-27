@@ -5,11 +5,20 @@ import { useRouter } from "next/router";
 import type { Priority } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
+import { UserPlusIcon } from "@heroicons/react/24/outline";
+import AssignBugToDev from "@/components/projectDetails/AssignBugToDev";
+import { FetchState } from "@/utils/fetch";
 
 interface ProjectData {
   id: string;
   name: string;
   ownerId: string;
+}
+
+interface Developer {
+  id: string;
+  name: string;
+  image: string;
 }
 
 const NewBug: NextPage = () => {
@@ -18,6 +27,13 @@ const NewBug: NextPage = () => {
     push,
   } = useRouter();
   const [projects, setProjects] = useState<ProjectData[]>([]);
+  const [projectDevelopers, setProjectDevelopers] = useState<
+    FetchState<Developer[]>
+  >({
+    data: null,
+    loading: true,
+    error: null,
+  });
   const [title, setTitle] = useState<string>("");
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [priority, setPriority] = useState<Priority>("LOW");
@@ -43,6 +59,25 @@ const NewBug: NextPage = () => {
 
     fetchProjects();
   }, [selectedProject, sessionData?.user.id]);
+
+  useEffect(() => {
+    console.log("useEffect:", selectedProject);
+    const fetchDevelopers = async () => {
+      console.log("useEffect 2:", selectedProject);
+      try {
+        console.log("useEffect 3:", selectedProject);
+        const res = await fetch(
+          `/api/getDevelopers?projectId=${selectedProject}`
+        );
+        const projects = await res.json();
+        setProjectDevelopers({ data: projects, loading: false, error: null });
+      } catch (error: any) {
+        setProjectDevelopers({ data: null, loading: false, error });
+      }
+
+      if (selectedProject) fetchDevelopers();
+    };
+  }, [selectedProject]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,7 +130,10 @@ const NewBug: NextPage = () => {
                   id="project"
                   name="project"
                   value={selectedProject}
-                  onChange={(e) => setSelectedProject(e.target.value)}
+                  onChange={(e) => {
+                    console.log("changing project: ", e.target.value);
+                    setSelectedProject(e.target.value);
+                  }}
                   className="custom-input"
                 >
                   {projects.filter((p) => p.ownerId === sessionData?.user.id)
@@ -139,6 +177,21 @@ const NewBug: NextPage = () => {
                     </option>
                   ))}
                 </select>
+              </div>
+              <div>
+                <label className="mb-2 block font-medium" htmlFor="">
+                  Assign to
+                </label>{" "}
+                <AssignBugToDev
+                  bugTitle={title}
+                  bugId={"newBug"}
+                  projectDevelopers={projectDevelopers.data ?? []}
+                  handleBugAssignment={(bugId, assignedToId) =>
+                    console.log(bugId, assignedToId)
+                  }
+                >
+                  <UserPlusIcon className="h-8 w-8" />
+                </AssignBugToDev>
               </div>
             </div>
             <div className="mb-3">

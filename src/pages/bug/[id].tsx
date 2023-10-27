@@ -208,6 +208,16 @@ const BugPage: NextPage = () => {
                 ) : (
                   "unassigned"
                 )}
+                <span className="ml-2" title="Assign or reassign bug">
+                  <AssignBugToDev
+                    bugTitle={bugData.data?.title ?? ""}
+                    bugId={bugData.data?.id ?? ""}
+                    projectDevelopers={bugData.data?.project?.developers ?? []}
+                    handleBugAssignment={handleBugAssignment}
+                  >
+                    <UserPlusIcon className="h-8 w-8" />
+                  </AssignBugToDev>
+                </span>
               </span>
               <div className="text-center">
                 <StatusDropdown
@@ -217,14 +227,6 @@ const BugPage: NextPage = () => {
                   projectOwnerId={bugData.data?.project?.ownerId ?? ""}
                   handleBugStatusChange={handleBugStatusChange}
                 />
-                <AssignBugToDev
-                  bugTitle={bugData.data?.title ?? ""}
-                  bugId={bugData.data?.id ?? ""}
-                  projectDevelopers={bugData.data?.project?.developers ?? []}
-                  handleBugAssignment={handleBugAssignment}
-                >
-                  <UserPlusIcon className="h-8 w-8" />
-                </AssignBugToDev>
               </div>
             </div>
           )}
@@ -241,7 +243,9 @@ const BugPage: NextPage = () => {
           )}
         </div>
 
-        <h2 className="text-2xl mt-2">Comments</h2>
+        <h2 className="text-2xl mt-2">
+          Comments ({bugData.data?.comments.length})
+        </h2>
 
         <div className="ml-3">
           {bugData.loading ? (

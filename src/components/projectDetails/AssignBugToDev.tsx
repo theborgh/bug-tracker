@@ -29,21 +29,26 @@ export default function AssignBugToDev({
   projectDevelopers,
   handleBugAssignment,
 }: AssignBugToDevProps) {
+  // For new bugs, simply call the handleBugAssignment function
   const mutate = async (bugId: string, assignedToUserId: string) => {
-    try {
-      const response = await fetch(`/api/bug/${bugId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ assignedToUserId }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to assign bug to developer");
-      }
+    if (bugId === "newBug") {
       handleBugAssignment(bugId, assignedToUserId);
-    } catch (error) {
-      console.error(error);
+    } else {
+      try {
+        const response = await fetch(`/api/bug/${bugId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ assignedToUserId }),
+        });
+        if (!response.ok) {
+          throw new Error("Failed to assign bug to developer");
+        }
+        handleBugAssignment(bugId, assignedToUserId);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
