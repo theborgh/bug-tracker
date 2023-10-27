@@ -187,7 +187,7 @@ const BugPage: NextPage = () => {
                   "unassigned"
                 )}
               </div>
-              <div className="text-center mt-2">
+              <div className="text-center">
                 <StatusDropdown
                   bugId={bugData.data?.id ?? ""}
                   status={bugData.data?.status ?? Status.TODO}
@@ -211,9 +211,9 @@ const BugPage: NextPage = () => {
           )}
         </div>
 
-        <div className="ml-3">
-          <h2 className="text-2xl mt-2">Comments</h2>
+        <h2 className="text-2xl mt-2">Comments</h2>
 
+        <div className="ml-3">
           {bugData.loading ? (
             <div>loading...</div>
           ) : bugData.error ? (
@@ -247,9 +247,11 @@ const BugPage: NextPage = () => {
               </div>
             ))
           )}
+        </div>
 
-          <h2 className="text-2xl mt-2">Add a comment</h2>
+        <h2 className="text-2xl mt-2">Add a comment</h2>
 
+        <div className="ml-3">
           <form onSubmit={handleSubmit} className="flex-col">
             <MentionsInput
               value={markdown}
@@ -273,7 +275,7 @@ const BugPage: NextPage = () => {
               />
             </MentionsInput>
 
-            <button type="submit" className="btn-blue">
+            <button type="submit" className="btn-blue hover:bg-opacity-75">
               Submit
             </button>
           </form>
