@@ -132,7 +132,14 @@ const NewBug: NextPage = () => {
                   id="project"
                   name="project"
                   value={selectedProject}
-                  onChange={(e) => setSelectedProject(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedProject(e.target.value);
+                    setProjectDevelopers({
+                      data: null,
+                      loading: true,
+                      error: null,
+                    });
+                  }}
                   className="custom-input"
                   tabIndex={2}
                 >
@@ -183,16 +190,22 @@ const NewBug: NextPage = () => {
                 <label className="mb-2 block font-medium" htmlFor="">
                   Assign to
                 </label>{" "}
-                <div tabIndex={4}>
-                  <AssignBugToDev
-                    bugTitle={title}
-                    bugId={"newBug"}
-                    projectDevelopers={projectDevelopers.data ?? []}
-                    handleBugAssignment={handleBugAssignment}
-                  >
-                    <UserPlusIcon className="h-8 w-8" />
-                  </AssignBugToDev>
-                </div>
+                {projectDevelopers.loading ? (
+                  <p>Loading...</p>
+                ) : projectDevelopers.error ? (
+                  <p>Error</p>
+                ) : (
+                  <div tabIndex={4}>
+                    <AssignBugToDev
+                      bugTitle={title}
+                      bugId={"newBug"}
+                      projectDevelopers={projectDevelopers.data ?? []}
+                      handleBugAssignment={handleBugAssignment}
+                    >
+                      <UserPlusIcon className="h-8 w-8" />
+                    </AssignBugToDev>
+                  </div>
+                )}
               </div>
             </div>
             <div className="mb-3">
