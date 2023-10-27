@@ -8,8 +8,6 @@ const prisma = new PrismaClient();
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const { projectId } = req.query as { projectId: string };
 
-  console.log("test", projectId);
-
   try {
     const developers = await prisma.user.findMany({
       where: {

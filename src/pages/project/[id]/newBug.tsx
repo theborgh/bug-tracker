@@ -61,11 +61,8 @@ const NewBug: NextPage = () => {
   }, [selectedProject, sessionData?.user.id]);
 
   useEffect(() => {
-    console.log("useEffect:", selectedProject);
     const fetchDevelopers = async () => {
-      console.log("useEffect 2:", selectedProject);
       try {
-        console.log("useEffect 3:", selectedProject);
         const res = await fetch(
           `/api/getDevelopers?projectId=${selectedProject}`
         );
@@ -74,9 +71,8 @@ const NewBug: NextPage = () => {
       } catch (error: any) {
         setProjectDevelopers({ data: null, loading: false, error });
       }
-
-      if (selectedProject) fetchDevelopers();
     };
+    if (selectedProject) fetchDevelopers();
   }, [selectedProject]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -130,10 +126,7 @@ const NewBug: NextPage = () => {
                   id="project"
                   name="project"
                   value={selectedProject}
-                  onChange={(e) => {
-                    console.log("changing project: ", e.target.value);
-                    setSelectedProject(e.target.value);
-                  }}
+                  onChange={(e) => setSelectedProject(e.target.value)}
                   className="custom-input"
                 >
                   {projects.filter((p) => p.ownerId === sessionData?.user.id)
@@ -214,7 +207,11 @@ const NewBug: NextPage = () => {
               <Link href={`/project/${id}`} className="btn mr-2">
                 Cancel
               </Link>
-              <button type="submit" className="btn-blue">
+              <button
+                type="submit"
+                className="btn-blue disabled:opacity-50"
+                disabled={description.length < 10}
+              >
                 Submit
               </button>
             </div>
