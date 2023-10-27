@@ -9,7 +9,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   const { id } = req.query as { id: string };
 
   if (req.method === "POST") {
-    const { title, markdown, priority, status, reportingUserId, projectId } = req.body;
+    const { title, markdown, priority, status, reportingUserId, projectId, assignedToUserId } = req.body;
 
     try {
       const newBug = await prisma.bug.create({
@@ -18,7 +18,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           markdown,
           priority,
           status,
-          assignedToUserId: id,
+          assignedToUserId: assignedToUserId,
           reportingUserId,
           projectId,
         },

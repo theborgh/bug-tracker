@@ -37,6 +37,7 @@ const NewBug: NextPage = () => {
   const [title, setTitle] = useState<string>("");
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [priority, setPriority] = useState<Priority>("LOW");
+  const [assignedDev, setAssignedDev] = useState<string | null>(null);
   const [description, setDescription] = useState<string>("");
   const priorities: Priority[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
   const { data: sessionData } = useSession();
@@ -90,12 +91,17 @@ const NewBug: NextPage = () => {
         status: "UNASSIGNED",
         projectId: selectedProject,
         reportingUserId: sessionData?.user.id,
+        assignedToUserId: assignedDev,
       }),
     });
 
     if (res.status === 200) {
       push(`/project/${selectedProject}`);
     }
+  };
+
+  const handleBugAssignment = (bugId: string, assignedToId: string) => {
+    setAssignedDev(assignedToId);
   };
 
   return (
@@ -116,6 +122,7 @@ const NewBug: NextPage = () => {
                   className="custom-input"
                   minLength={2}
                   onChange={(e) => setTitle(e.target.value)}
+                  tabIndex={1}
                 />
               </div>
               <div className="flex-auto px-2">
@@ -128,6 +135,7 @@ const NewBug: NextPage = () => {
                   value={selectedProject}
                   onChange={(e) => setSelectedProject(e.target.value)}
                   className="custom-input"
+                  tabIndex={2}
                 >
                   {projects.filter((p) => p.ownerId === sessionData?.user.id)
                     .length && (
@@ -163,6 +171,7 @@ const NewBug: NextPage = () => {
                   className="custom-input"
                   value={priority}
                   onChange={(e) => setPriority(e.target.value as Priority)}
+                  tabIndex={3}
                 >
                   {priorities.map((p) => (
                     <option key={p} value={p}>
@@ -175,16 +184,16 @@ const NewBug: NextPage = () => {
                 <label className="mb-2 block font-medium" htmlFor="">
                   Assign to
                 </label>{" "}
-                <AssignBugToDev
-                  bugTitle={title}
-                  bugId={"newBug"}
-                  projectDevelopers={projectDevelopers.data ?? []}
-                  handleBugAssignment={(bugId, assignedToId) =>
-                    console.log(bugId, assignedToId)
-                  }
-                >
-                  <UserPlusIcon className="h-8 w-8" />
-                </AssignBugToDev>
+                <div tabIndex={4}>
+                  <AssignBugToDev
+                    bugTitle={title}
+                    bugId={"newBug"}
+                    projectDevelopers={projectDevelopers.data ?? []}
+                    handleBugAssignment={handleBugAssignment}
+                  >
+                    <UserPlusIcon className="h-8 w-8" />
+                  </AssignBugToDev>
+                </div>
               </div>
             </div>
             <div className="mb-3">
@@ -201,16 +210,18 @@ const NewBug: NextPage = () => {
                 placeholder="Bug description and steps to reproduce..."
                 minLength={10}
                 onChange={(e) => setDescription(e.target.value)}
+                tabIndex={5}
               ></textarea>
             </div>
             <div className="ml-auto flex justify-end">
-              <Link href={`/project/${id}`} className="btn mr-2">
+              <Link href={`/project/${id}`} className="btn mr-2" tabIndex={6}>
                 Cancel
               </Link>
               <button
                 type="submit"
                 className="btn-blue disabled:opacity-50"
                 disabled={description.length < 10}
+                tabIndex={7}
               >
                 Submit
               </button>
