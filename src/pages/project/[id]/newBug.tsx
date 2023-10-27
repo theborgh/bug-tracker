@@ -88,7 +88,6 @@ const NewBug: NextPage = () => {
         title,
         markdown: description,
         priority,
-        status: "UNASSIGNED",
         projectId: selectedProject,
         reportingUserId: sessionData?.user.id,
         assignedToUserId: assignedDev,
