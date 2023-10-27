@@ -11,6 +11,7 @@ import StatusButton, { selectedStatusType } from "@/components/StatusButton";
 import PriorityButton, {
   selectedPriorityType,
 } from "@/components/priorityButton";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import SortDropdown from "@/components/projectDetails/SortDropdown";
 import {
@@ -176,7 +177,7 @@ export default function ProjectDetails() {
 
             <div className="bug-container">
               {projectData.loading ? (
-                <p>Loading project bugs...</p>
+                <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
               ) : projectData.error ? (
                 <p>Error: {projectData.error.message}</p>
               ) : (projectData.data?.bugs?.length ?? 0) > 0 ? (

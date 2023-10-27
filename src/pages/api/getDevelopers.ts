@@ -23,7 +23,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       },
     });
 
-    console.log(developers);
     res.json(developers);
   } catch (e) {
     console.error("Error fetching projects:", e);

@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import type { Priority } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
-import { UserPlusIcon } from "@heroicons/react/24/outline";
+import { UserPlusIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import AssignBugToDev from "@/components/projectDetails/AssignBugToDev";
 import { FetchState } from "@/utils/fetch";
 
@@ -191,7 +191,7 @@ const NewBug: NextPage = () => {
                   Assign to
                 </label>{" "}
                 {projectDevelopers.loading ? (
-                  <p>Loading...</p>
+                  <ArrowPathIcon className="h-8 w-8 animate-spin" />
                 ) : projectDevelopers.error ? (
                   <p>Error</p>
                 ) : (
