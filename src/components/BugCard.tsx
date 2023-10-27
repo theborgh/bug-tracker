@@ -58,7 +58,7 @@ export function BugCard({
       <div className="">
         <div className="flex justify-between">
           <h3
-            className="text-hs font-medium line-clamp-1"
+            className="text-hs font-medium line-clamp-1 w-64 hover:opacity-70"
             aria-label={title}
             title={title}
           >
