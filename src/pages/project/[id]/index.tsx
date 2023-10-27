@@ -20,6 +20,7 @@ import {
 } from "@/utils/sorting";
 import { FetchState } from "@/utils/fetch";
 import Sidebar from "@/components/Sidebar";
+import { getNameLetters } from "@/utils/data";
 
 interface ProjectData {
   id: string;
@@ -251,7 +252,6 @@ export default function ProjectDetails() {
             <SidebarCard
               title="Developers"
               className="space-y-3 text-white"
-              // TODO
               topRight={isOwner && <div>TODO: Project owner panel</div>}
             >
               {projectData.data?.developers.map((developer) => (
@@ -263,8 +263,7 @@ export default function ProjectDetails() {
                     <Avatar className="mr-4 h-6 w-6">
                       <AvatarImage src={developer?.image ?? ""} />
                       <AvatarFallback>
-                        {/* TODO */}
-                        <div>TODO: DEV INITIALS</div>
+                        {getNameLetters(developer.name ?? "")}
                       </AvatarFallback>
                     </Avatar>
                     {developer.name}

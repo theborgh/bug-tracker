@@ -9,9 +9,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { MentionsInput, Mention } from "react-mentions";
 import { getNameLetters } from "@/utils/data";
 import StatusDropdown from "@/components/projectDetails/StatusDropdown";
+import AssignBugToDev from "@/components/projectDetails/AssignBugToDev";
 import Link from "next/link";
 import styles from "./styles";
 import { format, formatDistance } from "date-fns";
+import { UserPlusIcon } from "@heroicons/react/24/outline";
 
 interface Comment {
   authorId: string;
@@ -43,6 +45,7 @@ interface BugData {
     developers: {
       id: string;
       name: string;
+      image: string;
     }[];
   };
   assignedTo: {
@@ -70,13 +73,6 @@ const BugPage: NextPage = () => {
     push,
   } = useRouter();
   const { data: sessionData } = useSession();
-
-  // const developers = [
-  //   { id: 1, display: "John Doe" },
-  //   { id: 2, display: "Jane Smith" },
-  //   { id: 3, display: "Bob Johnson" },
-  //   // Add more developers as needed
-  // ]
 
   useEffect(() => {
     const fetchData = async () => {
@@ -142,6 +138,28 @@ const BugPage: NextPage = () => {
     }));
   };
 
+  const handleBugAssignment = (bugId: string, assignedToId: string) => {
+    setBugData((prev) => {
+      if (!prev.data) return { data: null, loading: true, error: null };
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          assignedTo: {
+            id: assignedToId,
+            name: prev.data.project.developers.find(
+              (dev) => dev.id === assignedToId
+            )?.name,
+            image: prev.data.project.developers.find(
+              (dev) => dev.id === assignedToId
+            )?.image,
+          },
+        },
+      };
+    });
+  };
+
   return (
     <main className="flex">
       <Sidebar loggedUser={sessionData?.user} />
@@ -154,15 +172,19 @@ const BugPage: NextPage = () => {
           ) : (
             <div>
               <div>Bug: {bugData.data?.title}</div>
-              <Link
-                title="Go to project page"
-                className="text-2xl hover:opacity-50 opacity-70"
-                href={`/project/${bugData.data?.projectId}`}
-              >
-                {bugData.data?.project?.name} project
-              </Link>
-              <div className="text-lg">
-                created{" "}
+              <span className="text-2xl">
+                <Link
+                  title="Go to project page"
+                  className="hover:opacity-50 opacity-70"
+                  href={`/project/${bugData.data?.projectId}`}
+                >
+                  {bugData.data?.project?.name}
+                </Link>{" "}
+                project
+              </span>
+              <span className="text-lg">
+                {" "}
+                &middot; created{" "}
                 <span
                   className="hover:opacity-50 opacity-70 cursor-pointer"
                   title={`${format(
@@ -178,15 +200,15 @@ const BugPage: NextPage = () => {
                     }
                   )}
                 </span>{" "}
-                by {bugData.data?.reportingUser?.name ?? "anonymous"}
+                by {bugData.data?.reportingUser?.name ?? "anonymous"} &middot;{" "}
                 {bugData.data?.assignedTo?.id ? (
-                  <div>
+                  <span>
                     assigned to {bugData.data?.assignedTo?.name ?? "anonymous"}
-                  </div>
+                  </span>
                 ) : (
                   "unassigned"
                 )}
-              </div>
+              </span>
               <div className="text-center">
                 <StatusDropdown
                   bugId={bugData.data?.id ?? ""}
@@ -195,6 +217,14 @@ const BugPage: NextPage = () => {
                   projectOwnerId={bugData.data?.project?.ownerId ?? ""}
                   handleBugStatusChange={handleBugStatusChange}
                 />
+                <AssignBugToDev
+                  bugTitle={bugData.data?.title ?? ""}
+                  bugId={bugData.data?.id ?? ""}
+                  projectDevelopers={bugData.data?.project?.developers ?? []}
+                  handleBugAssignment={handleBugAssignment}
+                >
+                  <UserPlusIcon className="h-8 w-8" />
+                </AssignBugToDev>
               </div>
             </div>
           )}

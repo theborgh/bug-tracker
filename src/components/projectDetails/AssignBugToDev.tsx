@@ -10,7 +10,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import PlusIcon from "@heroicons/react/24/outline/PlusIcon";
 import { getNameLetters } from "@/utils/data";
-import { Status } from "@prisma/client";
 
 type AssignBugToDevProps = {
   bugTitle: string;
@@ -53,8 +52,13 @@ export default function AssignBugToDev({
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Assign {bugTitle} to</DialogTitle>
+          <DialogTitle>
+            Assign <em>{bugTitle}</em> to...
+          </DialogTitle>
           <DialogDescription>
+            <p>
+              Project owners can assign to anyone; everyone else can self-assign
+            </p>
             <ul className="space-y-3 pt-4">
               {projectDevelopers.map((developer) => (
                 <li
