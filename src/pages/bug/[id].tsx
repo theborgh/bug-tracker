@@ -9,9 +9,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { MentionsInput, Mention } from "react-mentions";
 import { getNameLetters } from "@/utils/data";
 import StatusDropdown from "@/components/projectDetails/StatusDropdown";
-import formatDistance from "date-fns/formatDistance";
 import Link from "next/link";
 import styles from "./styles";
+import { format, formatDistance } from "date-fns";
 
 interface Comment {
   authorId: string;
@@ -155,21 +155,30 @@ const BugPage: NextPage = () => {
             <div>
               <div>Bug: {bugData.data?.title}</div>
               <Link
-                className="text-2xl"
+                title="Go to project page"
+                className="text-2xl hover:opacity-50 opacity-70"
                 href={`/project/${bugData.data?.projectId}`}
               >
                 {bugData.data?.project?.name} project
               </Link>
               <div className="text-lg">
                 created{" "}
-                {formatDistance(
-                  new Date(bugData.data?.createdAt || ""),
-                  new Date(),
-                  {
-                    addSuffix: true,
-                  }
-                )}{" "}
-                by {bugData.data?.reportingUser?.name ?? "anonymous"},{" "}
+                <span
+                  className="hover:opacity-50 opacity-70 cursor-pointer"
+                  title={`${format(
+                    new Date(bugData.data?.createdAt),
+                    "cccc do 'of' MMMM yyyy 'at' HH:mm:ss"
+                  )}`}
+                >
+                  {formatDistance(
+                    new Date(bugData.data?.createdAt || ""),
+                    new Date(),
+                    {
+                      addSuffix: true,
+                    }
+                  )}
+                </span>{" "}
+                by {bugData.data?.reportingUser?.name ?? "anonymous"}
                 {bugData.data?.assignedTo?.id ? (
                   <div>
                     assigned to {bugData.data?.assignedTo?.name ?? "anonymous"}
@@ -202,63 +211,73 @@ const BugPage: NextPage = () => {
           )}
         </div>
 
-        <h2 className="text-2xl mt-2">Comments</h2>
+        <div className="ml-3">
+          <h2 className="text-2xl mt-2">Comments</h2>
 
-        {bugData.loading ? (
-          <div>loading...</div>
-        ) : bugData.error ? (
-          <div>error</div>
-        ) : (
-          bugData.data?.comments.map((comment) => (
-            <div key={comment.id} className="bg-gray-800 w-full p-3 mt-3 ml-3">
-              <div className="text-gray-400 text-sm">
-                from {comment.author.name},{" "}
-                {formatDistance(new Date(comment.createdAt), new Date(), {
-                  addSuffix: true,
-                })}
+          {bugData.loading ? (
+            <div>loading...</div>
+          ) : bugData.error ? (
+            <div>error</div>
+          ) : (
+            bugData.data?.comments.map((comment) => (
+              <div key={comment.id} className="bg-gray-800 w-full p-3 mt-3">
+                <div className="text-gray-400 text-sm">
+                  from {comment.author.name},{" "}
+                  <span
+                    className="hover:opacity-50 opacity-70 cursor-pointer"
+                    title={`${format(
+                      new Date(bugData.data?.createdAt),
+                      "cccc do 'of' MMMM yyyy 'at' HH:mm:ss"
+                    )}`}
+                  >
+                    {formatDistance(new Date(comment.createdAt), new Date(), {
+                      addSuffix: true,
+                    })}
+                  </span>
+                </div>
+                <div className="flex gap-4 mt-2">
+                  <Avatar title={comment.author.name ?? "anonymous"}>
+                    <AvatarImage src={comment.author.image ?? ""} />
+                    <AvatarFallback>
+                      {getNameLetters(comment.author.name ?? "")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>{comment.markdown}</div>
+                </div>
               </div>
-              <div className="flex gap-4 mt-2">
-                <Avatar title={comment.author.name ?? "anonymous"}>
-                  <AvatarImage src={comment.author.image ?? ""} />
-                  <AvatarFallback>
-                    {getNameLetters(comment.author.name ?? "")}
-                  </AvatarFallback>
-                </Avatar>
-                <div>{comment.markdown}</div>
-              </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
 
-        <h2 className="text-2xl mt-2">Add a comment</h2>
+          <h2 className="text-2xl mt-2">Add a comment</h2>
 
-        <form onSubmit={handleSubmit} className="flex-col">
-          <MentionsInput
-            value={markdown}
-            onChange={(e) => setMarkdown(e.target.value)}
-            className="bg-slate-800 rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-full mb-2"
-            placeholder="Add a comment (type @ to mention another developer on the project)"
-            style={styles}
-          >
-            <Mention
-              trigger="@"
-              data={
-                bugData.data?.project?.developers.map((dev) => ({
-                  id: dev.id,
-                  display: dev.name,
-                })) || []
-              }
-              displayTransform={(id, display) => `@${display}`}
-              className="hidden"
-              appendSpaceOnAdd={true}
-              markup="@[__display__]"
-            />
-          </MentionsInput>
+          <form onSubmit={handleSubmit} className="flex-col">
+            <MentionsInput
+              value={markdown}
+              onChange={(e) => setMarkdown(e.target.value)}
+              className="bg-slate-800 rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-full mb-2"
+              placeholder="Add a comment (type @ to mention another developer on the project)"
+              style={styles}
+            >
+              <Mention
+                trigger="@"
+                data={
+                  bugData.data?.project?.developers.map((dev) => ({
+                    id: dev.id,
+                    display: dev.name,
+                  })) || []
+                }
+                displayTransform={(id, display) => `@${display}`}
+                className="hidden"
+                appendSpaceOnAdd={true}
+                markup="@[__display__]"
+              />
+            </MentionsInput>
 
-          <button type="submit" className="btn-blue">
-            Submit
-          </button>
-        </form>
+            <button type="submit" className="btn-blue">
+              Submit
+            </button>
+          </form>
+        </div>
       </div>
     </main>
   );
