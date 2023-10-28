@@ -203,21 +203,40 @@ const BugPage: NextPage = () => {
                 by {bugData.data?.reportingUser?.name ?? "anonymous"} &middot;{" "}
                 {bugData.data?.assignedTo?.id ? (
                   <span>
-                    assigned to {bugData.data?.assignedTo?.name ?? "anonymous"}
+                    assigned to{" "}
+                    <AssignBugToDev
+                      bugTitle={bugData.data.title}
+                      bugId={"newBug"}
+                      projectDevelopers={bugData.data.project.developers ?? []}
+                      handleBugAssignment={handleBugAssignment}
+                    >
+                      <Avatar
+                        title={bugData.data.assignedTo.name ?? "anonymous"}
+                      >
+                        <AvatarImage
+                          src={bugData.data.assignedTo.image ?? ""}
+                        />
+                        <AvatarFallback>
+                          {getNameLetters(bugData.data.assignedTo.name ?? "")}
+                        </AvatarFallback>
+                      </Avatar>
+                    </AssignBugToDev>
                   </span>
                 ) : (
-                  "unassigned"
+                  <span className="ml-2" title="Assign bug">
+                    <span>unassigned</span>{" "}
+                    <AssignBugToDev
+                      bugTitle={bugData.data?.title ?? ""}
+                      bugId={bugData.data?.id ?? ""}
+                      projectDevelopers={
+                        bugData.data?.project?.developers ?? []
+                      }
+                      handleBugAssignment={handleBugAssignment}
+                    >
+                      <UserPlusIcon className="h-8 w-8" />
+                    </AssignBugToDev>
+                  </span>
                 )}
-                <span className="ml-2" title="Assign or reassign bug">
-                  <AssignBugToDev
-                    bugTitle={bugData.data?.title ?? ""}
-                    bugId={bugData.data?.id ?? ""}
-                    projectDevelopers={bugData.data?.project?.developers ?? []}
-                    handleBugAssignment={handleBugAssignment}
-                  >
-                    <UserPlusIcon className="h-8 w-8" />
-                  </AssignBugToDev>
-                </span>
               </span>
               <div className="text-center">
                 <StatusDropdown
