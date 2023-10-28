@@ -74,7 +74,11 @@ const StatusDropdown = ({
       <DropdownMenu.Portal>
         <DropdownMenu.Content className="my-2 w-28 rounded-lg border border-white border-opacity-10 bg-gray-800 p-3 text-sm font-medium text-white">
           <DropdownMenu.RadioGroup>
-            {Statuses.map((status) => (
+            {Statuses.filter((s) =>
+              assigneeId
+                ? true
+                : s.value === "UNASSIGNED" || s.value === "CLOSED"
+            ).map((status) => (
               <DropdownMenu.RadioItem
                 key={status.value}
                 value={status.value}
