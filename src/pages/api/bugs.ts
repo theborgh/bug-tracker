@@ -18,7 +18,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           markdown,
           priority,
           status: assignedToUserId ? "TODO" : "UNASSIGNED",
-          assignedToUserId: assignedToUserId,
+          assignedToUserId: assignedToUserId || null,
           reportingUserId,
           projectId,
         },

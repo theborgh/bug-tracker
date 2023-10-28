@@ -78,7 +78,7 @@ const NewBug: NextPage = () => {
         setProjectDevelopers({ data: devs, loading: false, error: null });
 
         // Reset the assigned dev if it's not in the list of devs for the newly selected project
-        if (!devs.some((dev) => dev.id === assignedDev.id))
+        if (!devs.some((dev: Developer) => dev.id === assignedDev.id))
           setAssignedDev({ id: "", name: "", image: "" });
       } catch (error: any) {
         setProjectDevelopers({ data: null, loading: false, error });
@@ -101,7 +101,7 @@ const NewBug: NextPage = () => {
         priority,
         projectId: selectedProject,
         reportingUserId: sessionData?.user.id,
-        assignedToUserId: assignedDev,
+        assignedToUserId: assignedDev.id,
       }),
     });
 
