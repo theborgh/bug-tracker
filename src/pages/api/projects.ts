@@ -20,6 +20,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
               name: true,
               createdAt: true,
               updatedAt: true,
+              developers: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                }
+              }
             }
           });
   
@@ -33,6 +40,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
               name: true,
               createdAt: true,
               updatedAt: true,
+              developers: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                }
+              }
             }
           });
   

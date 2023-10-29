@@ -8,10 +8,17 @@ import { Status } from "@prisma/client";
 import Sidebar from "@/components/Sidebar";
 import { FetchState } from "@/utils/fetch";
 
+interface Developer {
+  id: string;
+  name: string;
+  image: string;
+}
+
 interface ProjectData {
   id: string;
   name: string;
   updatedAt: string;
+  developers: Developer[];
 }
 
 interface SimpleBugCardProps {
@@ -91,6 +98,7 @@ export default function Dashboard() {
                   id={project.id}
                   name={project.name}
                   updatedAt={project.updatedAt}
+                  developers={project.developers}
                 />
               </Link>
             ))
@@ -110,6 +118,7 @@ export default function Dashboard() {
                   id={project.id}
                   name={project.name}
                   updatedAt={project.updatedAt}
+                  developers={project.developers}
                 />
               </Link>
             ))
