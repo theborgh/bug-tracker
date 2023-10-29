@@ -26,6 +26,11 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         throw new Error("Invalid request body");
       }
 
+      await prisma.project.update({
+        where: { id: bug.projectId },
+        data: { updatedAt: new Date() },
+      });
+
       res.json(bug);
     } catch (e) {
       console.error("Error querying the database:", e);

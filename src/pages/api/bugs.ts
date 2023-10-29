@@ -24,6 +24,11 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         },
       });
 
+      await prisma.project.update({
+        where: { id: projectId },
+        data: { updatedAt: new Date() },
+      });
+
       res.json(newBug);
     } catch (e) {
       console.error("Error creating a new bug:", e);
