@@ -65,7 +65,10 @@ export default function Sidebar({
           <div className="">
             <Link
               href="/dashboard"
-              className="mb-2 flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400"
+              className={`mb-2 flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+                router.pathname === "/dashboard" &&
+                "text-blue-400 border-r border-width-4 border-blue-400"
+              }`}
             >
               <Squares2X2Icon className="h-7 w-7" />
               Dashboard
