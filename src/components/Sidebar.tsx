@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import { Squares2X2Icon } from "@heroicons/react/24/solid";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
@@ -30,6 +31,7 @@ export default function Sidebar({
     error: null,
   });
   const { publicRuntimeConfig } = getConfig();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +94,10 @@ export default function Sidebar({
                 <Link
                   key={bug.id}
                   href={`/bug/${bug.id}`}
-                  className="flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400"
+                  className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+                    router.query.id === bug.id &&
+                    "text-blue-400 border-r border-width-4 border-blue-400"
+                  }`}
                 >
                   <BugAntIcon className="h-5 w-5" />
                   <div>{bug.title}</div>
@@ -120,7 +125,10 @@ export default function Sidebar({
                 <Link
                   key={proj.id}
                   href={`/project/${proj.id}`}
-                  className="flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400"
+                  className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+                    router.query.id === proj.id &&
+                    "text-blue-400 border-r border-width-4 border-blue-400"
+                  }`}
                 >
                   <FolderOpenIcon className="h-5 w-5" />
                   <div>{proj.name}</div>
@@ -159,7 +167,10 @@ export default function Sidebar({
                   <Link
                     key={proj.id}
                     href={`/project/${proj.id}`}
-                    className="flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400"
+                    className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+                      router.query.id === proj.id &&
+                      "text-blue-400 border-r border-width-4 border-blue-400"
+                    }`}
                   >
                     <FolderOpenIcon className="h-5 w-5" />
                     <div>{proj.name}</div>
