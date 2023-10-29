@@ -92,16 +92,22 @@ export default function Dashboard() {
           ) : ownedProjects.error ? (
             <p>Error: {ownedProjects.error.message}</p>
           ) : (
-            ownedProjects.data?.map((project) => (
-              <Link key={project.id} href={`/project/${project.id}`}>
-                <ProjectCard
-                  id={project.id}
-                  name={project.name}
-                  updatedAt={project.updatedAt}
-                  developers={project.developers}
-                />
-              </Link>
-            ))
+            ownedProjects.data
+              ?.sort(
+                (a: any, b: any) =>
+                  new Date(b.updatedAt).getTime() -
+                  new Date(a.updatedAt).getTime()
+              )
+              .map((project) => (
+                <Link key={project.id} href={`/project/${project.id}`}>
+                  <ProjectCard
+                    id={project.id}
+                    name={project.name}
+                    updatedAt={project.updatedAt}
+                    developers={project.developers}
+                  />
+                </Link>
+              ))
           )}
         </div>
 
@@ -115,6 +121,11 @@ export default function Dashboard() {
             assignedToProjects.data
               ?.filter(
                 (proj) => !ownedProjects.data?.some((p) => p.id === proj.id)
+              )
+              .sort(
+                (a: any, b: any) =>
+                  new Date(b.updatedAt).getTime() -
+                  new Date(a.updatedAt).getTime()
               )
               .map((project) => (
                 <Link key={project.id} href={`/project/${project.id}`}>
@@ -136,20 +147,26 @@ export default function Dashboard() {
           ) : assignedToMeBugs.error ? (
             <p>Error: {assignedToMeBugs.error.message}</p>
           ) : (
-            assignedToMeBugs?.data?.map((bug) => (
-              <Link key={bug.id} href={`/bug/${bug.id}`}>
-                <SimpleBugCard
-                  id={bug.id}
-                  title={bug.title}
-                  author={bug.author}
-                  description={bug.description}
-                  updatedAt={bug.updatedAt}
-                  priority={bug.priority}
-                  commentCount={bug._count?.comments ?? 0}
-                  status={bug.status}
-                />
-              </Link>
-            ))
+            assignedToMeBugs?.data
+              ?.sort(
+                (a: any, b: any) =>
+                  new Date(b.updatedAt).getTime() -
+                  new Date(a.updatedAt).getTime()
+              )
+              .map((bug) => (
+                <Link key={bug.id} href={`/bug/${bug.id}`}>
+                  <SimpleBugCard
+                    id={bug.id}
+                    title={bug.title}
+                    author={bug.author}
+                    description={bug.description}
+                    updatedAt={bug.updatedAt}
+                    priority={bug.priority}
+                    commentCount={bug._count?.comments ?? 0}
+                    status={bug.status}
+                  />
+                </Link>
+              ))
           )}
         </div>
 

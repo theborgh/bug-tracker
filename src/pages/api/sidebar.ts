@@ -13,15 +13,15 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     select: {
       id: true,
       name: true,
-      ownedProjects: { select: { id: true, name: true } },
-      developerOnProjects: { select: { id: true, name: true } },
+      ownedProjects: { select: { id: true, name: true, updatedAt: true } },
+      developerOnProjects: { select: { id: true, name: true, updatedAt: true } },
       assignedBugs: { 
         where: {
           status: {
             not: "CLOSED"
           }
         },
-        select: { id: true, title: true } },
+        select: { id: true, title: true, updatedAt: true } },
     }
   });
 

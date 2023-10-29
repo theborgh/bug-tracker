@@ -90,19 +90,25 @@ export default function Sidebar({
             ) : sidebarData.error ? (
               <div>Error: {sidebarData.error.message}</div>
             ) : (
-              sidebarData.data?.assignedBugs?.map((bug: any) => (
-                <Link
-                  key={bug.id}
-                  href={`/bug/${bug.id}`}
-                  className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
-                    router.query.id === bug.id &&
-                    "text-blue-400 border-r border-width-4 border-blue-400"
-                  }`}
-                >
-                  <BugAntIcon className="h-5 w-5" />
-                  <div>{bug.title}</div>
-                </Link>
-              ))
+              sidebarData.data?.assignedBugs
+                ?.sort(
+                  (a: any, b: any) =>
+                    new Date(b.updatedAt).getTime() -
+                    new Date(a.updatedAt).getTime()
+                )
+                .map((bug: any) => (
+                  <Link
+                    key={bug.id}
+                    href={`/bug/${bug.id}`}
+                    className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+                      router.query.id === bug.id &&
+                      "text-blue-400 border-r border-width-4 border-blue-400"
+                    }`}
+                  >
+                    <BugAntIcon className="h-5 w-5" />
+                    <div>{bug.title}</div>
+                  </Link>
+                ))
             )}
           </div>
 
@@ -121,19 +127,25 @@ export default function Sidebar({
             ) : sidebarData.error ? (
               <div>Error: {sidebarData.error.message}</div>
             ) : (
-              sidebarData.data?.ownedProjects?.map((proj: any) => (
-                <Link
-                  key={proj.id}
-                  href={`/project/${proj.id}`}
-                  className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
-                    router.query.id === proj.id &&
-                    "text-blue-400 border-r border-width-4 border-blue-400"
-                  }`}
-                >
-                  <FolderOpenIcon className="h-5 w-5" />
-                  <div>{proj.name}</div>
-                </Link>
-              ))
+              sidebarData.data?.ownedProjects
+                ?.sort(
+                  (a: any, b: any) =>
+                    new Date(b.updatedAt).getTime() -
+                    new Date(a.updatedAt).getTime()
+                )
+                .map((proj: any) => (
+                  <Link
+                    key={proj.id}
+                    href={`/project/${proj.id}`}
+                    className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+                      router.query.id === proj.id &&
+                      "text-blue-400 border-r border-width-4 border-blue-400"
+                    }`}
+                  >
+                    <FolderOpenIcon className="h-5 w-5" />
+                    <div>{proj.name}</div>
+                  </Link>
+                ))
             )}
           </div>
           <div className="mt-5 mb-2 text-hsb uppercase">
@@ -162,6 +174,11 @@ export default function Sidebar({
                     !sidebarData.data?.ownedProjects.some(
                       (p: any) => p.id === proj.id
                     )
+                )
+                .sort(
+                  (a: any, b: any) =>
+                    new Date(b.updatedAt).getTime() -
+                    new Date(a.updatedAt).getTime()
                 )
                 .map((proj: any) => (
                   <Link
