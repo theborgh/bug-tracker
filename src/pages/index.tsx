@@ -1,23 +1,29 @@
-import { NextPage } from "next";
-import Head from "next/head";
-import LoginButton from "../components/LoginButton";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
-import Dashboard from "./dashboard";
+import { useEffect } from "react";
+import { NextPage } from "next";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { data: userData } = useSession();
+  const { push } = useRouter();
 
-  return (
-    <>
-      <Head>
-        <title>Bug tracker app</title>
-        <meta name="description" content="A bug tracker built with NextJs" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main>{sessionData ? <Dashboard /> : <LoginButton />}</main>
-    </>
-  );
+  useEffect(() => {
+    const login = async () => {
+      console.log("userData: ", userData);
+      if (!userData) {
+        await signIn(undefined, {
+          callbackUrl: "/dashboard",
+        });
+      } else {
+        push("/dashboard");
+      }
+    };
+
+    login();
+  }, [userData, push]);
+
+  return <></>;
 };
 
 export default Home;
