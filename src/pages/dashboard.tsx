@@ -112,16 +112,20 @@ export default function Dashboard() {
           ) : assignedToProjects.error ? (
             <p>Error: {assignedToProjects.error.message}</p>
           ) : (
-            assignedToProjects.data?.map((project) => (
-              <Link key={project.id} href={`/project/${project.id}`}>
-                <ProjectCard
-                  id={project.id}
-                  name={project.name}
-                  updatedAt={project.updatedAt}
-                  developers={project.developers}
-                />
-              </Link>
-            ))
+            assignedToProjects.data
+              ?.filter(
+                (proj) => !ownedProjects.data?.some((p) => p.id === proj.id)
+              )
+              .map((project) => (
+                <Link key={project.id} href={`/project/${project.id}`}>
+                  <ProjectCard
+                    id={project.id}
+                    name={project.name}
+                    updatedAt={project.updatedAt}
+                    developers={project.developers}
+                  />
+                </Link>
+              ))
           )}
         </div>
 

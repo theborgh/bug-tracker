@@ -30,7 +30,7 @@ export default function ProjectCard({
         </p>
         <div className="flex gap-1">
           {developers.map((developer) => (
-            <Avatar key={id} title={developer?.name ?? "anonymous"}>
+            <Avatar key={developer.id} title={developer?.name ?? "anonymous"}>
               <AvatarImage src={developer?.image ?? ""} />
               <AvatarFallback>
                 {getNameLetters(developer?.name ?? "")}
