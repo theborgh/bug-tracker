@@ -22,6 +22,7 @@ import {
 import { FetchState } from "@/utils/fetch";
 import Sidebar from "@/components/Sidebar";
 import { getNameLetters } from "@/utils/data";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 interface ProjectData {
   id: string;
@@ -221,6 +222,7 @@ export default function ProjectDetails() {
               )}
             </div>
           </div>
+
           <div className="sidecards-container flex-col w-[250px]">
             <SidebarCard
               title="Status filter"
@@ -238,6 +240,7 @@ export default function ProjectDetails() {
                 </li>
               ))}
             </SidebarCard>
+
             <SidebarCard
               title="Priority filter"
               className="space-y-1 text-white"
@@ -252,24 +255,22 @@ export default function ProjectDetails() {
                 />
               ))}
             </SidebarCard>
-            <SidebarCard
-              title="Developers"
-              className="space-y-3 text-white"
-              topRight={isOwner && <div>TODO: Project owner panel</div>}
-            >
+
+            <SidebarCard title="Developers" className="space-y-3 text-white">
               {projectData.data?.developers.map((developer) => (
                 <li
                   key={developer.id}
                   className="flex justify-between text-bodym"
                 >
-                  <div className="flex">
-                    <Avatar className="mr-4 h-6 w-6">
+                  <div className="flex gap-2 items-center">
+                    <Avatar title={developer.name}>
                       <AvatarImage src={developer?.image ?? ""} />
                       <AvatarFallback>
                         {getNameLetters(developer.name ?? "")}
                       </AvatarFallback>
                     </Avatar>
-                    {developer.name}
+
+                    <span className="">{developer.name}</span>
                   </div>
                 </li>
               ))}
@@ -280,6 +281,15 @@ export default function ProjectDetails() {
                   developer, click the &quot;Add Developer&quot; icon.
                 </li>
               )}
+            </SidebarCard>
+
+            <SidebarCard title="Project owner panel" className="text-white">
+              <ul className="space-y-3">
+                <li className="flex gap-2 items-center">
+                  <TrashIcon className="h-5 w-5" />
+                  <span>Delete project</span>
+                </li>
+              </ul>
             </SidebarCard>
           </div>
         </div>

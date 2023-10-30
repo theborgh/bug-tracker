@@ -62,21 +62,21 @@ export default function Sidebar({
         />
       </Link>
 
-      <div className="flex h-full flex-col justify-between text-gray-400 mt-5">
+      <div className="flex h-full flex-col justify-between text-gray-400 mt-10">
         <div className="ml-4">
           <div className="">
             <Link
               href="/dashboard"
-              className={`mb-2 flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+              className={`mb-1 flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
                 router.pathname === "/dashboard" &&
                 "text-blue-400 border-r border-width-4 border-blue-400"
               }`}
             >
               <Squares2X2Icon className="h-7 w-7" />
-              Dashboard
+              <span>Dashboard</span>
             </Link>
           </div>
-          <div className="flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400">
+          <div className="flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center">
             <PencilSquareIcon className="h-7 w-7" />
             <NewProjectSheet />
           </div>
@@ -105,7 +105,7 @@ export default function Sidebar({
                   <Link
                     key={bug.id}
                     href={`/bug/${bug.id}`}
-                    className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+                    className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
                       router.query.id === bug.id &&
                       "text-blue-400 border-r border-width-4 border-blue-400"
                     }`}
@@ -142,7 +142,7 @@ export default function Sidebar({
                   <Link
                     key={proj.id}
                     href={`/project/${proj.id}`}
-                    className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+                    className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
                       router.query.id === proj.id &&
                       "text-blue-400 border-r border-width-4 border-blue-400"
                     }`}
@@ -189,7 +189,7 @@ export default function Sidebar({
                   <Link
                     key={proj.id}
                     href={`/project/${proj.id}`}
-                    className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 ${
+                    className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
                       router.query.id === proj.id &&
                       "text-blue-400 border-r border-width-4 border-blue-400"
                     }`}

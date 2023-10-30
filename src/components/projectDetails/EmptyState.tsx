@@ -6,7 +6,7 @@ export default function EmptyState() {
   const router = useRouter();
 
   return (
-    <div className="mt-6 flex h-[80%] flex-col items-center justify-center rounded-2xl bg-slate-800 text-center text-white">
+    <div className="mt-6 flex h-[80%] flex-col items-center justify-center rounded-2xl bg-slate-800 text-center text-white pb-12">
       <NoResultsSVG />
 
       <h2 className="mt-6 mb-3 text-hm font-semibold">
