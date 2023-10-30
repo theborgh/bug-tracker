@@ -36,7 +36,9 @@ export default function Sidebar({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/sidebar?id=${loggedUser?.id}`);
+        const res = await fetch(
+          `/api/user/getSidebarData?id=${loggedUser?.id}`
+        );
         const data = await res.json();
         setSidebarData({ data: data, loading: false, error: null });
       } catch (error: any) {

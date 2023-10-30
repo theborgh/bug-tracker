@@ -31,7 +31,7 @@ export default function NewProjectSheet() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`/api/users`);
+      const res = await fetch(`/api/user/getAllUsers`);
       const data = await res.json();
 
       setAllDevelopers(data);

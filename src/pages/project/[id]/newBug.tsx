@@ -72,7 +72,7 @@ const NewBug: NextPage = () => {
     const fetchDevelopers = async () => {
       try {
         const res = await fetch(
-          `/api/getDevelopers?projectId=${selectedProject}`
+          `/api/project/getProjectDevelopers?projectId=${selectedProject}`
         );
         const devs = await res.json();
         setProjectDevelopers({ data: devs, loading: false, error: null });

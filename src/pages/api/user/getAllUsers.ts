@@ -4,11 +4,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 const prisma = new PrismaClient();
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query as { id: string };
-
   try {
     const results = await prisma.user.findMany({
-      where: { id },
       select: {
         id: true,
         name: true,

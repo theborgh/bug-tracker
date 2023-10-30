@@ -92,7 +92,7 @@ const BugPage: NextPage = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`/api/comments`, {
+      const res = await fetch(`/api/comment/postComment`, {
         method: "POST",
         body: JSON.stringify({ id, markdown, authorId: sessionData?.user?.id }),
         headers: {
