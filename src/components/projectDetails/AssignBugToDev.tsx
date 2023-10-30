@@ -61,38 +61,35 @@ export default function AssignBugToDev({
             Assign <em>{bugTitle}</em> to...
           </DialogTitle>
           <DialogDescription>
-            <p>
-              Project owners can assign to anyone; everyone else can self-assign
-            </p>
-            <ul className="space-y-3 pt-4">
-              {projectDevelopers.map((developer) => (
-                <li
-                  key={developer.id}
-                  className="flex justify-between text-bodys"
-                >
-                  <div className="flex">
-                    <Avatar className="mr-4 h-6 w-6">
-                      <AvatarImage src={developer?.image ?? ""} />
-                      <AvatarFallback>
-                        {getNameLetters(developer?.name ?? "")}
-                      </AvatarFallback>
-                    </Avatar>
-                    {developer.name}
-                  </div>
-                  <button
-                    onClick={() => mutate(bugId, developer.id)}
-                    aria-label={`Assign to ${developer?.name ?? ""} `}
-                  >
-                    <PlusIcon
-                      aria-hidden
-                      className="h-6 w-6 cursor-pointer transition duration-200 hover:opacity-50"
-                    />
-                  </button>
-                </li>
-              ))}
-            </ul>
+            Project owners can assign bugs to anyone, everyone else can
+            self-assign
           </DialogDescription>
         </DialogHeader>
+        <ul className="space-y-1 pt-2">
+          {projectDevelopers.map((developer) => (
+            <li
+              key={developer.id}
+              className="flex justify-between text-bodys p-1 hover:cursor-pointer hover:bg-slate-800 hover:text-white"
+              onClick={() => mutate(bugId, developer.id)}
+            >
+              <div className="flex items-center gap-2">
+                <Avatar title={developer.name}>
+                  <AvatarImage src={developer?.image ?? ""} />
+                  <AvatarFallback>
+                    {getNameLetters(developer?.name ?? "")}
+                  </AvatarFallback>
+                </Avatar>
+                <span>{developer.name}</span>
+              </div>
+              <button aria-label={`Assign to ${developer?.name ?? ""} `}>
+                <PlusIcon
+                  aria-hidden
+                  className="h-6 w-6 transition duration-200 hover:opacity-50"
+                />
+              </button>
+            </li>
+          ))}
+        </ul>
       </DialogContent>
     </Dialog>
   );

@@ -283,14 +283,16 @@ export default function ProjectDetails() {
               )}
             </SidebarCard>
 
-            <SidebarCard title="Project owner panel" className="text-white">
-              <ul className="space-y-3">
-                <li className="flex gap-2 items-center">
-                  <TrashIcon className="h-5 w-5" />
-                  <span>Delete project</span>
-                </li>
-              </ul>
-            </SidebarCard>
+            {sessionData?.user?.id === projectData?.data?.ownerId && (
+              <SidebarCard title="Project owner panel" className="text-white">
+                <ul className="space-y-3">
+                  <li className="flex gap-2 items-center">
+                    <TrashIcon className="h-5 w-5" />
+                    <span>Delete project</span>
+                  </li>
+                </ul>
+              </SidebarCard>
+            )}
           </div>
         </div>
       </div>
