@@ -59,7 +59,7 @@ const NewBug: NextPage = () => {
     // fetch projects the user is assigned to the user
     const fetchProjects = async () => {
       const res = await fetch(
-        `/api/projects?userId=${sessionData?.user.id}&type=all`
+        `/api/project/getProjectsByType?userId=${sessionData?.user.id}&type=all`
       );
       const projects = await res.json();
       setProjects(projects);
@@ -90,7 +90,7 @@ const NewBug: NextPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await fetch("/api/bugs", {
+    const res = await fetch("/api/bug/postBug", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

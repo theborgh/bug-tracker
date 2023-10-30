@@ -48,7 +48,7 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `/api/projects?userId=${sessionData?.user.id}&type=owner`
+          `/api/project/getProjectsByType?userId=${sessionData?.user.id}&type=owner`
         );
         const data = await res.json();
         setOwnedProjects({ data, loading: false, error: null });
@@ -58,7 +58,7 @@ export default function Dashboard() {
 
       try {
         const res2 = await fetch(
-          `/api/projects?userId=${sessionData?.user.id}&type=developer`
+          `/api/project/getProjectsByType?userId=${sessionData?.user.id}&type=developer`
         );
         const data2 = await res2.json();
         setAssignedToProjects({ data: data2, loading: false, error: null });
@@ -68,7 +68,7 @@ export default function Dashboard() {
 
       try {
         const res3 = await fetch(
-          `/api/bugs?assignedTo=${sessionData?.user.id}&type=open`
+          `/api/bug/getBugs?assignedTo=${sessionData?.user.id}&type=open`
         );
         const data3 = await res3.json();
         setAssignedToMeBugs({ data: data3, loading: false, error: null });

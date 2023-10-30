@@ -49,7 +49,7 @@ export default function NewProjectSheet() {
       ownerId: sessionData?.user.id,
     };
 
-    const res = await fetch("/api/projects", {
+    const res = await fetch("/api/project/postNewProject", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
