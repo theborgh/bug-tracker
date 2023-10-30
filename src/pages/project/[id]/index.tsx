@@ -23,6 +23,7 @@ import { FetchState } from "@/utils/fetch";
 import Sidebar from "@/components/Sidebar";
 import { getNameLetters } from "@/utils/data";
 import { TrashIcon } from "@heroicons/react/24/solid";
+import DeleteProject from "@/components/projectDetails/DeleteProject";
 
 interface ProjectData {
   id: string;
@@ -85,8 +86,6 @@ export default function ProjectDetails() {
 
     if (router.query.id) fetchData();
   }, [router.query.id]);
-
-  const isOwner = sessionData?.user?.id === projectData?.data?.ownerId;
 
   const handleStatusFilterClick = (
     status: selectedStatusType,
@@ -256,7 +255,7 @@ export default function ProjectDetails() {
               ))}
             </SidebarCard>
 
-            <SidebarCard title="Developers" className="space-y-3 text-white">
+            <SidebarCard title="Developers" className="space-y-2 text-white">
               {projectData.data?.developers.map((developer) => (
                 <li
                   key={developer.id}
@@ -288,7 +287,12 @@ export default function ProjectDetails() {
                 <ul className="space-y-3">
                   <li className="flex gap-2 items-center">
                     <TrashIcon className="h-5 w-5" />
-                    <span>Delete project</span>
+                    <DeleteProject
+                      projectId={projectData.data?.id || ""}
+                      projectTitle={projectData.data?.name || ""}
+                    >
+                      Delete project
+                    </DeleteProject>
                   </li>
                 </ul>
               </SidebarCard>
