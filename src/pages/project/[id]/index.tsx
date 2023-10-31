@@ -198,9 +198,13 @@ export default function ProjectDetails() {
                       author={bug.reportingUser.name ?? "anonymous"}
                       assignedToDev={
                         bug.assignedToUserId
-                          ? projectData.data?.developers.find(
-                              (dev) => dev.id === bug.assignedToUserId
-                            )
+                          ? sessionData?.user.id === projectData.data?.ownerId
+                            ? projectData.data?.developers.find(
+                                (dev) => dev.id === bug.assignedToUserId
+                              )
+                            : projectData.data?.developers.find(
+                                (dev) => dev.id === sessionData?.user.id
+                              )
                           : null
                       }
                       commentCount={bug?._count.comments ?? 0}

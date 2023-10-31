@@ -61,8 +61,7 @@ export default function AssignBugToDev({
             Assign <em>{bugTitle}</em> to...
           </DialogTitle>
           <DialogDescription>
-            Project owners can assign bugs to anyone, everyone else can
-            self-assign
+            Project owners can assign bugs to anyone, developers can self-assign
           </DialogDescription>
         </DialogHeader>
         <ul className="space-y-1 pt-2">
