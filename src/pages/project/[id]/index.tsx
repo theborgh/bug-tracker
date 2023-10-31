@@ -242,6 +242,10 @@ export default function ProjectDetails() {
                           stroke: "stroke-white",
                         }
                       }
+                      canEditPriority={
+                        sessionData?.user.id === projectData.data?.ownerId ||
+                        sessionData?.user.id === bug.reportingUser.id
+                      }
                       status={bug.status}
                       handleBugStatusChange={changeBugStatus}
                       handleBugPriorityChange={changeBugPriority}

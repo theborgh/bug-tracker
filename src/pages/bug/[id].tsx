@@ -71,12 +71,26 @@ const BugPage: NextPage = () => {
     loading: true,
     error: null,
   });
+  const [canEditPriority, setCanEditPriority] = useState(false);
   const [markdown, setMarkdown] = useState("");
   const {
     query: { id },
     push,
   } = useRouter();
   const { data: sessionData } = useSession();
+
+  useEffect(() => {
+    if (sessionData?.user?.id) {
+      setCanEditPriority(
+        sessionData?.user?.id === bugData.data?.reportingUser?.id ||
+          sessionData?.user?.id === bugData.data?.project?.ownerId
+      );
+    }
+  }, [
+    sessionData?.user?.id,
+    bugData.data?.reportingUser?.id,
+    bugData.data?.project?.ownerId,
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -214,22 +228,34 @@ const BugPage: NextPage = () => {
                   )}
                 </span>{" "}
                 by {bugData.data?.reportingUser?.name ?? "anonymous"} &middot;{" "}
-                <PriorityDropdown
-                  bugId={bugData.data?.id ?? ""}
-                  priority={bugData.data?.priority ?? Priority.MEDIUM}
-                  projectOwnerId={bugData.data?.project?.ownerId ?? ""}
-                  reporterId={bugData.data?.reportingUser?.id ?? ""}
-                  handleBugPriorityChange={handleBugPriorityChange}
-                >
+                {canEditPriority ? (
+                  <PriorityDropdown
+                    bugId={bugData.data?.id ?? ""}
+                    priority={bugData.data?.priority ?? Priority.MEDIUM}
+                    projectOwnerId={bugData.data?.project?.ownerId ?? ""}
+                    reporterId={bugData.data?.reportingUser?.id ?? ""}
+                    handleBugPriorityChange={handleBugPriorityChange}
+                  >
+                    <ShieldExclamationIcon
+                      title={`${bugData.data?.priority.toLocaleLowerCase()} priority`}
+                      className={`h-8 w-8 hover:cursor-pointer`}
+                      stroke={
+                        Priorities.find(
+                          (p) => p.value === bugData.data?.priority
+                        )?.stroke ?? Priorities[0].stroke
+                      }
+                    />
+                  </PriorityDropdown>
+                ) : (
                   <ShieldExclamationIcon
-                    title={`${bugData.data?.priority.toLocaleLowerCase()} priority`}
-                    className={`h-8 w-8 hover:cursor-pointer`}
+                    title={`${bugData.data?.priority.toLocaleLowerCase()} priority (only project owner and reporter can edit priority)`}
+                    className={`h-8 w-8`}
                     stroke={
                       Priorities.find((p) => p.value === bugData.data?.priority)
                         ?.stroke ?? Priorities[0].stroke
                     }
                   />
-                </PriorityDropdown>
+                )}
                 {bugData.data?.priority.toLocaleLowerCase()} priority &middot;{" "}
                 {bugData.data?.assignedTo?.id ? (
                   <span>

@@ -32,6 +32,7 @@ type BugCardProps = {
   description: string;
   createdAt: Date;
   priority: { value: Priority; stroke: string };
+  canEditPriority: boolean;
   commentCount: number;
   status: Status;
   handleBugStatusChange: (bugId: string, newStatus: Status) => void;
@@ -50,6 +51,7 @@ export function BugCard({
   createdAt,
   description,
   priority,
+  canEditPriority,
   commentCount,
   status,
   handleBugStatusChange,
