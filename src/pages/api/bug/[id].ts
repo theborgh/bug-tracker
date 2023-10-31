@@ -7,7 +7,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   const { id } = req.query as { id: string };
 
   if (req.method === "PATCH") {
-    const { status, assignedToUserId } = req.body;
+    const { status, priority, assignedToUserId } = req.body;
 
     try {
       let bug;
@@ -16,6 +16,11 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         bug = await prisma.bug.update({
           where: { id },
           data: { status },
+        });
+      } else if (priority) {
+        bug = await prisma.bug.update({
+          where: { id },
+          data: { priority },
         });
       } else if (assignedToUserId) {
         bug = await prisma.bug.update({

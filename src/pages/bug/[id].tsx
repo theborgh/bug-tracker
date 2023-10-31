@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { MentionsInput, Mention } from "react-mentions";
 import { Priorities, getNameLetters } from "@/utils/data";
 import StatusDropdown from "@/components/projectDetails/StatusDropdown";
+import PriorityDropdown from "@/components/projectDetails/PriorityDropdown";
 import AssignBugToDev from "@/components/projectDetails/AssignBugToDev";
 import Link from "next/link";
 import styles from "./styles";
@@ -141,6 +142,16 @@ const BugPage: NextPage = () => {
     }));
   };
 
+  const handleBugPriorityChange = (newPriority: Priority) => {
+    setBugData((prev) => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        priority: newPriority,
+      },
+    }));
+  };
+
   const handleBugAssignment = (bugId: string, assignedToId: string) => {
     setBugData((prev) => {
       if (!prev.data) return { data: null, loading: true, error: null };
@@ -203,14 +214,22 @@ const BugPage: NextPage = () => {
                   )}
                 </span>{" "}
                 by {bugData.data?.reportingUser?.name ?? "anonymous"} &middot;{" "}
-                <ShieldExclamationIcon
-                  title={`${bugData.data?.priority.toLocaleLowerCase()} priority`}
-                  className={`h-8 w-8`}
-                  stroke={
-                    Priorities.find((p) => p.value === bugData.data?.priority)
-                      ?.stroke ?? Priorities[0].stroke
-                  }
-                />
+                <PriorityDropdown
+                  bugId={bugData.data?.id ?? ""}
+                  priority={bugData.data?.priority ?? Priority.MEDIUM}
+                  projectOwnerId={bugData.data?.project?.ownerId ?? ""}
+                  reporterId={bugData.data?.reportingUser?.id ?? ""}
+                  handleBugPriorityChange={handleBugPriorityChange}
+                >
+                  <ShieldExclamationIcon
+                    title={`${bugData.data?.priority.toLocaleLowerCase()} priority`}
+                    className={`h-8 w-8 hover:cursor-pointer`}
+                    stroke={
+                      Priorities.find((p) => p.value === bugData.data?.priority)
+                        ?.stroke ?? Priorities[0].stroke
+                    }
+                  />
+                </PriorityDropdown>
                 {bugData.data?.priority.toLocaleLowerCase()} priority &middot;{" "}
                 {bugData.data?.assignedTo?.id ? (
                   <span>
