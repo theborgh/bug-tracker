@@ -7,13 +7,16 @@ import Sidebar from "@/components/Sidebar";
 import { Status, Priority } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { MentionsInput, Mention } from "react-mentions";
-import { getNameLetters } from "@/utils/data";
+import { Priorities, getNameLetters } from "@/utils/data";
 import StatusDropdown from "@/components/projectDetails/StatusDropdown";
 import AssignBugToDev from "@/components/projectDetails/AssignBugToDev";
 import Link from "next/link";
 import styles from "./styles";
 import { format, formatDistance } from "date-fns";
-import { UserPlusIcon } from "@heroicons/react/24/outline";
+import {
+  UserPlusIcon,
+  ShieldExclamationIcon,
+} from "@heroicons/react/24/outline";
 
 interface Comment {
   authorId: string;
@@ -182,9 +185,8 @@ const BugPage: NextPage = () => {
                 </Link>{" "}
                 project
               </span>
-              <span className="text-lg">
-                {" "}
-                &middot; created{" "}
+              <span className="text-lg flex items-center justify-center gap-2">
+                Created{" "}
                 <span
                   className="hover:opacity-50 opacity-70 cursor-pointer"
                   title={`${format(
@@ -201,6 +203,15 @@ const BugPage: NextPage = () => {
                   )}
                 </span>{" "}
                 by {bugData.data?.reportingUser?.name ?? "anonymous"} &middot;{" "}
+                <ShieldExclamationIcon
+                  title={`${bugData.data?.priority.toLocaleLowerCase()} priority`}
+                  className={`h-8 w-8`}
+                  stroke={
+                    Priorities.find((p) => p.value === bugData.data?.priority)
+                      ?.stroke ?? Priorities[0].stroke
+                  }
+                />
+                {bugData.data?.priority.toLocaleLowerCase()} priority &middot;{" "}
                 {bugData.data?.assignedTo?.id ? (
                   <span>
                     assigned to{" "}
@@ -223,18 +234,20 @@ const BugPage: NextPage = () => {
                     </AssignBugToDev>
                   </span>
                 ) : (
-                  <span className="ml-2" title="Assign bug">
-                    <span>unassigned</span>{" "}
-                    <AssignBugToDev
-                      bugTitle={bugData.data?.title ?? ""}
-                      bugId={bugData.data?.id ?? ""}
-                      projectDevelopers={
-                        bugData.data?.project?.developers ?? []
-                      }
-                      handleBugAssignment={handleBugAssignment}
-                    >
-                      <UserPlusIcon className="h-8 w-8" />
-                    </AssignBugToDev>
+                  <span className="flex items-center gap-2" title="Assign bug">
+                    <span className="items-center">unassigned</span>{" "}
+                    <span className="items-center">
+                      <AssignBugToDev
+                        bugTitle={bugData.data?.title ?? ""}
+                        bugId={bugData.data?.id ?? ""}
+                        projectDevelopers={
+                          bugData.data?.project?.developers ?? []
+                        }
+                        handleBugAssignment={handleBugAssignment}
+                      >
+                        <UserPlusIcon className="h-8 w-8" />
+                      </AssignBugToDev>
+                    </span>
                   </span>
                 )}
               </span>
