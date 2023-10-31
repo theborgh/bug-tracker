@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Priorities } from "@/utils/data";
-import { Status } from "@prisma/client";
+import { Priority, Status } from "@prisma/client";
 import EmptyState from "@/components/projectDetails/EmptyState";
 import { BugCard } from "@/components/BugCard";
 import SidebarCard from "@/components/SidebarCard";
@@ -135,6 +135,30 @@ export default function ProjectDetails() {
     });
   };
 
+  const changeBugPriority = (bugId: string, newPriority: Priority) => {
+    setProjectData((prev) => {
+      if (!prev.data) return { data: null, loading: true, error: null };
+
+      const newBugs = prev.data.bugs.map((bug) => {
+        if (bug.id === bugId) {
+          return {
+            ...bug,
+            priority: newPriority,
+          };
+        }
+        return bug;
+      });
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          bugs: [...newBugs],
+        },
+      };
+    });
+  };
+
   const changeBugAssignee = (bugId: string, assignedToId: string) => {
     setProjectData((prev) => {
       if (!prev.data) return { data: null, loading: true, error: null };
@@ -191,6 +215,7 @@ export default function ProjectDetails() {
                   {filteredBugs?.map((bug) => (
                     <BugCard
                       id={bug.id}
+                      reporterId={bug.reportingUser.id}
                       projectOwnerId={projectData.data?.ownerId || ""}
                       projectDevelopers={projectData.data?.developers || []}
                       title={bug.title}
@@ -219,6 +244,7 @@ export default function ProjectDetails() {
                       }
                       status={bug.status}
                       handleBugStatusChange={changeBugStatus}
+                      handleBugPriorityChange={changeBugPriority}
                       handleBugAssignment={changeBugAssignee}
                       key={bug.id}
                     />

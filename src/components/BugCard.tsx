@@ -5,6 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { useSession } from "next-auth/react";
+import PriorityDropdown from "./projectDetails/PriorityDropdown";
 import formatDistance from "date-fns/formatDistance";
 import StatusDropdown from "./projectDetails/StatusDropdown";
 import { getNameLetters } from "@/utils/data";
@@ -13,6 +14,7 @@ import Link from "next/link";
 
 type BugCardProps = {
   id: string;
+  reporterId: string;
   projectOwnerId: string;
   projectDevelopers: {
     id: string;
@@ -33,11 +35,13 @@ type BugCardProps = {
   commentCount: number;
   status: Status;
   handleBugStatusChange: (bugId: string, newStatus: Status) => void;
+  handleBugPriorityChange: (bugId: string, newPriority: Priority) => void;
   handleBugAssignment: (bugId: string, assignedToId: string) => void;
 };
 
 export function BugCard({
   id,
+  reporterId,
   projectOwnerId,
   projectDevelopers,
   title,
@@ -49,6 +53,7 @@ export function BugCard({
   commentCount,
   status,
   handleBugStatusChange,
+  handleBugPriorityChange,
   handleBugAssignment,
 }: BugCardProps) {
   return (
@@ -62,11 +67,19 @@ export function BugCard({
           >
             <Link href={`/bug/${id}`}>{title}</Link>
           </h3>
-          <ShieldExclamationIcon
-            title={`${priority.value.toLocaleLowerCase()} priority`}
-            className={`h-8 w-8`}
-            stroke={priority.stroke}
-          />
+          <PriorityDropdown
+            bugId={id}
+            priority={priority.value}
+            projectOwnerId={projectOwnerId}
+            reporterId={reporterId}
+            handleBugPriorityChange={handleBugPriorityChange}
+          >
+            <ShieldExclamationIcon
+              title={`${priority.value.toLocaleLowerCase()} priority`}
+              className={`h-8 w-8 hover:cursor-pointer`}
+              stroke={priority.stroke}
+            />
+          </PriorityDropdown>
         </div>
         <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
           {formatDistance(new Date(createdAt), new Date(), { addSuffix: true })}{" "}

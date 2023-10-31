@@ -44,6 +44,7 @@ export interface Bug {
     minutesToComplete: number;
     reportingUser: {
       name: string;
+      id: string;
     };
     assignedToUserId: string;
     _count: { 

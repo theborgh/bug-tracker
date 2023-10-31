@@ -27,7 +27,8 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           assignedToUserId: true,
           reportingUser: {
             select: {
-              name: true
+              name: true,
+              id: true,
             }
           },
           _count: { select: { comments: true } },

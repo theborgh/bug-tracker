@@ -142,7 +142,7 @@ const BugPage: NextPage = () => {
     }));
   };
 
-  const handleBugPriorityChange = (newPriority: Priority) => {
+  const handleBugPriorityChange = (bugId: string, newPriority: Priority) => {
     setBugData((prev) => ({
       ...prev,
       data: {

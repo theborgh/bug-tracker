@@ -11,7 +11,7 @@ type PriorityDropdownProps = {
   projectOwnerId: string;
   reporterId: string;
   children: ReactNode;
-  handleBugPriorityChange: (newPriority: Priority) => void;
+  handleBugPriorityChange: (bugId: string, newPriority: Priority) => void;
 };
 
 const PriorityDropdown = ({
@@ -26,13 +26,6 @@ const PriorityDropdown = ({
   const readonly =
     !sessionData || ![reporterId, projectOwnerId].includes(sessionData.user.id);
   const [open, setOpen] = useState(false);
-  const selectedPriorityObject = Priorities?.find(
-    (item) => item.value === priority
-  ) ?? {
-    value: "UNASSIGNED" as const,
-    background: "bg-slate-900",
-    label: "Unassigned",
-  };
 
   const updatePriority = async (newPriority: Priority) => {
     const response = await fetch(`/api/bug/${bugId}`, {
@@ -46,7 +39,7 @@ const PriorityDropdown = ({
     await response.json();
 
     if (response.ok) {
-      handleBugPriorityChange(newPriority);
+      handleBugPriorityChange(bugId, newPriority);
     }
   };
 
