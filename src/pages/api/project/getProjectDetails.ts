@@ -35,6 +35,12 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           updatedAt: true,
         }
       },
+      owner: {
+        select: {
+          name: true,
+          image: true,
+        }
+      },
       developers: {
         select: {
           id: true,

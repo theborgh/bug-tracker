@@ -31,6 +31,10 @@ interface ProjectData {
   name: string;
   createdAt: string;
   updatedAt: string;
+  owner: {
+    name: string;
+    image: string;
+  };
   developers: [
     {
       id: string;
@@ -255,7 +259,27 @@ export default function ProjectDetails() {
               ))}
             </SidebarCard>
 
-            <SidebarCard title="Developers" className="space-y-2 text-white">
+            <SidebarCard title="Team" className="space-y-2 text-white">
+              <h1 className="font-bold">Project owner</h1>
+              <div className="flex gap-2 items-center">
+                <Avatar title={projectData.data?.owner.name}>
+                  <AvatarImage src={projectData.data?.owner.image ?? ""} />
+                  <AvatarFallback>
+                    {getNameLetters(projectData.data?.owner.name ?? "")}
+                  </AvatarFallback>
+                </Avatar>
+                {projectData.data?.owner.name}
+              </div>
+
+              {!projectData.data?.developers.length ? (
+                <li className="text-justify text-bodys leading-5 text-white text-opacity-75">
+                  No developers are currently assigned to this project. To add a
+                  developer, click the &quot;Add Developer&quot; icon.
+                </li>
+              ) : (
+                <h1 className="font-bold">Developers</h1>
+              )}
+
               {projectData.data?.developers.map((developer) => (
                 <li
                   key={developer.id}
@@ -273,13 +297,6 @@ export default function ProjectDetails() {
                   </div>
                 </li>
               ))}
-
-              {!projectData.data?.developers.length && (
-                <li className="text-justify text-bodys leading-5 text-white text-opacity-75">
-                  No developers are currently assigned to this project. To add a
-                  developer, click the &quot;Add Developer&quot; icon.
-                </li>
-              )}
             </SidebarCard>
 
             {sessionData?.user?.id === projectData?.data?.ownerId && (
