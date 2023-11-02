@@ -96,10 +96,15 @@ const BugPage: NextPage = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(`/api/bug/${id}`);
+
+        if (res.status === 404) {
+          throw new Error("Bug not found");
+        }
+
         const data = await res.json();
         setBugData({ data, loading: false, error: null });
       } catch (error: any) {
-        setBugData({ data: null, loading: false, error: error });
+        setBugData({ data: null, loading: false, error });
       }
     };
 
@@ -196,7 +201,7 @@ const BugPage: NextPage = () => {
           {bugData.loading ? (
             <div>loading...</div>
           ) : bugData.error ? (
-            <div>error</div>
+            <div>Error</div>
           ) : (
             <div>
               <div>Bug: {bugData.data?.title}</div>
@@ -215,12 +220,22 @@ const BugPage: NextPage = () => {
                 <span
                   className="hover:opacity-50 opacity-70 cursor-pointer"
                   title={`${format(
-                    new Date(bugData.data?.createdAt),
+                    new Date(
+                      bugData.data?.createdAt &&
+                      !isNaN(Date.parse(bugData.data?.createdAt))
+                        ? new Date(bugData.data?.createdAt)
+                        : new Date()
+                    ),
                     "cccc do 'of' MMMM yyyy 'at' HH:mm:ss"
                   )}`}
                 >
                   {formatDistance(
-                    new Date(bugData.data?.createdAt || ""),
+                    new Date(
+                      bugData.data?.createdAt &&
+                      !isNaN(Date.parse(bugData.data?.createdAt))
+                        ? new Date(bugData.data?.createdAt)
+                        : new Date()
+                    ),
                     new Date(),
                     {
                       addSuffix: true,
@@ -248,7 +263,7 @@ const BugPage: NextPage = () => {
                   </PriorityDropdown>
                 ) : (
                   <ShieldExclamationIcon
-                    title={`${bugData.data?.priority.toLocaleLowerCase()} priority (only project owner and reporter can edit priority)`}
+                    title={`${bugData.data?.priority?.toLocaleLowerCase()} priority (only project owner and reporter can edit priority)`}
                     className={`h-8 w-8`}
                     stroke={
                       Priorities.find((p) => p.value === bugData.data?.priority)
@@ -256,7 +271,7 @@ const BugPage: NextPage = () => {
                     }
                   />
                 )}
-                {bugData.data?.priority.toLocaleLowerCase()} priority &middot;{" "}
+                {bugData.data?.priority?.toLocaleLowerCase()} priority &middot;{" "}
                 {bugData.data?.assignedTo?.id ? (
                   <span>
                     assigned to{" "}
@@ -321,7 +336,7 @@ const BugPage: NextPage = () => {
         </div>
 
         <h2 className="text-2xl mt-2">
-          Comments ({bugData.data?.comments.length})
+          Comments ({bugData.data?.comments?.length})
         </h2>
 
         <div className="ml-3">
@@ -330,14 +345,19 @@ const BugPage: NextPage = () => {
           ) : bugData.error ? (
             <div>error</div>
           ) : (
-            bugData.data?.comments.map((comment) => (
+            bugData.data?.comments?.map((comment) => (
               <div key={comment.id} className="bg-gray-800 w-full p-3 mt-3">
                 <div className="text-gray-400 text-sm">
                   from {comment.author.name},{" "}
                   <span
                     className="hover:opacity-50 opacity-70 cursor-pointer"
                     title={`${format(
-                      new Date(bugData.data?.createdAt),
+                      new Date(
+                        bugData.data?.createdAt &&
+                        !isNaN(Date.parse(bugData.data?.createdAt))
+                          ? new Date(bugData.data?.createdAt)
+                          : new Date()
+                      ),
                       "cccc do 'of' MMMM yyyy 'at' HH:mm:ss"
                     )}`}
                   >

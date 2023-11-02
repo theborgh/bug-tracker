@@ -53,6 +53,11 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     }
   });
 
+  if (!project) {
+    res.status(404).json({ message: "Project not found" });
+    return;
+  }
+
   res.json(project);
 } catch (e) {
   console.error("Error querying the database:", e);

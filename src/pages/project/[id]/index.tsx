@@ -81,8 +81,16 @@ export default function ProjectDetails() {
         const res = await fetch(
           `/api/project/getProjectDetails?id=${router.query.id}`
         );
+
+        if (res.status === 404) {
+          throw new Error("Project not found");
+        }
+
         const data = await res.json();
+
         setProjectData({ data, loading: false, error: null });
+
+        console.log(data);
       } catch (error: any) {
         setProjectData({ data: null, loading: false, error });
       }
@@ -209,7 +217,9 @@ export default function ProjectDetails() {
               {projectData.loading ? (
                 <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
               ) : projectData.error ? (
-                <p>Error: {projectData.error.message}</p>
+                <p className="text-white text-center">
+                  Error: {projectData.error.message}
+                </p>
               ) : (projectData.data?.bugs?.length ?? 0) > 0 ? (
                 <div className="mt-4 flex flex-wrap gap-3">
                   {filteredBugs?.map((bug) => (
