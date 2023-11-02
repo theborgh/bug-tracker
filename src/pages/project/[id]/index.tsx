@@ -87,10 +87,7 @@ export default function ProjectDetails() {
         }
 
         const data = await res.json();
-
         setProjectData({ data, loading: false, error: null });
-
-        console.log(data);
       } catch (error: any) {
         setProjectData({ data: null, loading: false, error });
       }

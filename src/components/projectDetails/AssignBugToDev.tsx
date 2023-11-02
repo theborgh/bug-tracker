@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/Dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import PlusIcon from "@heroicons/react/24/outline/PlusIcon";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { getNameLetters } from "@/utils/data";
 
 type AssignBugToDevProps = {
@@ -29,12 +31,14 @@ export default function AssignBugToDev({
   projectDevelopers,
   handleBugAssignment,
 }: AssignBugToDevProps) {
-  // For new bugs, simply call the handleBugAssignment function
+  const [loading, setLoading] = useState(false);
+
   const mutate = async (bugId: string, assignedToUserId: string) => {
     if (bugId === "newBug") {
       handleBugAssignment(bugId, assignedToUserId);
     } else {
       try {
+        setLoading(true);
         const response = await fetch(`/api/bug/${bugId}`, {
           method: "PATCH",
           headers: {
@@ -45,9 +49,11 @@ export default function AssignBugToDev({
         if (!response.ok) {
           throw new Error("Failed to assign bug to developer");
         }
+        setLoading(false);
         handleBugAssignment(bugId, assignedToUserId);
       } catch (error) {
         console.error(error);
+        setLoading(false);
       }
     }
   };
@@ -68,7 +74,9 @@ export default function AssignBugToDev({
           {projectDevelopers.map((developer) => (
             <li
               key={developer.id}
-              className="flex justify-between text-bodys p-1 hover:cursor-pointer hover:bg-slate-800 hover:text-white"
+              className={`flex justify-between text-bodys p-1 hover:cursor-pointer hover:bg-slate-800 hover:text-white ${
+                loading && "pointer-events-none opacity-25"
+              }}`}
               onClick={() => mutate(bugId, developer.id)}
             >
               <div className="flex items-center gap-2">
@@ -81,10 +89,17 @@ export default function AssignBugToDev({
                 <span>{developer.name}</span>
               </div>
               <button aria-label={`Assign to ${developer?.name ?? ""} `}>
-                <PlusIcon
-                  aria-hidden
-                  className="h-6 w-6 transition duration-200 hover:opacity-50"
-                />
+                {loading ? (
+                  <ArrowPathIcon
+                    aria-hidden
+                    className="h-6 w-6 transition duration-200 hover:opacity-50 animate-spin"
+                  />
+                ) : (
+                  <PlusIcon
+                    aria-hidden
+                    className="h-6 w-6 transition duration-200 hover:opacity-50"
+                  />
+                )}
               </button>
             </li>
           ))}
