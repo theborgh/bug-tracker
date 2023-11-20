@@ -99,12 +99,19 @@ export function BugCard({
           handleBugStatusChange={handleBugStatusChange}
         />
         {assignedToDev ? (
-          <Avatar title={assignedToDev?.name ?? "anonymous"}>
-            <AvatarImage src={assignedToDev?.image ?? ""} />
-            <AvatarFallback>
-              {getNameLetters(assignedToDev?.name ?? "")}
-            </AvatarFallback>
-          </Avatar>
+          <AssignBugToDev
+            bugTitle={title}
+            bugId={id}
+            projectDevelopers={projectDevelopers ?? []}
+            handleBugAssignment={handleBugAssignment}
+          >
+            <Avatar title={assignedToDev?.name ?? "anonymous"}>
+              <AvatarImage src={assignedToDev?.image ?? ""} />
+              <AvatarFallback>
+                {getNameLetters(assignedToDev?.name ?? "")}
+              </AvatarFallback>
+            </Avatar>
+          </AssignBugToDev>
         ) : (
           <AssignBugToDev
             bugTitle={title}
