@@ -164,7 +164,7 @@ export default function ProjectDetails() {
     });
   };
 
-  const changeBugAssignee = (bugId: string, assignedToId: string) => {
+  const changeBugAssignee = (bugId: string, assignedToId: string | null) => {
     setProjectData((prev) => {
       if (!prev.data) return { data: null, loading: true, error: null };
 
@@ -172,7 +172,7 @@ export default function ProjectDetails() {
         if (bug.id === bugId) {
           return {
             ...bug,
-            status: Status.TODO,
+            status: assignedToId ? Status.TODO : Status.UNASSIGNED,
             assignedToUserId: assignedToId,
           };
         }

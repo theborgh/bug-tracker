@@ -25,7 +25,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       } else if (assignedToUserId || assignedToUserId === null) {
         bug = await prisma.bug.update({
           where: { id },
-          data: { assignedToUserId, status: "TODO" },
+          data: { assignedToUserId, status: assignedToUserId ? "TODO" : "UNASSIGNED" },
         });
       } else {
         throw new Error("Invalid request body");

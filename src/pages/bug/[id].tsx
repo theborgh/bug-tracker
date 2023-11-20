@@ -188,6 +188,7 @@ const BugPage: NextPage = () => {
               (dev) => dev.id === assignedToId
             )?.image,
           },
+          status: assignedToId ? prev.data.status : Status.UNASSIGNED,
         },
       };
     });
