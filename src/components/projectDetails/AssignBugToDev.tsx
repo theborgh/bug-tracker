@@ -21,7 +21,7 @@ type AssignBugToDevProps = {
     name: string;
     image: string;
   }[];
-  handleBugAssignment: (bugId: string, assignedToId: string) => void;
+  handleBugAssignment: (bugId: string, assignedToId: string | null) => void;
   children: ReactNode;
 };
 export default function AssignBugToDev({
@@ -33,7 +33,7 @@ export default function AssignBugToDev({
 }: AssignBugToDevProps) {
   const [loading, setLoading] = useState(false);
 
-  const mutate = async (bugId: string, assignedToUserId: string) => {
+  const mutate = async (bugId: string, assignedToUserId: string | null) => {
     if (bugId === "newBug") {
       handleBugAssignment(bugId, assignedToUserId);
     } else {
@@ -104,6 +104,7 @@ export default function AssignBugToDev({
             </li>
           ))}
         </ul>
+        <button onClick={() => mutate(bugId, null)}>Unassign</button>
       </DialogContent>
     </Dialog>
   );

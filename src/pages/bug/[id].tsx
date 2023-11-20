@@ -171,7 +171,7 @@ const BugPage: NextPage = () => {
     }));
   };
 
-  const handleBugAssignment = (bugId: string, assignedToId: string) => {
+  const handleBugAssignment = (bugId: string, assignedToId: string | null) => {
     setBugData((prev) => {
       if (!prev.data) return { data: null, loading: true, error: null };
 
@@ -277,7 +277,7 @@ const BugPage: NextPage = () => {
                     assigned to{" "}
                     <AssignBugToDev
                       bugTitle={bugData.data.title}
-                      bugId={"newBug"}
+                      bugId={bugData.data.id}
                       projectDevelopers={bugData.data.project.developers ?? []}
                       handleBugAssignment={handleBugAssignment}
                     >

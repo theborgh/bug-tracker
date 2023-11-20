@@ -37,7 +37,7 @@ type BugCardProps = {
   status: Status;
   handleBugStatusChange: (bugId: string, newStatus: Status) => void;
   handleBugPriorityChange: (bugId: string, newPriority: Priority) => void;
-  handleBugAssignment: (bugId: string, assignedToId: string) => void;
+  handleBugAssignment: (bugId: string, assignedToId: string | null) => void;
 };
 
 export function BugCard({

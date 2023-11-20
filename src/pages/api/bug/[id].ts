@@ -22,7 +22,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           where: { id },
           data: { priority },
         });
-      } else if (assignedToUserId) {
+      } else if (assignedToUserId || assignedToUserId === null) {
         bug = await prisma.bug.update({
           where: { id },
           data: { assignedToUserId, status: "TODO" },

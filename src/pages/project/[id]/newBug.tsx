@@ -110,7 +110,7 @@ const NewBug: NextPage = () => {
     }
   };
 
-  const handleBugAssignment = (bugId: string, assignedToId: string) => {
+  const handleBugAssignment = (bugId: string, assignedToId: string | null) => {
     setAssignedDev(
       projectDevelopers.data?.find((d) => d.id === assignedToId) ?? {
         id: "",
