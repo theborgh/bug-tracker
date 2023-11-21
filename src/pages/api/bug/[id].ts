@@ -40,17 +40,19 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         });
       }
 
-      if(assignedToUserId === null) {
+      if (assignedToUserId === null) {
         bug = await prisma.bug.update({
           where: { id },
           data: { status: 'UNASSIGNED', assignedToUserId },
         });
       }
 
-      await prisma.project.update({
-        where: { id: bug.projectId },
-        data: { updatedAt: new Date() },
-      });
+      if (bug) {
+        await prisma.project.update({
+          where: { id: bug.projectId },
+          data: { updatedAt: new Date() },
+        });
+      }
 
       res.json(bug);
     } catch (e) {
