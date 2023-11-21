@@ -12,7 +12,7 @@ import StatusDropdown from "@/components/projectDetails/StatusDropdown";
 import PriorityDropdown from "@/components/projectDetails/PriorityDropdown";
 import AssignBugToDev from "@/components/projectDetails/AssignBugToDev";
 import Link from "next/link";
-import styles from "./styles";
+import { bugCommentStyles } from "../../utils/styles";
 import { format, formatDistance } from "date-fns";
 import {
   UserPlusIcon,
@@ -428,7 +428,7 @@ const BugPage: NextPage = () => {
               onChange={(e) => setMarkdown(e.target.value)}
               className="bg-slate-800 rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-full mb-2"
               placeholder="Add a comment (type @ to mention another developer on the project)"
-              style={styles}
+              style={bugCommentStyles}
             >
               <Mention
                 trigger="@"
