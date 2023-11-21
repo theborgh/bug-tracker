@@ -10,7 +10,6 @@ import AssignBugToDev from "@/components/projectDetails/AssignBugToDev";
 import { FetchState } from "@/utils/fetch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { getNameLetters } from "@/utils/data";
-import { set } from "date-fns";
 
 interface ProjectData {
   id: string;
@@ -85,7 +84,7 @@ const NewBug: NextPage = () => {
       }
     };
     if (selectedProject) fetchDevelopers();
-  }, [selectedProject]);
+  }, [selectedProject, assignedDev.id]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -214,6 +213,7 @@ const NewBug: NextPage = () => {
                 ) : (
                   <div tabIndex={4}>
                     <AssignBugToDev
+                      assignedToId={assignedDev.id}
                       bugTitle={title}
                       bugId={"newBug"}
                       projectDevelopers={projectDevelopers.data ?? []}
