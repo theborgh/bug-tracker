@@ -68,19 +68,27 @@ export function BugCard({
           >
             <Link href={`/bug/${id}`}>{title}</Link>
           </h3>
-          <PriorityDropdown
-            bugId={id}
-            priority={priority.value}
-            projectOwnerId={projectOwnerId}
-            reporterId={reporterId}
-            handleBugPriorityChange={handleBugPriorityChange}
-          >
+          {canEditPriority ? (
+            <PriorityDropdown
+              bugId={id}
+              priority={priority.value}
+              projectOwnerId={projectOwnerId}
+              reporterId={reporterId}
+              handleBugPriorityChange={handleBugPriorityChange}
+            >
+              <ShieldExclamationIcon
+                title={`${priority.value.toLocaleLowerCase()} priority`}
+                className={`h-8 w-8 hover:cursor-pointer`}
+                stroke={priority.stroke}
+              />
+            </PriorityDropdown>
+          ) : (
             <ShieldExclamationIcon
               title={`${priority.value.toLocaleLowerCase()} priority`}
               className={`h-8 w-8 hover:cursor-pointer`}
               stroke={priority.stroke}
             />
-          </PriorityDropdown>
+          )}
         </div>
         <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
           {formatDistance(new Date(createdAt), new Date(), { addSuffix: true })}{" "}
@@ -114,6 +122,7 @@ export function BugCard({
           </AssignBugToDev>
         ) : (
           <AssignBugToDev
+            assignedToId={null}
             bugTitle={title}
             bugId={id}
             projectDevelopers={projectDevelopers}
