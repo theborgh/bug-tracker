@@ -24,6 +24,7 @@ type AssignBugToDevProps = {
   handleBugAssignment: (bugId: string, assignedToId: string | null) => void;
   children: ReactNode;
 };
+
 export default function AssignBugToDev({
   children,
   bugId,
@@ -104,7 +105,7 @@ export default function AssignBugToDev({
             </li>
           ))}
         </ul>
-        <button onClick={() => mutate(bugId, null)}>Unassign</button>
+        {<button onClick={() => mutate(bugId, null)}>Unassign</button>}
       </DialogContent>
     </Dialog>
   );
