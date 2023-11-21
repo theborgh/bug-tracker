@@ -19,6 +19,13 @@ import {
   ShieldExclamationIcon,
 } from "@heroicons/react/24/outline";
 
+interface SessionData {
+  user: {
+    id: string;
+    name: string;
+    image: string;
+  };
+}
 interface Comment {
   authorId: string;
   author: {
@@ -77,7 +84,7 @@ const BugPage: NextPage = () => {
     query: { id },
     push,
   } = useRouter();
-  const { data: sessionData } = useSession();
+  const { data: sessionData } = useSession() as { data: SessionData | null };
 
   useEffect(() => {
     if (sessionData?.user?.id) {
