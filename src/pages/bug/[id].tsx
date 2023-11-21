@@ -285,6 +285,7 @@ const BugPage: NextPage = () => {
                   <span>
                     assigned to{" "}
                     <AssignBugToDev
+                      assignedToId={bugData.data?.assignedTo.id}
                       bugTitle={bugData.data.title}
                       bugId={bugData.data.id}
                       projectDevelopers={bugData.data.project.developers ?? []}
@@ -307,6 +308,7 @@ const BugPage: NextPage = () => {
                     <span className="items-center">unassigned</span>{" "}
                     <span className="items-center">
                       <AssignBugToDev
+                        assignedToId={bugData.data?.assignedTo.id}
                         bugTitle={bugData.data?.title ?? ""}
                         bugId={bugData.data?.id ?? ""}
                         projectDevelopers={

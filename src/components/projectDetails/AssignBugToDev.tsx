@@ -14,6 +14,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { getNameLetters } from "@/utils/data";
 
 type AssignBugToDevProps = {
+  assignedToId: string | null;
   bugTitle: string;
   bugId: string;
   projectDevelopers: {
@@ -26,6 +27,7 @@ type AssignBugToDevProps = {
 };
 
 export default function AssignBugToDev({
+  assignedToId,
   children,
   bugId,
   bugTitle,
@@ -76,7 +78,8 @@ export default function AssignBugToDev({
             <li
               key={developer.id}
               className={`flex justify-between text-bodys p-1 hover:cursor-pointer hover:bg-slate-800 hover:text-white ${
-                loading && "pointer-events-none opacity-25"
+                (loading || assignedToId === developer.id) &&
+                "pointer-events-none opacity-25"
               }}`}
               onClick={() => mutate(bugId, developer.id)}
             >
@@ -96,16 +99,20 @@ export default function AssignBugToDev({
                     className="h-6 w-6 transition duration-200 hover:opacity-50 animate-spin"
                   />
                 ) : (
-                  <PlusIcon
-                    aria-hidden
-                    className="h-6 w-6 transition duration-200 hover:opacity-50"
-                  />
+                  assignedToId !== developer.id && (
+                    <PlusIcon
+                      aria-hidden
+                      className="h-6 w-6 transition duration-200 hover:opacity-50"
+                    />
+                  )
                 )}
               </button>
             </li>
           ))}
         </ul>
-        {<button onClick={() => mutate(bugId, null)}>Unassign</button>}
+        {assignedToId && (
+          <button onClick={() => mutate(bugId, null)}>Unassign</button>
+        )}
       </DialogContent>
     </Dialog>
   );

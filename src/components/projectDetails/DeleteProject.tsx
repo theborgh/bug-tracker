@@ -16,7 +16,7 @@ type DeleteProjectProps = {
   children: ReactNode;
 };
 
-export default function AssignBugToDev({
+export default function DeleteProject({
   projectId,
   projectTitle,
   children,

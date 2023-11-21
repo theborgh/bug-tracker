@@ -19,7 +19,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             data: { status, assignedToUserId: null },
           });
         } else {
-
           bug = await prisma.bug.update({
             where: { id },
             data: { status },
@@ -39,16 +38,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           where: { id },
           data: { assignedToUserId },
         });
+      }
 
-        if(assignedToUserId === null) {
-          bug = await prisma.bug.update({
-            where: { id },
-            data: { status: 'UNASSIGNED' },
-          });
-        }
-
-      } else if (!status && !priority && !assignedToUserId) {
-        throw new Error("Invalid request body");
+      if(assignedToUserId === null) {
+        bug = await prisma.bug.update({
+          where: { id },
+          data: { status: 'UNASSIGNED', assignedToUserId },
+        });
       }
 
       await prisma.project.update({

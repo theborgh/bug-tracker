@@ -99,6 +99,7 @@ export function BugCard({
         />
         {assignedToDev ? (
           <AssignBugToDev
+            assignedToId={assignedToDev?.id}
             bugTitle={title}
             bugId={id}
             projectDevelopers={projectDevelopers ?? []}
