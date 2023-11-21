@@ -53,7 +53,7 @@ interface BugData {
     }[];
   };
   assignedTo: {
-    id: string;
+    id: string | null;
     name: string;
     image: string;
   };
@@ -127,23 +127,28 @@ const BugPage: NextPage = () => {
       if (data.error) {
         console.log(data.error);
       } else {
-        setBugData((prev) => ({
-          ...prev,
-          data: {
-            ...prev.data,
-            comments: [
-              ...prev.data.comments,
-              {
-                ...data,
-                author: {
-                  id: sessionData?.user?.id,
-                  name: sessionData?.user?.name,
-                  image: sessionData?.user?.image,
-                },
-              } as Comment,
-            ],
-          },
-        }));
+        setBugData((prev) => {
+          if (!prev.data) return prev;
+
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              comments: [
+                ...prev.data.comments,
+                {
+                  ...data,
+                  author: {
+                    id: sessionData?.user?.id,
+                    name: sessionData?.user?.name,
+                    image: sessionData?.user?.image,
+                  },
+                } as Comment,
+              ],
+            },
+          };
+        });
+
         setMarkdown("");
       }
     } catch (error: any) {
@@ -152,31 +157,45 @@ const BugPage: NextPage = () => {
   };
 
   const handleBugStatusChange = async (bugId: string, newStatus: Status) => {
-    setBugData((prev) => ({
-      ...prev,
-      data: {
-        ...prev.data,
-        status: newStatus,
-        assignedTo: {
-          id:
-            newStatus === Status.UNASSIGNED ? null : prev.data?.assignedTo?.id,
-          name:
-            newStatus === Status.UNASSIGNED ? "" : prev.data?.assignedTo?.name,
-          image:
-            newStatus === Status.UNASSIGNED ? "" : prev.data?.assignedTo?.image,
+    setBugData((prev) => {
+      if (!prev.data) return prev;
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          status: newStatus,
+          assignedTo: {
+            id:
+              newStatus === Status.UNASSIGNED
+                ? null
+                : prev.data?.assignedTo?.id || null,
+            name:
+              newStatus === Status.UNASSIGNED
+                ? ""
+                : prev.data?.assignedTo?.name,
+            image:
+              newStatus === Status.UNASSIGNED
+                ? ""
+                : prev.data?.assignedTo?.image,
+          },
         },
-      },
-    }));
+      };
+    });
   };
 
   const handleBugPriorityChange = (bugId: string, newPriority: Priority) => {
-    setBugData((prev) => ({
-      ...prev,
-      data: {
-        ...prev.data,
-        priority: newPriority,
-      },
-    }));
+    setBugData((prev) => {
+      if (!prev.data) return prev;
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          priority: newPriority,
+        },
+      };
+    });
   };
 
   const handleBugAssignment = (bugId: string, assignedToId: string | null) => {
@@ -189,12 +208,14 @@ const BugPage: NextPage = () => {
           ...prev.data,
           assignedTo: {
             id: assignedToId,
-            name: prev.data.project.developers.find(
-              (dev) => dev.id === assignedToId
-            )?.name,
-            image: prev.data.project.developers.find(
-              (dev) => dev.id === assignedToId
-            )?.image,
+            name:
+              prev.data.project.developers.find(
+                (dev) => dev.id === assignedToId
+              )?.name || "",
+            image:
+              prev.data.project.developers.find(
+                (dev) => dev.id === assignedToId
+              )?.image || "",
           },
           status: assignedToId ? prev.data.status : Status.UNASSIGNED,
         },
@@ -308,7 +329,7 @@ const BugPage: NextPage = () => {
                     <span className="items-center">unassigned</span>{" "}
                     <span className="items-center">
                       <AssignBugToDev
-                        assignedToId={bugData.data?.assignedTo.id}
+                        assignedToId={bugData.data?.assignedTo?.id ?? null}
                         bugTitle={bugData.data?.title ?? ""}
                         bugId={bugData.data?.id ?? ""}
                         projectDevelopers={
