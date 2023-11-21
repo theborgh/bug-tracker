@@ -50,8 +50,6 @@ export const authOptions = {
       });
       session.user.id = res.id;
 
-      console.log(session);
-
       return session;
     },
   },

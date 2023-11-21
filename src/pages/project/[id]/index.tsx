@@ -168,7 +168,7 @@ export default function ProjectDetails() {
 
   const changeBugAssignee = (bugId: string, assignedToId: string | null) => {
     setProjectData((prev) => {
-      if (!prev.data) return { data: null, loading: true, error: null };
+      if (!prev.data) return prev;
 
       const newBugs = prev.data.bugs.map((bug) => {
         if (bug.id === bugId) {
