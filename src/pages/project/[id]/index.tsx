@@ -125,6 +125,8 @@ export default function ProjectDetails() {
           return {
             ...bug,
             status: newStatus,
+            assignedToUserId:
+              newStatus === Status.UNASSIGNED ? "" : bug.assignedToUserId,
           };
         }
         return bug;

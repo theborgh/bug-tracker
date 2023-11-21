@@ -17,17 +17,21 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           where: { id },
           data: { status },
         });
-      } else if (priority) {
+      }
+      
+      if (priority) {
         bug = await prisma.bug.update({
           where: { id },
           data: { priority },
         });
-      } else if (assignedToUserId || assignedToUserId === null) {
+      }
+      
+      if (assignedToUserId || assignedToUserId === null) {
         bug = await prisma.bug.update({
           where: { id },
           data: { assignedToUserId, status: assignedToUserId ? "TODO" : "UNASSIGNED" },
         });
-      } else {
+      } else if (!status && !priority && !assignedToUserId) {
         throw new Error("Invalid request body");
       }
 

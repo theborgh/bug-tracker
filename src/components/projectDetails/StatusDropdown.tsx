@@ -27,10 +27,13 @@ const StatusDropdown = ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ status: newStatus }),
+      body: JSON.stringify({
+        status: newStatus,
+        assignedToUserId: newStatus === "UNASSIGNED" ? null : assigneeId,
+      }),
     });
 
-    const data = await response.json();
+    await response.json();
 
     if (response.ok) {
       handleBugStatusChange(bugId, newStatus);

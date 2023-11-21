@@ -4,7 +4,6 @@ import {
   UserPlusIcon,
 } from "@heroicons/react/24/outline";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
-import { useSession } from "next-auth/react";
 import PriorityDropdown from "./projectDetails/PriorityDropdown";
 import formatDistance from "date-fns/formatDistance";
 import StatusDropdown from "./projectDetails/StatusDropdown";

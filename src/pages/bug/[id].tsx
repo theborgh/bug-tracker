@@ -151,12 +151,20 @@ const BugPage: NextPage = () => {
     }
   };
 
-  const handleBugStatusChange = (bugId: string, newStatus: Status) => {
+  const handleBugStatusChange = async (bugId: string, newStatus: Status) => {
     setBugData((prev) => ({
       ...prev,
       data: {
         ...prev.data,
         status: newStatus,
+        assignedTo: {
+          id:
+            newStatus === Status.UNASSIGNED ? null : prev.data?.assignedTo?.id,
+          name:
+            newStatus === Status.UNASSIGNED ? "" : prev.data?.assignedTo?.name,
+          image:
+            newStatus === Status.UNASSIGNED ? "" : prev.data?.assignedTo?.image,
+        },
       },
     }));
   };
