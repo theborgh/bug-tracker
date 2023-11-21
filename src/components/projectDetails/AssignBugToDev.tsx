@@ -35,8 +35,12 @@ export default function AssignBugToDev({
   handleBugAssignment,
 }: AssignBugToDevProps) {
   const [loading, setLoading] = useState(false);
+  const [selectedDeveloper, setSelectedDeveloper] = useState<null | string>(
+    null
+  );
 
   const mutate = async (bugId: string, assignedToUserId: string | null) => {
+    setSelectedDeveloper(assignedToUserId);
     if (bugId === "newBug") {
       handleBugAssignment(bugId, assignedToUserId);
     } else {
@@ -93,19 +97,19 @@ export default function AssignBugToDev({
                 <span>{developer.name}</span>
               </div>
               <button aria-label={`Assign to ${developer?.name ?? ""} `}>
-                {loading ? (
-                  <ArrowPathIcon
-                    aria-hidden
-                    className="h-6 w-6 transition duration-200 hover:opacity-50 animate-spin"
-                  />
-                ) : (
-                  assignedToId !== developer.id && (
-                    <PlusIcon
-                      aria-hidden
-                      className="h-6 w-6 transition duration-200 hover:opacity-50"
-                    />
-                  )
-                )}
+                {loading
+                  ? developer.id === selectedDeveloper && (
+                      <ArrowPathIcon
+                        aria-hidden
+                        className="h-6 w-6 transition duration-200 hover:opacity-50 animate-spin"
+                      />
+                    )
+                  : assignedToId !== developer.id && (
+                      <PlusIcon
+                        aria-hidden
+                        className="h-6 w-6 transition duration-200 hover:opacity-50"
+                      />
+                    )}
               </button>
             </li>
           ))}
