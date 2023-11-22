@@ -24,6 +24,7 @@ import Sidebar from "@/components/Sidebar";
 import { getNameLetters } from "@/utils/data";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import DeleteProject from "@/components/projectDetails/DeleteProject";
+import LoginErrorMessage from "@/components/LoginErrorMessage";
 
 interface ProjectData {
   id: string;
@@ -190,6 +191,10 @@ export default function ProjectDetails() {
       };
     });
   };
+
+  if (!sessionData) {
+    return <LoginErrorMessage />;
+  }
 
   return (
     <main className="flex bg-gray-900">

@@ -10,6 +10,7 @@ import AssignBugToDev from "@/components/projectDetails/AssignBugToDev";
 import { FetchState } from "@/utils/fetch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { getNameLetters } from "@/utils/data";
+import LoginErrorMessage from "@/components/LoginErrorMessage";
 
 interface ProjectData {
   id: string;
@@ -118,6 +119,10 @@ const NewBug: NextPage = () => {
       }
     );
   };
+
+  if (!sessionData) {
+    return <LoginErrorMessage />;
+  }
 
   return (
     <main className="flex">

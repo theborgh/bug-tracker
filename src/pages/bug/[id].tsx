@@ -18,6 +18,7 @@ import {
   UserPlusIcon,
   ShieldExclamationIcon,
 } from "@heroicons/react/24/outline";
+import LoginErrorMessage from "@/components/LoginErrorMessage";
 
 interface SessionData {
   user: {
@@ -229,6 +230,10 @@ const BugPage: NextPage = () => {
       };
     });
   };
+
+  if (!sessionData) {
+    return <LoginErrorMessage />;
+  }
 
   return (
     <main className="flex">

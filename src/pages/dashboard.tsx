@@ -7,6 +7,7 @@ import { SimpleBugCard } from "@/components/BugCard";
 import { Status } from "@prisma/client";
 import Sidebar from "@/components/Sidebar";
 import { FetchState } from "@/utils/fetch";
+import LoginErrorMessage from "@/components/LoginErrorMessage";
 
 interface Developer {
   id: string;
@@ -79,6 +80,10 @@ export default function Dashboard() {
 
     if (sessionData?.user.id) fetchData();
   }, [sessionData?.user.id]);
+
+  if (!sessionData) {
+    return <LoginErrorMessage />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex">
