@@ -8,18 +8,15 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "test": "jest --watch"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "test": "jest --watch",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "jest --findRelatedTests",
       "git add"
-    ]
+    ],
+    "*.js": "eslint --cache --fix"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
