@@ -10,6 +10,17 @@
     "postinstall": "prisma generate",
     "test": "jest --watch"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "jest --findRelatedTests",
+      "git add"
+    ]
+  },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "@next-auth/prisma-adapter": "^1.0.7",
@@ -46,8 +57,10 @@
     "autoprefixer": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
+    "husky": "^8.0.3",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "lint-staged": "^15.1.0",
     "postcss": "latest",
     "tailwindcss": "latest",
     "typescript": "latest"
