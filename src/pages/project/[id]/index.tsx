@@ -224,7 +224,7 @@ export default function ProjectDetails() {
                 <p className="text-white text-center">
                   Error: {projectData.error.message}
                 </p>
-              ) : (projectData.data?.bugs?.length ?? 0) > 0 ? (
+              ) : (filteredBugs?.length ?? 0) > 0 ? (
                 <div className="mt-4 flex flex-wrap gap-3">
                   {filteredBugs?.map((bug) => (
                     <BugCard
