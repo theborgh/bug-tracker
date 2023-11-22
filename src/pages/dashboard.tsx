@@ -1,4 +1,3 @@
-import LoginButton from "@/components/LoginButton";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -8,6 +7,8 @@ import { Status } from "@prisma/client";
 import Sidebar from "@/components/Sidebar";
 import { FetchState } from "@/utils/fetch";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
+import LoadingMessage from "@/components/LoadingMessage";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 interface Developer {
   id: string;
@@ -81,7 +82,14 @@ export default function Dashboard() {
     if (sessionData?.user.id) fetchData();
   }, [sessionData?.user.id]);
 
-  if (!sessionData) {
+  if (
+    !sessionData &&
+    !(
+      ownedProjects.loading ||
+      assignedToProjects.loading ||
+      assignedToMeBugs.loading
+    )
+  ) {
     return <LoginErrorMessage />;
   }
 
@@ -93,9 +101,7 @@ export default function Dashboard() {
         <h2 className="text-2xl my-3">My projects</h2>
         <div className="flex flex-wrap gap-4 ml">
           {ownedProjects.loading ? (
-            <p>Loading my projects...</p>
-          ) : ownedProjects.error ? (
-            <p>Error: {ownedProjects.error.message}</p>
+            <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
           ) : (
             ownedProjects.data
               ?.sort(
@@ -119,9 +125,7 @@ export default function Dashboard() {
         <h2 className="text-2xl my-3">Projects I&apos;m assigned to</h2>
         <div className="flex flex-wrap gap-4">
           {assignedToProjects.loading ? (
-            <p>Loading assigned projects...</p>
-          ) : assignedToProjects.error ? (
-            <p>Error: {assignedToProjects.error.message}</p>
+            <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
           ) : (
             assignedToProjects.data
               ?.filter(
@@ -148,9 +152,7 @@ export default function Dashboard() {
         <h2 className="text-2xl my-3">Bugs assigned to me</h2>
         <div className="flex flex-wrap gap-4">
           {assignedToMeBugs.loading ? (
-            <p>Loading assigned bugs...</p>
-          ) : assignedToMeBugs.error ? (
-            <p>Error: {assignedToMeBugs.error.message}</p>
+            <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
           ) : (
             assignedToMeBugs?.data
               ?.sort(
