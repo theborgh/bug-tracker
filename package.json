@@ -12,11 +12,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "jest --findRelatedTests",
-      "git add"
-    ],
-    "*.js": "eslint --cache --fix"
+    "*.{js,jsx,ts,tsx}": "jest --findRelatedTests"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
