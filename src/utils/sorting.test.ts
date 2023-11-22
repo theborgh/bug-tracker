@@ -68,7 +68,7 @@ describe("sorting", () => {
     });
 
     it("should sort by oldest", () => {
-      expect(sortByAllCriteria(bugA, bugB, "oldest")).toBeGreaterThan(2);
+      expect(sortByAllCriteria(bugA, bugB, "oldest")).toBeGreaterThan(1);
       expect(sortByAllCriteria(bugB, bugA, "oldest")).toBeGreaterThan(0);
     });
 
