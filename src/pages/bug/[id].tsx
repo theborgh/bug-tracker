@@ -17,8 +17,10 @@ import { format, formatDistance } from "date-fns";
 import {
   UserPlusIcon,
   ShieldExclamationIcon,
+  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
+import LoadingMessage from "@/components/LoadingMessage";
 
 interface SessionData {
   user: {
@@ -231,20 +233,24 @@ const BugPage: NextPage = () => {
     });
   };
 
-  if (!sessionData) {
+  if (!sessionData && !bugData.loading) {
     return <LoginErrorMessage />;
   }
 
   return (
     <main className="flex">
       <Sidebar loggedUser={sessionData?.user} />
-      <div className="flex-1 min-h-screen flex-col items-center bg-gray-900 text-white w-full p-8">
-        <h1 className="text-4xl mt-5 text-center">
-          {bugData.loading ? (
-            <div>loading...</div>
-          ) : bugData.error ? (
-            <div>Error</div>
-          ) : (
+      {bugData.loading ? (
+        <div className="flex-1 min-h-screen flex-col items-center bg-gray-900 text-white w-full p-8">
+          <div className="text-4xl mt-5 text-center">
+            <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
+          </div>
+        </div>
+      ) : bugData.error ? (
+        <div>Error</div>
+      ) : (
+        <div className="flex-1 min-h-screen flex-col items-center bg-gray-900 text-white w-full p-8">
+          <div className="text-4xl mt-5 text-center">
             <div>
               <div>Bug: {bugData.data?.title}</div>
               <span className="text-2xl">
@@ -365,97 +371,96 @@ const BugPage: NextPage = () => {
                 />
               </div>
             </div>
-          )}
-        </h1>
+          </div>
 
-        <h2 className="text-2xl my-2">Bug description</h2>
-        <div className="bg-gray-800 w-full p-3">
-          {bugData.loading ? (
-            <div>loading...</div>
-          ) : bugData.error ? (
-            <div>error</div>
-          ) : (
-            bugData.data?.markdown
-          )}
-        </div>
+          <h2 className="text-2xl my-2">Bug description</h2>
+          <div className="bg-gray-800 w-full p-3">
+            {bugData.loading ? (
+              <div>loading...</div>
+            ) : bugData.error ? (
+              <div>error</div>
+            ) : (
+              bugData.data?.markdown
+            )}
+          </div>
 
-        <h2 className="text-2xl mt-2">
-          Comments ({bugData.data?.comments?.length})
-        </h2>
+          <h2 className="text-2xl mt-2">
+            Comments ({bugData.data?.comments?.length})
+          </h2>
 
-        <div className="ml-3">
-          {bugData.loading ? (
-            <div>loading...</div>
-          ) : bugData.error ? (
-            <div>error</div>
-          ) : (
-            bugData.data?.comments?.map((comment) => (
-              <div key={comment.id} className="bg-gray-800 w-full p-3 mt-3">
-                <div className="text-gray-400 text-sm">
-                  from {comment.author.name},{" "}
-                  <span
-                    className="hover:opacity-50 opacity-70 cursor-pointer"
-                    title={`${format(
-                      new Date(
-                        bugData.data?.createdAt &&
-                        !isNaN(Date.parse(bugData.data?.createdAt))
-                          ? new Date(bugData.data?.createdAt)
-                          : new Date()
-                      ),
-                      "cccc do 'of' MMMM yyyy 'at' HH:mm:ss"
-                    )}`}
-                  >
-                    {formatDistance(new Date(comment.createdAt), new Date(), {
-                      addSuffix: true,
-                    })}
-                  </span>
+          <div className="ml-3">
+            {bugData.loading ? (
+              <LoadingMessage />
+            ) : bugData.error ? (
+              <div>error</div>
+            ) : (
+              bugData.data?.comments?.map((comment) => (
+                <div key={comment.id} className="bg-gray-800 w-full p-3 mt-3">
+                  <div className="text-gray-400 text-sm">
+                    from {comment.author.name},{" "}
+                    <span
+                      className="hover:opacity-50 opacity-70 cursor-pointer"
+                      title={`${format(
+                        new Date(
+                          bugData.data?.createdAt &&
+                          !isNaN(Date.parse(bugData.data?.createdAt))
+                            ? new Date(bugData.data?.createdAt)
+                            : new Date()
+                        ),
+                        "cccc do 'of' MMMM yyyy 'at' HH:mm:ss"
+                      )}`}
+                    >
+                      {formatDistance(new Date(comment.createdAt), new Date(), {
+                        addSuffix: true,
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex gap-4 mt-2">
+                    <Avatar title={comment.author.name ?? "anonymous"}>
+                      <AvatarImage src={comment.author.image ?? ""} />
+                      <AvatarFallback>
+                        {getNameLetters(comment.author.name ?? "")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>{comment.markdown}</div>
+                  </div>
                 </div>
-                <div className="flex gap-4 mt-2">
-                  <Avatar title={comment.author.name ?? "anonymous"}>
-                    <AvatarImage src={comment.author.image ?? ""} />
-                    <AvatarFallback>
-                      {getNameLetters(comment.author.name ?? "")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>{comment.markdown}</div>
-                </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
+          <h2 className="text-2xl mt-2">Add a comment</h2>
+
+          <div className="ml-3">
+            <form onSubmit={handleSubmit} className="flex-col">
+              <MentionsInput
+                value={markdown}
+                onChange={(e) => setMarkdown(e.target.value)}
+                className="bg-slate-800 rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-full mb-2"
+                placeholder="Add a comment (type @ to mention another developer on the project)"
+                style={bugCommentStyles}
+              >
+                <Mention
+                  trigger="@"
+                  data={
+                    bugData.data?.project?.developers.map((dev) => ({
+                      id: dev.id,
+                      display: dev.name,
+                    })) || []
+                  }
+                  displayTransform={(id, display) => `@${display}`}
+                  className="hidden"
+                  appendSpaceOnAdd={true}
+                  markup="@[__display__]"
+                />
+              </MentionsInput>
+
+              <button type="submit" className="btn-blue hover:bg-opacity-75">
+                Submit
+              </button>
+            </form>
+          </div>
         </div>
-
-        <h2 className="text-2xl mt-2">Add a comment</h2>
-
-        <div className="ml-3">
-          <form onSubmit={handleSubmit} className="flex-col">
-            <MentionsInput
-              value={markdown}
-              onChange={(e) => setMarkdown(e.target.value)}
-              className="bg-slate-800 rounded-sm p-3 border-solid border border-[#252945] focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent text-base mt-5 w-full mb-2"
-              placeholder="Add a comment (type @ to mention another developer on the project)"
-              style={bugCommentStyles}
-            >
-              <Mention
-                trigger="@"
-                data={
-                  bugData.data?.project?.developers.map((dev) => ({
-                    id: dev.id,
-                    display: dev.name,
-                  })) || []
-                }
-                displayTransform={(id, display) => `@${display}`}
-                className="hidden"
-                appendSpaceOnAdd={true}
-                markup="@[__display__]"
-              />
-            </MentionsInput>
-
-            <button type="submit" className="btn-blue hover:bg-opacity-75">
-              Submit
-            </button>
-          </form>
-        </div>
-      </div>
+      )}
     </main>
   );
 };
