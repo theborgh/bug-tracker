@@ -63,7 +63,7 @@ const NewProject: NextPage = () => {
   };
 
   return (
-    <main className="flex">
+    <main className="flex-row lg:flex bg-gray-900">
       <Sidebar loggedUser={sessionData?.user} />
       <div className="flex-1 min-h-screen flex-col items-center justify-center bg-gray-900 w-full p-8">
         <h1 className="mb-8 text-3xl text-white">Add New Project</h1>

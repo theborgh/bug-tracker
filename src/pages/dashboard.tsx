@@ -7,7 +7,6 @@ import { Status } from "@prisma/client";
 import Sidebar from "@/components/Sidebar";
 import { FetchState } from "@/utils/fetch";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
-import LoadingMessage from "@/components/LoadingMessage";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 interface Developer {
@@ -94,7 +93,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex">
+    <div className="min-h-screen bg-gray-900 text-white flex-row lg:flex">
       <Sidebar loggedUser={sessionData?.user} />
       <div className="flex-row mx-5 flex-1">
         <h1 className="text-4xl text-center mt-3">Dashboard</h1>
@@ -109,7 +108,7 @@ export default function Dashboard() {
                   new Date(b.updatedAt).getTime() -
                   new Date(a.updatedAt).getTime()
               )
-              .map((project) => (
+              ?.map((project) => (
                 <Link key={project.id} href={`/project/${project.id}`}>
                   <ProjectCard
                     id={project.id}
