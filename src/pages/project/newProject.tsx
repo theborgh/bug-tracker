@@ -71,7 +71,7 @@ const NewProject: NextPage = () => {
         <div className="text-white">
           <form onSubmit={(e) => handleSubmit(e)}>
             <div className="text-sm">Title</div>
-            <div className="mb-5 flex items-center gap-4">
+            <div className="mb-5 flex-row sm:flex items-center gap-4">
               <input
                 className="custom-input text-white"
                 type="text"
@@ -80,7 +80,10 @@ const NewProject: NextPage = () => {
                 minLength={3}
                 required
               />
-              <button type="submit" className="btn-blue whitespace-nowrap">
+              <button
+                type="submit"
+                className="mt-4 sm:mt-0 w-full sm:w-64 btn-blue whitespace-nowrap"
+              >
                 Create project
               </button>
             </div>

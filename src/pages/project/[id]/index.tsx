@@ -197,7 +197,7 @@ export default function ProjectDetails() {
   }
 
   return (
-    <main className="flex-row lg:flex bg-gray-900">
+    <main className="flex-row lg:flex bg-gray-900 min-h-screen">
       <Sidebar loggedUser={sessionData?.user} />
       <div className="flex-1 m-5">
         <div className="flex">
