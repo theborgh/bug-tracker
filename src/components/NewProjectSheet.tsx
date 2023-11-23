@@ -88,18 +88,6 @@ export default function NewProjectSheet() {
                 Create project
               </button>
             </div>
-
-            <div className="text-sm">Invite developers</div>
-            <div className="flex items-center gap-4">
-              <input
-                className="custom-input"
-                type="text"
-                placeholder="Enter an Email"
-              />
-              <button className="btn-blue whitespace-nowrap">
-                Send Invite
-              </button>
-            </div>
           </form>
 
           {projectDevelopers.length > 0 && (
