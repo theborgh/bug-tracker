@@ -4,7 +4,6 @@ import Image from "next/image";
 import { Squares2X2Icon } from "@heroicons/react/24/solid";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import Link from "next/link";
-import NewProjectSheet from "./NewProjectSheet";
 import LoginButton from "./LoginButton";
 import { FetchState } from "@/utils/fetch";
 import getConfig from "next/config";
@@ -78,7 +77,7 @@ export default function Sidebar({
           </div>
           <div className="flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center">
             <PencilSquareIcon className="h-7 w-7" />
-            <NewProjectSheet />
+            <Link href="/project/newProject">New Project</Link>
           </div>
           <div className="mt-5 mb-2 text-hsb uppercase">
             My work (

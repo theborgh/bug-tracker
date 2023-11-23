@@ -4,12 +4,9 @@ import { useRouter } from "next/router";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import PlusIcon from "@heroicons/react/24/outline/PlusIcon";
 import MinusIcon from "@heroicons/react/24/outline/MinusIcon";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTrigger,
-} from "@/components/ui/Sheet";
+import { NextPage } from "next";
+import Sidebar from "@/components/Sidebar";
+import { getNameLetters } from "@/utils/data";
 
 type DeveloperType = {
   id: string;
@@ -17,7 +14,7 @@ type DeveloperType = {
   image: string | null;
 };
 
-export default function NewProjectSheet() {
+const NewProject: NextPage = () => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const [projectName, setProjectName] = useState("");
@@ -66,12 +63,11 @@ export default function NewProjectSheet() {
   };
 
   return (
-    <Sheet>
-      <SheetTrigger>Create new project</SheetTrigger>
-      <SheetContent className="rounded-tl-large rounded-bl-large bg-slate-700">
-        <SheetHeader>
-          <h1 className="mb-8 text-3xl text-white">Add New Project</h1>
-        </SheetHeader>
+    <main className="flex">
+      <Sidebar loggedUser={sessionData?.user} />
+      <div className="flex-1 min-h-screen flex-col items-center justify-center bg-gray-900 w-full p-8">
+        <h1 className="mb-8 text-3xl text-white">Add New Project</h1>
+
         <div className="text-white">
           <form onSubmit={(e) => handleSubmit(e)}>
             <div className="text-sm">Title</div>
@@ -100,9 +96,11 @@ export default function NewProjectSheet() {
               className="mb-2 flex justify-between text-bodym"
             >
               <div className="flex">
-                <Avatar className="mr-4 h-6 w-6">
+                <Avatar className="mr-4">
                   <AvatarImage src={developer?.image ?? ""} />
-                  <AvatarFallback>{developer.name}</AvatarFallback>
+                  <AvatarFallback>
+                    {getNameLetters(developer?.name ?? "")}
+                  </AvatarFallback>
                 </Avatar>
                 {developer.name}
               </div>
@@ -135,9 +133,11 @@ export default function NewProjectSheet() {
                   className="mb-2 flex justify-between text-bodym"
                 >
                   <div className="flex">
-                    <Avatar className="mr-4 h-6 w-6">
+                    <Avatar className="mr-4">
                       <AvatarImage src={developer?.image ?? ""} />
-                      <AvatarFallback>{developer.name}</AvatarFallback>
+                      <AvatarFallback>
+                        {getNameLetters(developer?.name ?? "")}
+                      </AvatarFallback>
                     </Avatar>
                     {developer.name}
                   </div>
@@ -150,7 +150,9 @@ export default function NewProjectSheet() {
                 </li>
               ))}
         </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+    </main>
   );
-}
+};
+
+export default NewProject;
