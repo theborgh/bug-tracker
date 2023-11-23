@@ -12,7 +12,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "jest --findRelatedTests"
+    "*.{js,jsx,ts,tsx}": "jest --findRelatedTests --passWithNoTests"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
