@@ -82,7 +82,7 @@ export default function Sidebar({
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </div>
-      <div className="hidden lg:block flex flex-col w-[250px] border-r border-sidebar-border bg-slate-800 min-h-screen">
+      <div className="hidden lg:flex flex flex-col w-[250px] border-r border-sidebar-border bg-slate-800 min-h-screen">
         <Link href={"/dashboard"}>
           <Image
             priority
@@ -94,156 +94,159 @@ export default function Sidebar({
           />
         </Link>
 
-        <div className="flex h-full flex-col justify-between text-gray-400 mt-10">
-          <div className="ml-4">
-            <div className="">
-              <Link
-                href="/dashboard"
-                className={`mb-1 flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
-                  router.pathname === "/dashboard" &&
-                  "text-blue-400 border-r border-width-4 border-blue-400"
-                }`}
-              >
-                <Squares2X2Icon className="h-7 w-7" />
-                <span className="hidden sm:inline">Dashboard</span>
-              </Link>
-            </div>
-            <div className="flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center">
-              <PencilSquareIcon className="h-7 w-7" />
-              <Link href="/project/newProject">New Project</Link>
-            </div>
-            <div className="mt-5 mb-2 text-hsb uppercase">
-              My work (
-              {sidebarData.loading
-                ? "loading..."
-                : sidebarData.error
-                ? "error"
-                : sidebarData.data?.assignedBugs?.length}
-              )
-            </div>
-            <div className="">
-              {sidebarData.loading ? (
-                <div>Loading...</div>
-              ) : sidebarData.error ? (
-                <div>Error: {sidebarData.error.message}</div>
-              ) : (
-                sidebarData.data?.assignedBugs
-                  ?.sort(
-                    (a: any, b: any) =>
-                      new Date(b.updatedAt).getTime() -
-                      new Date(a.updatedAt).getTime()
-                  )
-                  .map((bug: any) => (
-                    <Link
-                      key={bug.id}
-                      href={`/bug/${bug.id}`}
-                      className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
-                        router.query.id === bug.id &&
-                        "text-blue-400 border-r border-width-4 border-blue-400"
-                      }`}
-                    >
-                      <BugAntIcon className="h-5 w-5" />
-                      <div>{bug.title}</div>
-                    </Link>
-                  ))
-              )}
+        <div className="flex flex-col text-gray-400 mt-10 flex-1">
+          <div className="flex flex-col justify-between flex-1 ml-4">
+            <div>
+              <div className="">
+                <Link
+                  href="/dashboard"
+                  className={`mb-1 flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
+                    router.pathname === "/dashboard" &&
+                    "text-blue-400 border-r border-width-4 border-blue-400"
+                  }`}
+                >
+                  <Squares2X2Icon className="h-7 w-7" />
+                  <span className="hidden sm:inline">Dashboard</span>
+                </Link>
+              </div>
+              <div className="flex gap-2 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center">
+                <PencilSquareIcon className="h-7 w-7" />
+                <Link href="/project/newProject">New Project</Link>
+              </div>
+              <div className="mt-5 mb-2 text-hsb uppercase">
+                My work (
+                {sidebarData.loading
+                  ? "loading..."
+                  : sidebarData.error
+                  ? "error"
+                  : sidebarData.data?.assignedBugs?.length}
+                )
+              </div>
+              <div className="">
+                {sidebarData.loading ? (
+                  <div>Loading...</div>
+                ) : sidebarData.error ? (
+                  <div>Error: {sidebarData.error.message}</div>
+                ) : (
+                  sidebarData.data?.assignedBugs
+                    ?.sort(
+                      (a: any, b: any) =>
+                        new Date(b.updatedAt).getTime() -
+                        new Date(a.updatedAt).getTime()
+                    )
+                    .map((bug: any) => (
+                      <Link
+                        key={bug.id}
+                        href={`/bug/${bug.id}`}
+                        className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
+                          router.query.id === bug.id &&
+                          "text-blue-400 border-r border-width-4 border-blue-400"
+                        }`}
+                      >
+                        <BugAntIcon className="h-5 w-5" />
+                        <div>{bug.title}</div>
+                      </Link>
+                    ))
+                )}
+              </div>
+
+              <div className="mt-5 mb-2 text-hsb uppercase">
+                My projects (
+                {sidebarData.loading
+                  ? "loading..."
+                  : sidebarData.error
+                  ? "error"
+                  : sidebarData.data?.ownedProjects?.length}
+                )
+              </div>
+              <div>
+                {sidebarData.loading ? (
+                  <div>Loading...</div>
+                ) : sidebarData.error ? (
+                  <div>Error: {sidebarData.error.message}</div>
+                ) : (
+                  sidebarData.data?.ownedProjects
+                    ?.sort(
+                      (a: any, b: any) =>
+                        new Date(b.updatedAt).getTime() -
+                        new Date(a.updatedAt).getTime()
+                    )
+                    .map((proj: any) => (
+                      <Link
+                        key={proj.id}
+                        href={`/project/${proj.id}`}
+                        className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
+                          router.query.id === proj.id &&
+                          "text-blue-400 border-r border-width-4 border-blue-400"
+                        }`}
+                      >
+                        <FolderOpenIcon className="h-5 w-5" />
+                        <div>{proj.name}</div>
+                      </Link>
+                    ))
+                )}
+              </div>
+              <div className="mt-5 mb-2 text-hsb uppercase">
+                Assigned projects (
+                {sidebarData.loading
+                  ? "loading..."
+                  : sidebarData.error
+                  ? "error"
+                  : sidebarData.data?.developerOnProjects.filter(
+                      (proj: any) =>
+                        !sidebarData.data?.ownedProjects.some(
+                          (p: any) => p.id === proj.id
+                        )
+                    ).length}
+                )
+              </div>
+              <div>
+                {sidebarData.loading ? (
+                  <div>Loading...</div>
+                ) : sidebarData.error ? (
+                  <div>Error: {sidebarData.error.message}</div>
+                ) : (
+                  sidebarData.data?.developerOnProjects
+                    .filter(
+                      (proj: any) =>
+                        !sidebarData.data?.ownedProjects.some(
+                          (p: any) => p.id === proj.id
+                        )
+                    )
+                    .sort(
+                      (a: any, b: any) =>
+                        new Date(b.updatedAt).getTime() -
+                        new Date(a.updatedAt).getTime()
+                    )
+                    .map((proj: any) => (
+                      <Link
+                        key={proj.id}
+                        href={`/project/${proj.id}`}
+                        className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
+                          router.query.id === proj.id &&
+                          "text-blue-400 border-r border-width-4 border-blue-400"
+                        }`}
+                      >
+                        <FolderOpenIcon className="h-5 w-5" />
+                        <div>{proj.name}</div>
+                      </Link>
+                    ))
+                )}
+              </div>
             </div>
 
-            <div className="mt-5 mb-2 text-hsb uppercase">
-              My projects (
-              {sidebarData.loading
-                ? "loading..."
-                : sidebarData.error
-                ? "error"
-                : sidebarData.data?.ownedProjects?.length}
-              )
-            </div>
-            <div>
-              {sidebarData.loading ? (
-                <div>Loading...</div>
-              ) : sidebarData.error ? (
-                <div>Error: {sidebarData.error.message}</div>
-              ) : (
-                sidebarData.data?.ownedProjects
-                  ?.sort(
-                    (a: any, b: any) =>
-                      new Date(b.updatedAt).getTime() -
-                      new Date(a.updatedAt).getTime()
-                  )
-                  .map((proj: any) => (
-                    <Link
-                      key={proj.id}
-                      href={`/project/${proj.id}`}
-                      className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
-                        router.query.id === proj.id &&
-                        "text-blue-400 border-r border-width-4 border-blue-400"
-                      }`}
-                    >
-                      <FolderOpenIcon className="h-5 w-5" />
-                      <div>{proj.name}</div>
-                    </Link>
-                  ))
-              )}
-            </div>
-            <div className="mt-5 mb-2 text-hsb uppercase">
-              Assigned projects (
-              {sidebarData.loading
-                ? "loading..."
-                : sidebarData.error
-                ? "error"
-                : sidebarData.data?.developerOnProjects.filter(
-                    (proj: any) =>
-                      !sidebarData.data?.ownedProjects.some(
-                        (p: any) => p.id === proj.id
-                      )
-                  ).length}
-              )
-            </div>
-            <div>
-              {sidebarData.loading ? (
-                <div>Loading...</div>
-              ) : sidebarData.error ? (
-                <div>Error: {sidebarData.error.message}</div>
-              ) : (
-                sidebarData.data?.developerOnProjects
-                  .filter(
-                    (proj: any) =>
-                      !sidebarData.data?.ownedProjects.some(
-                        (p: any) => p.id === proj.id
-                      )
-                  )
-                  .sort(
-                    (a: any, b: any) =>
-                      new Date(b.updatedAt).getTime() -
-                      new Date(a.updatedAt).getTime()
-                  )
-                  .map((proj: any) => (
-                    <Link
-                      key={proj.id}
-                      href={`/project/${proj.id}`}
-                      className={`flex gap-1 hover:text-blue-400 hover:border-r hover:border-width-4 hover:border-blue-400 items-center ${
-                        router.query.id === proj.id &&
-                        "text-blue-400 border-r border-width-4 border-blue-400"
-                      }`}
-                    >
-                      <FolderOpenIcon className="h-5 w-5" />
-                      <div>{proj.name}</div>
-                    </Link>
-                  ))
-              )}
-            </div>
-          </div>
-          <div className="flex-row m-0 mb-6 self-center justify-center">
-            <div className="flex justify-center">
-              <Link href={"/dashboard"}>
-                <Avatar title="avatar">
-                  <AvatarImage src={loggedUser?.image ?? ""} />
-                  <AvatarFallback>{loggedUser?.name}</AvatarFallback>
-                </Avatar>
-              </Link>
-            </div>
-            <div className="flex justify-center">
-              <LoginButton />
+            <div className="flex-row m-0 mb-6 self-center justify-center">
+              <div className="flex justify-center">
+                <Link href={"/dashboard"}>
+                  <Avatar title="avatar">
+                    <AvatarImage src={loggedUser?.image ?? ""} />
+                    <AvatarFallback>{loggedUser?.name}</AvatarFallback>
+                  </Avatar>
+                </Link>
+              </div>
+              <div className="flex justify-center">
+                <LoginButton />
+              </div>
             </div>
           </div>
         </div>

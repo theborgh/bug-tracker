@@ -238,7 +238,7 @@ const BugPage: NextPage = () => {
   }
 
   return (
-    <main className="flex">
+    <main className="flex-row lg:flex bg-gray-900 min-h-screen">
       <Sidebar loggedUser={sessionData?.user} />
       {bugData.loading ? (
         <div className="flex-1 min-h-screen flex-col items-center bg-gray-900 text-white w-full p-8">
