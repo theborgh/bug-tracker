@@ -1,5 +1,7 @@
 A bug tracker for use by software development teams built with Next.js, Prisma, and PostgreSQL.
 
+Live demo [here](https://bug-tracker-sigma.vercel.app/).
+
 ## Getting Started
 
 Clone the repository to your local machine and install dependencies:
