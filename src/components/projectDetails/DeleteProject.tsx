@@ -38,11 +38,11 @@ export default function DeleteProject({
       if (!response.ok) {
         throw new Error("Failed to delete project");
       }
-      router.push("/dashboard");
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
+      router.push("/dashboard");
     }
   };
 
