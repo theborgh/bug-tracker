@@ -7,7 +7,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import Link from "next/link";
 import LoginButton from "./LoginButton";
-import { FetchState } from "@/utils/fetch";
+import { useQuery } from "@tanstack/react-query";
 import getConfig from "next/config";
 import {
   BugAntIcon,
@@ -27,30 +27,25 @@ export default function Sidebar({
       })
     | undefined;
 }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [sidebarData, setSidebarData] = useState<FetchState<any>>({
-    data: null,
-    loading: true,
-    error: null,
-  });
   const { publicRuntimeConfig } = getConfig();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const { data: sidebarData, isLoading: isSidebarLoading } = useQuery({
+    queryFn: async () => {
       try {
         const res = await fetch(
           `/api/user/getSidebarData?id=${loggedUser?.id}`
         );
         const data = await res.json();
-        setSidebarData({ data: data, loading: false, error: null });
+        return data;
       } catch (error: any) {
-        setSidebarData({ data: null, loading: false, error: error });
+        console.error(error);
       }
-    };
-
-    if (loggedUser?.id) fetchData();
-  }, [loggedUser?.id]);
+    },
+    queryKey: ["getSidebarData"],
+    enabled: !!loggedUser?.id,
+  });
 
   return (
     <>
@@ -115,20 +110,16 @@ export default function Sidebar({
               </div>
               <div className="mt-5 mb-2 text-hsb uppercase">
                 My work (
-                {sidebarData.loading
+                {isSidebarLoading
                   ? "loading..."
-                  : sidebarData.error
-                  ? "error"
-                  : sidebarData.data?.assignedBugs?.length}
+                  : sidebarData?.assignedBugs?.length}
                 )
               </div>
               <div className="">
-                {sidebarData.loading ? (
+                {isSidebarLoading ? (
                   <div>Loading...</div>
-                ) : sidebarData.error ? (
-                  <div>Error: {sidebarData.error.message}</div>
                 ) : (
-                  sidebarData.data?.assignedBugs
+                  sidebarData?.assignedBugs
                     ?.sort(
                       (a: any, b: any) =>
                         new Date(b.updatedAt).getTime() -
@@ -152,20 +143,16 @@ export default function Sidebar({
 
               <div className="mt-5 mb-2 text-hsb uppercase">
                 My projects (
-                {sidebarData.loading
+                {isSidebarLoading
                   ? "loading..."
-                  : sidebarData.error
-                  ? "error"
-                  : sidebarData.data?.ownedProjects?.length}
+                  : sidebarData?.ownedProjects?.length}
                 )
               </div>
               <div>
-                {sidebarData.loading ? (
+                {isSidebarLoading ? (
                   <div>Loading...</div>
-                ) : sidebarData.error ? (
-                  <div>Error: {sidebarData.error.message}</div>
                 ) : (
-                  sidebarData.data?.ownedProjects
+                  sidebarData?.ownedProjects
                     ?.sort(
                       (a: any, b: any) =>
                         new Date(b.updatedAt).getTime() -
@@ -188,28 +175,24 @@ export default function Sidebar({
               </div>
               <div className="mt-5 mb-2 text-hsb uppercase">
                 Assigned projects (
-                {sidebarData.loading
+                {isSidebarLoading
                   ? "loading..."
-                  : sidebarData.error
-                  ? "error"
-                  : sidebarData.data?.developerOnProjects.filter(
+                  : sidebarData?.developerOnProjects.filter(
                       (proj: any) =>
-                        !sidebarData.data?.ownedProjects.some(
+                        !sidebarData?.ownedProjects.some(
                           (p: any) => p.id === proj.id
                         )
                     ).length}
                 )
               </div>
               <div>
-                {sidebarData.loading ? (
+                {isSidebarLoading ? (
                   <div>Loading...</div>
-                ) : sidebarData.error ? (
-                  <div>Error: {sidebarData.error.message}</div>
                 ) : (
-                  sidebarData.data?.developerOnProjects
+                  sidebarData?.developerOnProjects
                     .filter(
                       (proj: any) =>
-                        !sidebarData.data?.ownedProjects.some(
+                        !sidebarData?.ownedProjects.some(
                           (p: any) => p.id === proj.id
                         )
                     )

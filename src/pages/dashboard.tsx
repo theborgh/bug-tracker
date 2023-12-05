@@ -39,6 +39,7 @@ export default function Dashboard() {
   const { data: ownProjects, isLoading: isOwnProjectsLoading } = useQuery({
     queryFn: async () => {
       try {
+        console.log("user id", sessionData?.user.id);
         const res = await fetch(
           `/api/project/getProjectsByType?userId=${sessionData?.user.id}&type=owner`
         );
