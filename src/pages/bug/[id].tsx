@@ -80,7 +80,6 @@ const BugPage: NextPage = () => {
       }
     },
     onSuccess: (newComment) => {
-      console.log("onSuccess, data: ", newComment);
       setBugData((prev) => {
         if (!prev) return prev;
 
@@ -98,7 +97,6 @@ const BugPage: NextPage = () => {
             },
           ],
         };
-        console.log("newState: ", newState);
 
         return newState;
       });
@@ -113,18 +111,14 @@ const BugPage: NextPage = () => {
 
       return {
         ...prev,
-        data: {
-          ...prev,
-          status: newStatus,
-          assignedTo: {
-            id:
-              newStatus === Status.UNASSIGNED
-                ? null
-                : prev?.assignedTo?.id || null,
-            name: newStatus === Status.UNASSIGNED ? "" : prev?.assignedTo?.name,
-            image:
-              newStatus === Status.UNASSIGNED ? "" : prev?.assignedTo?.image,
-          },
+        status: newStatus,
+        assignedTo: {
+          id:
+            newStatus === Status.UNASSIGNED
+              ? null
+              : prev?.assignedTo?.id || null,
+          name: newStatus === Status.UNASSIGNED ? "" : prev?.assignedTo?.name,
+          image: newStatus === Status.UNASSIGNED ? "" : prev?.assignedTo?.image,
         },
       };
     });
@@ -136,10 +130,7 @@ const BugPage: NextPage = () => {
 
       return {
         ...prev,
-        data: {
-          ...prev,
-          priority: newPriority,
-        },
+        priority: newPriority,
       };
     });
   };
@@ -150,19 +141,16 @@ const BugPage: NextPage = () => {
 
       return {
         ...prev,
-        data: {
-          ...prev,
-          assignedTo: {
-            id: assignedToId,
-            name:
-              prev.project.developers.find((dev) => dev.id === assignedToId)
-                ?.name || "",
-            image:
-              prev.project.developers.find((dev) => dev.id === assignedToId)
-                ?.image || "",
-          },
-          status: assignedToId ? prev.status : Status.UNASSIGNED,
+        assignedTo: {
+          id: assignedToId,
+          name:
+            prev.project.developers.find((dev) => dev.id === assignedToId)
+              ?.name || "",
+          image:
+            prev.project.developers.find((dev) => dev.id === assignedToId)
+              ?.image || "",
         },
+        status: assignedToId ? prev.status : Status.UNASSIGNED,
       };
     });
   };
