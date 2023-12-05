@@ -10,7 +10,6 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const login = async () => {
-      console.log("userData: ", userData);
       if (!userData) {
         await signIn(undefined, {
           callbackUrl: "/dashboard",
