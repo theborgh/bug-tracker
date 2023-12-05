@@ -53,4 +53,10 @@ interface BugData {
   comments: Comment[];
 }
 
-export type { SessionData, Comment, BugData };
+interface Developer {
+  id: string;
+  name: string;
+  image: string;
+}
+
+export type { SessionData, Comment, BugData, Developer };

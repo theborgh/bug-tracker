@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { type NextPage } from "next";
-import { FetchState } from "@/utils/fetch";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
 import { Status, Priority } from "@prisma/client";
-import { BugData, SessionData, Comment } from "@/types/appTypes";
+import { BugData, SessionData, Comment, Developer } from "@/types/appTypes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import { MentionsInput, Mention } from "react-mentions";
 import { Priorities, getNameLetters } from "@/utils/data";
@@ -25,11 +24,7 @@ import LoginErrorMessage from "@/components/LoginErrorMessage";
 import LoadingMessage from "@/components/LoadingMessage";
 
 const BugPage: NextPage = () => {
-  const [bugData, setBugData] = useState<FetchState<BugData>>({
-    data: null,
-    loading: true,
-    error: null,
-  });
+  const [bugData, setBugData] = useState<BugData | null>(null);
   const [canEditPriority, setCanEditPriority] = useState(false);
   const [markdown, setMarkdown] = useState("");
   const {
@@ -39,99 +34,96 @@ const BugPage: NextPage = () => {
 
   const { data: bugDetails, isLoading: isBugDataLoading } = useQuery({
     queryFn: async () => {
-      try {
-        const res = await fetch(`/api/bug/${id}`);
-        const data = await res.json();
-        setBugData({ data, loading: false, error: null });
-        return data;
-      } catch (error: any) {
-        console.error(error);
-      }
+      const res = await fetch(`/api/bug/${id}`);
+      const data = await res.json();
+      setBugData(data);
+
+      return data;
     },
-    queryKey: ["getBugData"],
+    queryKey: ["bugDetails"],
     enabled: !!id,
   });
 
   useEffect(() => {
     if (sessionData?.user?.id) {
       setCanEditPriority(
-        sessionData?.user?.id === bugData.data?.reportingUser?.id ||
-          sessionData?.user?.id === bugData.data?.project?.ownerId
+        sessionData?.user?.id === bugDetails?.reportingUser?.id ||
+          sessionData?.user?.id === bugDetails?.project?.ownerId
       );
     }
   }, [
     sessionData?.user?.id,
-    bugData.data?.reportingUser?.id,
-    bugData.data?.project?.ownerId,
+    bugDetails?.reportingUser?.id,
+    bugDetails?.project?.ownerId,
   ]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const res = await fetch(`/api/comment/postComment`, {
-        method: "POST",
-        body: JSON.stringify({ id, markdown, authorId: sessionData?.user?.id }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await res.json();
-      if (data.error) {
-        console.log(data.error);
-      } else {
-        setBugData((prev) => {
-          if (!prev.data) return prev;
-
-          return {
-            ...prev,
-            data: {
-              ...prev.data,
-              comments: [
-                ...prev.data.comments,
-                {
-                  ...data,
-                  author: {
-                    id: sessionData?.user?.id,
-                    name: sessionData?.user?.name,
-                    image: sessionData?.user?.image,
-                  },
-                } as Comment,
-              ],
-            },
-          };
+  const { mutateAsync: postCommentMutation } = useMutation({
+    mutationFn: async (markdown: string) => {
+      try {
+        console.log("markdown: ", markdown);
+        const res = await fetch(`/api/comment/postComment`, {
+          method: "POST",
+          body: JSON.stringify({
+            id,
+            markdown,
+            authorId: sessionData?.user?.id,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
 
-        setMarkdown("");
+        const data = await res.json();
+        return data;
+      } catch (error: any) {
+        console.log(error);
       }
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
+    },
+    onSuccess: (newComment) => {
+      console.log("onSuccess, data: ", newComment);
+      setBugData((prev) => {
+        if (!prev) return prev;
+
+        const newState = {
+          ...prev,
+          comments: [
+            ...prev.comments,
+            {
+              ...newComment,
+              author: {
+                id: sessionData?.user?.id,
+                name: sessionData?.user?.name,
+                image: sessionData?.user?.image,
+              },
+            },
+          ],
+        };
+        console.log("newState: ", newState);
+
+        return newState;
+      });
+
+      setMarkdown("");
+    },
+  });
 
   const handleBugStatusChange = async (bugId: string, newStatus: Status) => {
     setBugData((prev) => {
-      if (!prev.data) return prev;
+      if (!prev) return prev;
 
       return {
         ...prev,
         data: {
-          ...prev.data,
+          ...prev,
           status: newStatus,
           assignedTo: {
             id:
               newStatus === Status.UNASSIGNED
                 ? null
-                : prev.data?.assignedTo?.id || null,
-            name:
-              newStatus === Status.UNASSIGNED
-                ? ""
-                : prev.data?.assignedTo?.name,
+                : prev?.assignedTo?.id || null,
+            name: newStatus === Status.UNASSIGNED ? "" : prev?.assignedTo?.name,
             image:
-              newStatus === Status.UNASSIGNED
-                ? ""
-                : prev.data?.assignedTo?.image,
+              newStatus === Status.UNASSIGNED ? "" : prev?.assignedTo?.image,
           },
         },
       };
@@ -140,12 +132,12 @@ const BugPage: NextPage = () => {
 
   const handleBugPriorityChange = (bugId: string, newPriority: Priority) => {
     setBugData((prev) => {
-      if (!prev.data) return prev;
+      if (!prev) return prev;
 
       return {
         ...prev,
         data: {
-          ...prev.data,
+          ...prev,
           priority: newPriority,
         },
       };
@@ -154,30 +146,28 @@ const BugPage: NextPage = () => {
 
   const handleBugAssignment = (bugId: string, assignedToId: string | null) => {
     setBugData((prev) => {
-      if (!prev.data) return { data: null, loading: true, error: null };
+      if (!prev) return prev;
 
       return {
         ...prev,
         data: {
-          ...prev.data,
+          ...prev,
           assignedTo: {
             id: assignedToId,
             name:
-              prev.data.project.developers.find(
-                (dev) => dev.id === assignedToId
-              )?.name || "",
+              prev.project.developers.find((dev) => dev.id === assignedToId)
+                ?.name || "",
             image:
-              prev.data.project.developers.find(
-                (dev) => dev.id === assignedToId
-              )?.image || "",
+              prev.project.developers.find((dev) => dev.id === assignedToId)
+                ?.image || "",
           },
-          status: assignedToId ? prev.data.status : Status.UNASSIGNED,
+          status: assignedToId ? prev.status : Status.UNASSIGNED,
         },
       };
     });
   };
 
-  if (!sessionData && !bugData.loading) {
+  if (!sessionData && !isBugDataLoading) {
     return <LoginErrorMessage />;
   }
 
@@ -194,14 +184,14 @@ const BugPage: NextPage = () => {
         <div className="flex-1 min-h-screen flex-col items-center bg-gray-900 text-white w-full p-8">
           <div className="text-4xl mt-5 text-center">
             <div>
-              <div>Bug: {bugDetails?.title}</div>
+              <div>Bug: {bugData?.title}</div>
               <span className="text-2xl">
                 <Link
                   title="Go to project page"
                   className="hover:opacity-50 opacity-70"
-                  href={`/project/${bugDetails?.projectId}`}
+                  href={`/project/${bugData?.projectId}`}
                 >
-                  {bugDetails?.project?.name}
+                  {bugData?.project?.name}
                 </Link>{" "}
                 project
               </span>
@@ -211,9 +201,9 @@ const BugPage: NextPage = () => {
                   className="hover:opacity-50 opacity-70 cursor-pointer"
                   title={`${format(
                     new Date(
-                      bugData.data?.createdAt &&
-                      !isNaN(Date.parse(bugDetails?.createdAt))
-                        ? new Date(bugDetails?.createdAt)
+                      bugData?.createdAt &&
+                      !isNaN(Date.parse(bugData?.createdAt))
+                        ? new Date(bugData?.createdAt)
                         : new Date()
                     ),
                     "cccc do 'of' MMMM yyyy 'at' HH:mm:ss"
@@ -221,9 +211,9 @@ const BugPage: NextPage = () => {
                 >
                   {formatDistance(
                     new Date(
-                      bugDetails?.createdAt &&
-                      !isNaN(Date.parse(bugDetails?.createdAt))
-                        ? new Date(bugDetails?.createdAt)
+                      bugData?.createdAt &&
+                      !isNaN(Date.parse(bugData?.createdAt))
+                        ? new Date(bugData?.createdAt)
                         : new Date()
                     ),
                     new Date(),
@@ -232,49 +222,49 @@ const BugPage: NextPage = () => {
                     }
                   )}
                 </span>{" "}
-                by {bugDetails?.reportingUser?.name ?? "anonymous"} &middot;{" "}
+                by {bugData?.reportingUser?.name ?? "anonymous"} &middot;{" "}
                 {canEditPriority ? (
                   <PriorityDropdown
-                    bugId={bugDetails?.id ?? ""}
-                    priority={bugDetails?.priority ?? Priority.MEDIUM}
-                    projectOwnerId={bugDetails?.project?.ownerId ?? ""}
-                    reporterId={bugDetails?.reportingUser?.id ?? ""}
+                    bugId={bugData?.id ?? ""}
+                    priority={bugData?.priority ?? Priority.MEDIUM}
+                    projectOwnerId={bugData?.project?.ownerId ?? ""}
+                    reporterId={bugData?.reportingUser?.id ?? ""}
                     handleBugPriorityChange={handleBugPriorityChange}
                   >
                     <ShieldExclamationIcon
-                      title={`${bugDetails?.priority.toLocaleLowerCase()} priority`}
+                      title={`${bugData?.priority.toLocaleLowerCase()} priority`}
                       className={`h-8 w-8 hover:cursor-pointer`}
                       stroke={
-                        Priorities.find((p) => p.value === bugDetails?.priority)
+                        Priorities.find((p) => p.value === bugData?.priority)
                           ?.stroke ?? Priorities[0].stroke
                       }
                     />
                   </PriorityDropdown>
                 ) : (
                   <ShieldExclamationIcon
-                    title={`${bugDetails?.priority?.toLocaleLowerCase()} priority (only project owner and reporter can edit priority)`}
+                    title={`${bugData?.priority?.toLocaleLowerCase()} priority (only project owner and reporter can edit priority)`}
                     className={`h-8 w-8`}
                     stroke={
-                      Priorities.find((p) => p.value === bugDetails?.priority)
+                      Priorities.find((p) => p.value === bugData?.priority)
                         ?.stroke ?? Priorities[0].stroke
                     }
                   />
                 )}
-                {bugDetails?.priority?.toLocaleLowerCase()} priority &middot;{" "}
-                {bugDetails?.assignedTo?.id ? (
+                {bugData?.priority?.toLocaleLowerCase()} priority &middot;{" "}
+                {bugData?.assignedTo?.id ? (
                   <span>
                     assigned to{" "}
                     <AssignBugToDev
-                      assignedToId={bugDetails?.assignedTo.id}
-                      bugTitle={bugDetails.title}
-                      bugId={bugDetails.id}
-                      projectDevelopers={bugDetails.project.developers ?? []}
+                      assignedToId={bugData?.assignedTo.id}
+                      bugTitle={bugData.title}
+                      bugId={bugData.id}
+                      projectDevelopers={bugData.project.developers ?? []}
                       handleBugAssignment={handleBugAssignment}
                     >
-                      <Avatar title={bugDetails.assignedTo.name ?? "anonymous"}>
-                        <AvatarImage src={bugDetails.assignedTo.image ?? ""} />
+                      <Avatar title={bugData.assignedTo.name ?? "anonymous"}>
+                        <AvatarImage src={bugData.assignedTo.image ?? ""} />
                         <AvatarFallback>
-                          {getNameLetters(bugDetails.assignedTo.name ?? "")}
+                          {getNameLetters(bugData.assignedTo.name ?? "")}
                         </AvatarFallback>
                       </Avatar>
                     </AssignBugToDev>
@@ -284,12 +274,10 @@ const BugPage: NextPage = () => {
                     <span className="items-center">unassigned</span>{" "}
                     <span className="items-center">
                       <AssignBugToDev
-                        assignedToId={bugDetails?.assignedTo?.id ?? null}
-                        bugTitle={bugDetails?.title ?? ""}
-                        bugId={bugDetails?.id ?? ""}
-                        projectDevelopers={
-                          bugDetails?.project?.developers ?? []
-                        }
+                        assignedToId={bugData?.assignedTo?.id ?? null}
+                        bugTitle={bugData?.title ?? ""}
+                        bugId={bugData?.id ?? ""}
+                        projectDevelopers={bugData?.project?.developers ?? []}
                         handleBugAssignment={handleBugAssignment}
                       >
                         <UserPlusIcon className="h-8 w-8" />
@@ -300,10 +288,10 @@ const BugPage: NextPage = () => {
               </span>
               <div className="text-center">
                 <StatusDropdown
-                  bugId={bugDetails?.id ?? ""}
-                  status={bugDetails?.status ?? Status.TODO}
-                  assigneeId={bugDetails?.assignedTo?.id ?? ""}
-                  projectOwnerId={bugDetails?.project?.ownerId ?? ""}
+                  bugId={bugData?.id ?? ""}
+                  status={bugData?.status ?? Status.TODO}
+                  assigneeId={bugData?.assignedTo?.id ?? ""}
+                  projectOwnerId={bugData?.project?.ownerId ?? ""}
                   handleBugStatusChange={handleBugStatusChange}
                 />
               </div>
@@ -312,26 +300,18 @@ const BugPage: NextPage = () => {
 
           <h2 className="text-2xl my-2">Bug description</h2>
           <div className="bg-gray-800 w-full p-3">
-            {bugData.loading ? (
-              <div>loading...</div>
-            ) : bugData.error ? (
-              <div>error</div>
-            ) : (
-              bugDetails?.markdown
-            )}
+            {isBugDataLoading ? <div>loading...</div> : bugData?.markdown}
           </div>
 
           <h2 className="text-2xl mt-2">
-            Comments ({bugDetails?.comments?.length})
+            Comments ({bugData?.comments?.length})
           </h2>
 
           <div className="ml-3">
-            {bugData.loading ? (
+            {isBugDataLoading ? (
               <LoadingMessage />
-            ) : bugData.error ? (
-              <div>error</div>
             ) : (
-              bugDetails?.comments?.map((comment: Comment) => (
+              bugData?.comments?.map((comment: Comment) => (
                 <div key={comment.id} className="bg-gray-800 w-full p-3 mt-3">
                   <div className="text-gray-400 text-sm">
                     from {comment.author.name},{" "}
@@ -339,9 +319,9 @@ const BugPage: NextPage = () => {
                       className="hover:opacity-50 opacity-70 cursor-pointer"
                       title={`${format(
                         new Date(
-                          bugDetails?.createdAt &&
-                          !isNaN(Date.parse(bugDetails?.createdAt))
-                            ? new Date(bugDetails?.createdAt)
+                          bugData?.createdAt &&
+                          !isNaN(Date.parse(bugData?.createdAt))
+                            ? new Date(bugData?.createdAt)
                             : new Date()
                         ),
                         "cccc do 'of' MMMM yyyy 'at' HH:mm:ss"
@@ -368,7 +348,17 @@ const BugPage: NextPage = () => {
           <h2 className="text-2xl mt-2">Add a comment</h2>
 
           <div className="ml-3">
-            <form onSubmit={handleSubmit} className="flex-col">
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                try {
+                  await postCommentMutation(markdown);
+                } catch (error) {
+                  console.log(error);
+                }
+              }}
+              className="flex-col"
+            >
               <MentionsInput
                 value={markdown}
                 onChange={(e) => setMarkdown(e.target.value)}
@@ -379,7 +369,7 @@ const BugPage: NextPage = () => {
                 <Mention
                   trigger="@"
                   data={
-                    bugDetails?.project?.developers.map((dev) => ({
+                    bugData?.project?.developers.map((dev: Developer) => ({
                       id: dev.id,
                       display: dev.name,
                     })) || []
