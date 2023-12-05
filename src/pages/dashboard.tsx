@@ -5,9 +5,9 @@ import ProjectCard from "@/components/ProjectCard";
 import { SimpleBugCard } from "@/components/BugCard";
 import { Status } from "@prisma/client";
 import Sidebar from "@/components/Sidebar";
-import { FetchState } from "@/utils/fetch";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { useQuery } from "@tanstack/react-query";
 
 interface Developer {
   id: string;
@@ -34,59 +34,63 @@ interface SimpleBugCardProps {
 }
 
 export default function Dashboard() {
-  const [ownedProjects, setOwnedProjects] = useState<FetchState<ProjectData[]>>(
-    { data: null, loading: true, error: null }
-  );
-  const [assignedToProjects, setAssignedToProjects] = useState<
-    FetchState<ProjectData[]>
-  >({ data: null, loading: true, error: null });
-  const [assignedToMeBugs, setAssignedToMeBugs] = useState<
-    FetchState<SimpleBugCardProps[]>
-  >({ data: null, loading: true, error: null });
   const { data: sessionData } = useSession();
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const { data: ownProjects, isLoading: isOwnProjectsLoading } = useQuery({
+    queryFn: async () => {
       try {
         const res = await fetch(
           `/api/project/getProjectsByType?userId=${sessionData?.user.id}&type=owner`
         );
         const data = await res.json();
-        setOwnedProjects({ data, loading: false, error: null });
+        return data;
       } catch (error: any) {
-        setOwnedProjects({ data: null, loading: false, error });
+        console.error(error);
       }
+    },
+    queryKey: ["getOwnProjects"],
+    enabled: !!sessionData?.user.id,
+  });
 
-      try {
-        const res2 = await fetch(
-          `/api/project/getProjectsByType?userId=${sessionData?.user.id}&type=developer`
-        );
-        const data2 = await res2.json();
-        setAssignedToProjects({ data: data2, loading: false, error: null });
-      } catch (error: any) {
-        setAssignedToProjects({ data: null, loading: false, error });
-      }
+  const { data: assignedProjects, isLoading: isAssignedProjectsLoading } =
+    useQuery({
+      queryFn: async () => {
+        try {
+          const res = await fetch(
+            `/api/project/getProjectsByType?userId=${sessionData?.user.id}&type=developer`
+          );
+          const data = await res.json();
+          return data;
+        } catch (error: any) {
+          console.error(error);
+        }
+      },
+      queryKey: ["getAssignedProjects"],
+      enabled: !!sessionData?.user.id,
+    });
 
+  const { data: assignedBugs, isLoading: isAssignedBugsLoading } = useQuery({
+    queryFn: async () => {
       try {
-        const res3 = await fetch(
+        const res = await fetch(
           `/api/bug/getBugs?assignedTo=${sessionData?.user.id}&type=open`
         );
-        const data3 = await res3.json();
-        setAssignedToMeBugs({ data: data3, loading: false, error: null });
+        const data = await res.json();
+        return data;
       } catch (error: any) {
-        setAssignedToMeBugs({ data: null, loading: false, error });
+        console.error(error);
       }
-    };
-
-    if (sessionData?.user.id) fetchData();
-  }, [sessionData?.user.id]);
+    },
+    queryKey: ["getAssignedBugs"],
+    enabled: !!sessionData?.user.id,
+  });
 
   if (
     !sessionData &&
     !(
-      ownedProjects.loading ||
-      assignedToProjects.loading ||
-      assignedToMeBugs.loading
+      isOwnProjectsLoading ||
+      isAssignedProjectsLoading ||
+      isAssignedBugsLoading
     )
   ) {
     return <LoginErrorMessage />;
@@ -99,16 +103,16 @@ export default function Dashboard() {
         <h1 className="text-4xl text-center mt-3">Dashboard</h1>
         <h2 className="text-2xl my-3">My projects</h2>
         <div className="flex flex-wrap gap-4 ml">
-          {ownedProjects.loading ? (
+          {isOwnProjectsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
           ) : (
-            ownedProjects.data
+            ownProjects
               ?.sort(
                 (a: any, b: any) =>
                   new Date(b.updatedAt).getTime() -
                   new Date(a.updatedAt).getTime()
               )
-              ?.map((project) => (
+              ?.map((project: ProjectData) => (
                 <Link key={project.id} href={`/project/${project.id}`}>
                   <ProjectCard
                     id={project.id}
@@ -123,19 +127,20 @@ export default function Dashboard() {
 
         <h2 className="text-2xl my-3">Projects I&apos;m assigned to</h2>
         <div className="flex flex-wrap gap-4">
-          {assignedToProjects.loading ? (
+          {isAssignedProjectsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
           ) : (
-            assignedToProjects.data
+            assignedProjects
               ?.filter(
-                (proj) => !ownedProjects.data?.some((p) => p.id === proj.id)
+                (proj: ProjectData) =>
+                  !ownProjects?.some((p: ProjectData) => p.id === proj.id)
               )
               .sort(
                 (a: any, b: any) =>
                   new Date(b.updatedAt).getTime() -
                   new Date(a.updatedAt).getTime()
               )
-              .map((project) => (
+              .map((project: ProjectData) => (
                 <Link key={project.id} href={`/project/${project.id}`}>
                   <ProjectCard
                     id={project.id}
@@ -150,16 +155,16 @@ export default function Dashboard() {
 
         <h2 className="text-2xl my-3">Bugs assigned to me</h2>
         <div className="flex flex-wrap gap-4">
-          {assignedToMeBugs.loading ? (
+          {isAssignedBugsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
           ) : (
-            assignedToMeBugs?.data
+            assignedBugs
               ?.sort(
                 (a: any, b: any) =>
                   new Date(b.updatedAt).getTime() -
                   new Date(a.updatedAt).getTime()
               )
-              .map((bug) => (
+              .map((bug: SimpleBugCardProps) => (
                 <Link key={bug.id} href={`/bug/${bug.id}`}>
                   <SimpleBugCard
                     id={bug.id}
