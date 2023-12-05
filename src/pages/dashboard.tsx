@@ -93,7 +93,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className=" bg-gray-900 text-white flex-row lg:flex">
+    <div className="bg-gray-900 text-white flex-row lg:flex min-h-screen">
       <Sidebar loggedUser={sessionData?.user} />
       <div className="flex-row mx-5 flex-1">
         <h1 className="text-4xl text-center mt-3">Dashboard</h1>
