@@ -12,7 +12,7 @@ cd bug-tracker
 npm i
 ```
 
-Create a `.env.local` file in the root directory based on `.env.local.sample` and add the relevant environment variables. To enable login via GitHub and/or Discord, create a [GitHub OAuth App](https://docs.github.com/en/developers/apps/creating-an-oauth-app) and a [GitHub personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token), or a [Discord OAuth2 application](https://discord.com/developers/applications) and a [Discord bot token](https://discord.com/developers/applications).
+Rename the `.env.sample` file in the root directory to `.env` and add the relevant environment variables. To enable login via GitHub and/or Discord, create a [GitHub OAuth App](https://docs.github.com/en/developers/apps/creating-an-oauth-app) and a [GitHub personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token), or a [Discord OAuth2 application](https://discord.com/developers/applications) and a [Discord bot token](https://discord.com/developers/applications).
 
 Now you can run the development server:
 
