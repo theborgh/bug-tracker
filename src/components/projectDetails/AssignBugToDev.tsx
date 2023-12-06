@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -34,36 +35,44 @@ export default function AssignBugToDev({
   projectDevelopers,
   handleBugAssignment,
 }: AssignBugToDevProps) {
-  const [loading, setLoading] = useState(false);
   const [selectedDeveloper, setSelectedDeveloper] = useState<null | string>(
     null
   );
 
-  const mutate = async (bugId: string, assignedToUserId: string | null) => {
-    setSelectedDeveloper(assignedToUserId);
-    if (bugId === "newBug") {
-      handleBugAssignment(bugId, assignedToUserId);
-    } else {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/bug/${bugId}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ assignedToUserId }),
-        });
-        if (!response.ok) {
-          throw new Error("Failed to assign bug to developer");
+  const { mutateAsync: assignBugMutation, isPending: isAssignmentPending } =
+    useMutation({
+      mutationFn: async (assignedToUserId) => {
+        setSelectedDeveloper(assignedToUserId);
+        if (bugId === "newBug") {
+          handleBugAssignment(bugId, assignedToUserId);
+        } else {
+          try {
+            const response = await fetch(`/api/bug/${bugId}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ assignedToUserId }),
+            });
+            if (!response.ok) {
+              throw new Error("Failed to assign bug to developer");
+            }
+
+            handleBugAssignment(bugId, assignedToUserId);
+            const data = await response.json();
+            return data;
+          } catch (error: any) {
+            console.log(error);
+          }
+
+          return null;
         }
-        setLoading(false);
+      },
+      onSuccess: (bugId: string, assignedToUserId: string | null) => {
         handleBugAssignment(bugId, assignedToUserId);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    }
-  };
+      },
+      mutationKey: ["assignBug"],
+    });
 
   return (
     <Dialog>
@@ -82,10 +91,10 @@ export default function AssignBugToDev({
             <li
               key={developer.id}
               className={`flex justify-between text-bodys p-1 hover:cursor-pointer hover:bg-slate-800 hover:text-white ${
-                (loading || assignedToId === developer.id) &&
+                (isAssignmentPending || assignedToId === developer.id) &&
                 "pointer-events-none opacity-25"
               }}`}
-              onClick={() => mutate(bugId, developer.id)}
+              onClick={async () => assignBugMutation(developer.id)}
             >
               <div className="flex items-center gap-2">
                 <Avatar title={developer.name}>
@@ -97,7 +106,7 @@ export default function AssignBugToDev({
                 <span>{developer.name}</span>
               </div>
               <button aria-label={`Assign to ${developer?.name ?? ""} `}>
-                {loading
+                {isAssignmentPending
                   ? developer.id === selectedDeveloper && (
                       <ArrowPathIcon
                         aria-hidden
@@ -115,7 +124,7 @@ export default function AssignBugToDev({
           ))}
         </ul>
         {assignedToId && (
-          <button onClick={() => mutate(bugId, null)}>Unassign</button>
+          <button onClick={() => assignBugMutation(bugId)}>Unassign</button>
         )}
       </DialogContent>
     </Dialog>

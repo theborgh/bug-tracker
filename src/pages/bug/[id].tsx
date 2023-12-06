@@ -61,7 +61,6 @@ const BugPage: NextPage = () => {
     useMutation({
       mutationFn: async (markdown: string) => {
         try {
-          console.log("markdown: ", markdown);
           const res = await fetch(`/api/comment/postComment`, {
             method: "POST",
             body: JSON.stringify({
