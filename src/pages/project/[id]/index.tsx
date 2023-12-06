@@ -14,11 +14,8 @@ import PriorityButton, {
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import SortDropdown from "@/components/projectDetails/SortDropdown";
-import {
-  sortByAllCriteria,
-  type bugSortingType,
-  type Bug,
-} from "@/utils/sorting";
+import { sortByAllCriteria, type bugSortingType } from "@/utils/sorting";
+import { BugCardData } from "@/types/appTypes";
 import { FetchState } from "@/utils/fetch";
 import Sidebar from "@/components/Sidebar";
 import { getNameLetters } from "@/utils/data";
@@ -43,7 +40,7 @@ interface ProjectData {
       image: string;
     }
   ];
-  bugs: Bug[];
+  bugs: BugCardData[];
 }
 
 export default function ProjectDetails() {

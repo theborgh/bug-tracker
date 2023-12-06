@@ -1,4 +1,4 @@
-import { Status } from "@prisma/client";
+import { BugCardData } from "@/types/appTypes";
 import { Priorities } from "@/utils/data";
 
 export type bugSortingType =
@@ -35,26 +35,7 @@ export function getBugSortLabel(sort: bugSortingType): string {
   }
 }
 
-export interface Bug {
-    id: string;
-    title: string;
-    markdown: string;
-    priority: string;
-    status: Status;
-    minutesToComplete: number;
-    reportingUser: {
-      name: string;
-      id: string;
-    };
-    assignedToUserId: string | null;
-    _count: { 
-      comments: number 
-    };
-    createdAt: Date;
-    updatedAt: string;
-}
-
-export const sortByAllCriteria = (a: Bug, b: Bug, sortBy: string) => {
+export const sortByAllCriteria = (a: BugCardData, b: BugCardData, sortBy: string) => {
     if (sortBy === "recent") {
       return (
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

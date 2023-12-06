@@ -53,6 +53,25 @@ interface BugData {
   comments: Comment[];
 }
 
+interface BugCardData {
+  id: string;
+  title: string;
+  markdown: string;
+  priority: string;
+  status: Status;
+  minutesToComplete: number;
+  reportingUser: {
+    name: string;
+    id: string;
+  };
+  assignedToUserId: string | null;
+  _count: { 
+    comments: number 
+  };
+  createdAt: Date;
+  updatedAt: string;
+}
+
 interface Developer {
   id: string;
   name: string;
@@ -70,4 +89,4 @@ interface SimpleBugCardProps {
   status: Status;
 }
 
-export type { SessionData, Comment, BugData, Developer, SimpleBugCardProps };
+export type { SessionData, Comment, BugData, Developer, SimpleBugCardProps, BugCardData };
