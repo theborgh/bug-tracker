@@ -57,53 +57,54 @@ const BugPage: NextPage = () => {
     bugDetails?.project?.ownerId,
   ]);
 
-  const { mutateAsync: postCommentMutation } = useMutation({
-    mutationFn: async (markdown: string) => {
-      try {
-        console.log("markdown: ", markdown);
-        const res = await fetch(`/api/comment/postComment`, {
-          method: "POST",
-          body: JSON.stringify({
-            id,
-            markdown,
-            authorId: sessionData?.user?.id,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
+  const { mutateAsync: postCommentMutation, isPending: isPostCommentPending } =
+    useMutation({
+      mutationFn: async (markdown: string) => {
+        try {
+          console.log("markdown: ", markdown);
+          const res = await fetch(`/api/comment/postComment`, {
+            method: "POST",
+            body: JSON.stringify({
+              id,
+              markdown,
+              authorId: sessionData?.user?.id,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await res.json();
+          return data;
+        } catch (error: any) {
+          console.log(error);
+        }
+      },
+      onSuccess: (newComment) => {
+        setBugData((prev) => {
+          if (!prev) return prev;
+
+          const newState = {
+            ...prev,
+            comments: [
+              ...prev.comments,
+              {
+                ...newComment,
+                author: {
+                  id: sessionData?.user?.id,
+                  name: sessionData?.user?.name,
+                  image: sessionData?.user?.image,
+                },
+              },
+            ],
+          };
+
+          return newState;
         });
 
-        const data = await res.json();
-        return data;
-      } catch (error: any) {
-        console.log(error);
-      }
-    },
-    onSuccess: (newComment) => {
-      setBugData((prev) => {
-        if (!prev) return prev;
-
-        const newState = {
-          ...prev,
-          comments: [
-            ...prev.comments,
-            {
-              ...newComment,
-              author: {
-                id: sessionData?.user?.id,
-                name: sessionData?.user?.name,
-                image: sessionData?.user?.image,
-              },
-            },
-          ],
-        };
-
-        return newState;
-      });
-
-      setMarkdown("");
-    },
-  });
+        setMarkdown("");
+      },
+    });
 
   const handleBugStatusChange = async (bugId: string, newStatus: Status) => {
     setBugData((prev) => {
@@ -369,7 +370,11 @@ const BugPage: NextPage = () => {
                 />
               </MentionsInput>
 
-              <button type="submit" className="btn-blue hover:bg-opacity-75">
+              <button
+                type="submit"
+                className="btn-blue hover:bg-opacity-75 disabled:bg-slate-400"
+                disabled={isPostCommentPending}
+              >
                 Submit
               </button>
             </form>
