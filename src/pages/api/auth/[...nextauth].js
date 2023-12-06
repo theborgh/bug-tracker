@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import DiscordProvider from "next-auth/providers/discord";
-import EmailProvider from "next-auth/providers/email";
 import { PrismaClient } from ".prisma/client";
 import getConfig from "next/config";
 
@@ -19,23 +18,12 @@ export const authOptions = {
       clientId: process.env.DISCORD_CLIENT_ID,
       clientSecret: process.env.DISCORD_CLIENT_SECRET,
     }),
-    // EmailProvider({
-    //   server: {
-    //     host: process.env.EMAIL_SERVER_HOST,
-    //     port: process.env.EMAIL_SERVER_PORT,
-    //     auth: {
-    //       user: process.env.EMAIL_SERVER_USER,
-    //       pass: process.env.EMAIL_SERVER_PASSWORD,
-    //     },
-    //   },
-    //   from: process.env.EMAIL_FROM,
-    // }),
   ],
   theme: {
-    colorScheme: "dark", // "auto" | "dark" | "light"
-    brandColor: "red", // Hex color code
-    logo: `${publicRuntimeConfig.baseUrl}/logo.svg`, // Absolute URL to image
-    buttonText: "#c94b4b", // Hex color code
+    colorScheme: "dark",
+    brandColor: "red",
+    logo: `${publicRuntimeConfig.baseUrl}/logo.svg`,
+    buttonText: "#c94b4b",
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {

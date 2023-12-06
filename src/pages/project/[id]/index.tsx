@@ -22,7 +22,7 @@ import { getNameLetters } from "@/utils/data";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import DeleteProject from "@/components/projectDetails/DeleteProject";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
-import { initialFilters } from "./helpers";
+import initialFilters from "./helpers";
 
 interface ProjectData {
   id: string;
@@ -191,6 +191,7 @@ export default function ProjectDetails() {
       <div className="flex-1 m-5">
         <div className="flex">
           <div className="flex-1 flex-wrap title-and-bugs-container mr-3">
+            {/* Card with title, sort dropdown and report new bug button */}
             <div className="flex w-full grow-0 items-center justify-between rounded-xl bg-slate-800 px-6 py-5 bug-title-container">
               <div className="flex items-center justify-between gap-6">
                 <h1 className="text-hm text-white font-medium">
@@ -206,6 +207,7 @@ export default function ProjectDetails() {
               </Link>
             </div>
 
+            {/* Bugs container */}
             <div className="bug-container">
               {projectData.loading ? (
                 <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
@@ -263,6 +265,7 @@ export default function ProjectDetails() {
             </div>
           </div>
 
+          {/* Right sidebar container */}
           <div className="sidecards-container flex-col w-[250px]">
             <SidebarCard
               title="Status filter"

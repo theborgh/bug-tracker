@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -49,6 +49,7 @@ export default function Sidebar({
 
   return (
     <>
+      {/* Hamburger menu for mobile */}
       <div className="block lg:hidden">
         <DropdownMenu.Root
           open={isMenuOpen}
@@ -77,6 +78,8 @@ export default function Sidebar({
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </div>
+
+      {/* Full sidebar for lg viewport width */}
       <div className="hidden lg:flex flex flex-col w-[250px] border-r border-sidebar-border bg-slate-800 min-h-screen">
         <Link href={"/dashboard"}>
           <Image
@@ -218,6 +221,7 @@ export default function Sidebar({
               </div>
             </div>
 
+            {/* Avatar and logout button */}
             <div className="flex-row m-0 mb-6 self-center justify-center">
               <div className="flex justify-center">
                 <Link href={"/dashboard"}>

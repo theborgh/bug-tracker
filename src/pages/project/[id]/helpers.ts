@@ -14,4 +14,4 @@ const initialFilters = {
   },
 };
 
-export { initialFilters }
+export default initialFilters
