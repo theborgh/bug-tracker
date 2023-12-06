@@ -22,7 +22,7 @@ import { getNameLetters } from "@/utils/data";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import DeleteProject from "@/components/projectDetails/DeleteProject";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
-import initialFilters from "./helpers";
+import { initialFilters } from "@/utils/sorting";
 
 interface ProjectData {
   id: string;
