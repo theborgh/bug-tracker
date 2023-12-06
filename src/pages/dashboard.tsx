@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
 import { SimpleBugCard } from "@/components/BugCard";
-import { Status } from "@prisma/client";
 import Sidebar from "@/components/Sidebar";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
