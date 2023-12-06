@@ -1,5 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
-
 export type selectedPriorityType = "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
 
 export default function PriorityButton({

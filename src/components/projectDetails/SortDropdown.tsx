@@ -19,14 +19,14 @@ const SortDropdown = ({
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="my-4  rounded-lg border border-white border-opacity-10 bg-gray-800 p-3  font-medium text-white">
+        <DropdownMenu.Content className="my-4 rounded-lg border border-white border-opacity-10 bg-gray-800 p-3  font-medium text-white">
           <DropdownMenu.RadioGroup>
             {allSortingTypes.map((sortType) => (
               <DropdownMenu.RadioItem
                 key={sortType}
                 value={sortType}
                 onSelect={() => setSort(sortType)}
-                className={`my-1 cursor-pointer  capitalize outline-none transition hover:text-gray-500`}
+                className={`my-1 cursor-pointer capitalize outline-none transition hover:text-gray-500`}
               >
                 {getBugSortLabel(sortType)}
               </DropdownMenu.RadioItem>

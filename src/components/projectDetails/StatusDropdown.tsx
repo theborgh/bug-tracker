@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Status } from "@prisma/client";
+import { Status } from "@prisma/client";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useSession } from "next-auth/react";
 import { defaultStatuses } from "@/utils/data";
@@ -29,7 +29,7 @@ const StatusDropdown = ({
       },
       body: JSON.stringify({
         status: newStatus,
-        assignedToUserId: newStatus === "UNASSIGNED" ? null : assigneeId,
+        assignedToUserId: newStatus === Status.UNASSIGNED ? null : assigneeId,
       }),
     });
 
@@ -50,7 +50,7 @@ const StatusDropdown = ({
   const selectedStatusObject = defaultStatuses?.find(
     (item) => item.value === status
   ) ?? {
-    value: "UNASSIGNED" as const,
+    value: Status.UNASSIGNED,
     background: "bg-slate-900",
     label: "Unassigned",
   };
@@ -80,7 +80,7 @@ const StatusDropdown = ({
             {Statuses.filter((s) =>
               assigneeId
                 ? true
-                : s.value === "UNASSIGNED" || s.value === "CLOSED"
+                : s.value === Status.UNASSIGNED || s.value === Status.CLOSED
             ).map((status) => (
               <DropdownMenu.RadioItem
                 key={status.value}

@@ -22,6 +22,7 @@ import { getNameLetters } from "@/utils/data";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import DeleteProject from "@/components/projectDetails/DeleteProject";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
+import { initialFilters } from "./helpers";
 
 interface ProjectData {
   id: string;
@@ -51,19 +52,10 @@ export default function ProjectDetails() {
     loading: true,
     error: null,
   });
-  const [statusFilters, setStasusFilters] = useState({
-    CLOSED: false,
-    INPROGRESS: true,
-    TESTING: true,
-    TODO: true,
-    UNASSIGNED: true,
-  });
-  const [priorityFilters, setPriorityFilters] = useState({
-    CRITICAL: true,
-    HIGH: true,
-    MEDIUM: true,
-    LOW: true,
-  });
+  const [statusFilters, setStasusFilters] = useState(initialFilters.status);
+  const [priorityFilters, setPriorityFilters] = useState(
+    initialFilters.priority
+  );
   const [sortBy, setSortBy] = useState<bugSortingType>("recent");
   const filteredBugs = projectData.data?.bugs
     .filter(
