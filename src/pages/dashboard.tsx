@@ -8,29 +8,13 @@ import Sidebar from "@/components/Sidebar";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
-
-interface Developer {
-  id: string;
-  name: string;
-  image: string;
-}
+import { Developer, SimpleBugCardProps } from "@/types/appTypes";
 
 interface ProjectData {
   id: string;
   name: string;
   updatedAt: string;
   developers: Developer[];
-}
-
-interface SimpleBugCardProps {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  updatedAt: Date;
-  priority: string;
-  _count: { comments: number };
-  status: Status;
 }
 
 export default function Dashboard() {

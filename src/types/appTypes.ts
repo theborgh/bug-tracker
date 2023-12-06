@@ -59,4 +59,15 @@ interface Developer {
   image: string;
 }
 
-export type { SessionData, Comment, BugData, Developer };
+interface SimpleBugCardProps {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  updatedAt: Date;
+  priority: string;
+  _count: { comments: number };
+  status: Status;
+}
+
+export type { SessionData, Comment, BugData, Developer, SimpleBugCardProps };
