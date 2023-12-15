@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
@@ -8,6 +8,8 @@ import LoginErrorMessage from "@/components/LoginErrorMessage";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
 import { Developer, SimpleBugCardProps } from "@/types/appTypes";
+import LoadingMessage from "@/components/LoadingMessage";
+import { is } from "date-fns/locale";
 
 interface ProjectData {
   id: string;
@@ -68,15 +70,18 @@ export default function Dashboard() {
     enabled: !!sessionData?.user.id,
   });
 
-  if (
-    !sessionData &&
-    !(
-      isOwnProjectsLoading ||
-      isAssignedProjectsLoading ||
-      isAssignedBugsLoading
-    )
-  ) {
+  useEffect(() => {
+    console.log(
+      `sessiondata: ${sessionData}, ownProjects: ${ownProjects}, isOwnProjectsLoading: ${isOwnProjectsLoading}`
+    );
+  }, [sessionData, ownProjects, isOwnProjectsLoading]);
+
+  if (sessionData === null) {
     return <LoginErrorMessage />;
+  }
+
+  if (sessionData === undefined) {
+    return <LoadingMessage />;
   }
 
   return (
