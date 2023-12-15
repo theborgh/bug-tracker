@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import PriorityDropdown from "./projectDetails/PriorityDropdown";
 import formatDistance from "date-fns/formatDistance";
 import StatusDropdown from "./projectDetails/StatusDropdown";
-import { getNameLetters } from "@/utils/data";
+import { Priorities, getNameLetters } from "@/utils/data";
 import AssignBugToDev from "./projectDetails/AssignBugToDev";
 import Link from "next/link";
 
@@ -149,7 +149,6 @@ export type SimpleBugCardProps = {
 };
 
 export function SimpleBugCard({
-  id,
   title,
   author,
   description,
@@ -160,24 +159,26 @@ export function SimpleBugCard({
 }: SimpleBugCardProps) {
   return (
     <div className="flex justify-between rounded-md bg-gray-800 py-3 px-4 w-64">
-      <div className="">
+      <div className="w-full">
         <div className="flex justify-between">
-          <h3 className="text-hs text-white font-medium line-clamp-1">
+          <h3
+            className="text-hs font-medium line-clamp-1 hover:opacity-70"
+            aria-label={title}
+          >
             {title}
           </h3>
-          <p className="mb-4 text-sm text-white text-opacity-75">
-            {description}
-          </p>
+          <ShieldExclamationIcon
+            title={`${priority.toLocaleLowerCase()} priority`}
+            className={`h-8 w-8 hover:cursor-pointer`}
+            stroke={Priorities.find((p) => p.value === priority)!.stroke}
+          />
         </div>
+        <p className="mb-2 mt-2 text-sm text-white text-opacity-75">
+          {description}
+        </p>
         <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
           last updated{" "}
           {formatDistance(new Date(updatedAt), new Date(), { addSuffix: true })}
-        </p>
-        <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
-          Reported by {author} - {commentCount} comments
-        </p>
-        <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
-          Priority: {priority}
         </p>
         <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
           Status: {status}

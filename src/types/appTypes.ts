@@ -82,7 +82,7 @@ interface SimpleBugCardProps {
   id: string;
   title: string;
   author: string;
-  description: string;
+  markdown: string;
   updatedAt: Date;
   priority: string;
   _count: { comments: number };

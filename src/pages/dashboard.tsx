@@ -9,7 +9,6 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
 import { Developer, SimpleBugCardProps } from "@/types/appTypes";
 import LoadingMessage from "@/components/LoadingMessage";
-import { is } from "date-fns/locale";
 
 interface ProjectData {
   id: string;
@@ -152,7 +151,7 @@ export default function Dashboard() {
                     id={bug.id}
                     title={bug.title}
                     author={bug.author}
-                    description={bug.description}
+                    description={bug.markdown}
                     updatedAt={bug.updatedAt}
                     priority={bug.priority}
                     commentCount={bug._count?.comments ?? 0}
