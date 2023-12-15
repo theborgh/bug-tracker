@@ -15,6 +15,7 @@ import {
   PencilSquareIcon,
 } from "@heroicons/react/24/solid";
 import { Bars3Icon } from "@heroicons/react/24/outline";
+import { getNameLetters } from "@/utils/data";
 
 export default function Sidebar({
   loggedUser,
@@ -243,7 +244,9 @@ export default function Sidebar({
                 <Link href={"/dashboard"}>
                   <Avatar title="avatar">
                     <AvatarImage src={loggedUser?.image ?? ""} />
-                    <AvatarFallback>{loggedUser?.name}</AvatarFallback>
+                    <AvatarFallback>
+                      {getNameLetters(loggedUser?.name ?? "")}
+                    </AvatarFallback>
                   </Avatar>
                 </Link>
               </div>
