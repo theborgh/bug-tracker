@@ -121,6 +121,8 @@ export default function Sidebar({
               <div className="">
                 {isSidebarLoading ? (
                   <div>Loading...</div>
+                ) : sidebarData?.assignedBugs.length === 0 ? (
+                  <div>You don&apos;t have any bugs assigned to you.</div>
                 ) : (
                   sidebarData?.assignedBugs
                     ?.sort(
@@ -154,6 +156,8 @@ export default function Sidebar({
               <div>
                 {isSidebarLoading ? (
                   <div>Loading...</div>
+                ) : sidebarData?.ownedProjects.length === 0 ? (
+                  <div>You don&apos;t have any projects yet.</div>
                 ) : (
                   sidebarData?.ownedProjects
                     ?.sort(
@@ -191,6 +195,8 @@ export default function Sidebar({
               <div>
                 {isSidebarLoading ? (
                   <div>Loading...</div>
+                ) : sidebarData?.developerOnProjects.length === 0 ? (
+                  <div>You are not assigned to any projects yet.</div>
                 ) : (
                   sidebarData?.developerOnProjects
                     .filter(

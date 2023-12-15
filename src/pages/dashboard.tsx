@@ -90,6 +90,16 @@ export default function Dashboard() {
         <div className="flex flex-wrap gap-4 ml">
           {isOwnProjectsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
+          ) : ownProjects.length === 0 ? (
+            <p className="text-center text-lg">
+              You don&apos;t have any projects yet.{" "}
+              <Link
+                href={"/project/newProject"}
+                className="font-bold hover:underline"
+              >
+                Create your first project
+              </Link>
+            </p>
           ) : (
             ownProjects
               ?.sort(
@@ -114,6 +124,10 @@ export default function Dashboard() {
         <div className="flex flex-wrap gap-4">
           {isAssignedProjectsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
+          ) : assignedProjects.length === 0 ? (
+            <p className="text-center text-lg">
+              You are not assigned to any projects yet.
+            </p>
           ) : (
             assignedProjects
               ?.filter(
@@ -142,6 +156,10 @@ export default function Dashboard() {
         <div className="flex flex-wrap gap-4">
           {isAssignedBugsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
+          ) : assignedBugs.length === 0 ? (
+            <p className="text-center text-lg">
+              You have not been assigned any bugs yet.
+            </p>
           ) : (
             assignedBugs
               ?.sort(
