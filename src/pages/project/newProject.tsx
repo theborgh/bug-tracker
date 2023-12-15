@@ -89,7 +89,7 @@ const NewProject: NextPage = () => {
             </div>
           </form>
 
-          {projectDevelopers.length > 0 && (
+          {projectDevelopers?.length > 0 && (
             <p className="mb-3 mt-3">New project developers</p>
           )}
 
@@ -124,7 +124,7 @@ const NewProject: NextPage = () => {
 
           {!isLoading &&
             !isError &&
-            allDevelopers.length > 0 &&
+            allDevelopers?.length > 0 &&
             allDevelopers
               .filter(
                 (dev) =>
