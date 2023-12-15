@@ -70,12 +70,6 @@ export default function Dashboard() {
     enabled: !!sessionData?.user.id,
   });
 
-  useEffect(() => {
-    console.log(
-      `sessiondata: ${sessionData}, ownProjects: ${ownProjects}, isOwnProjectsLoading: ${isOwnProjectsLoading}`
-    );
-  }, [sessionData, ownProjects, isOwnProjectsLoading]);
-
   if (sessionData === null) {
     return <LoginErrorMessage />;
   }
