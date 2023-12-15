@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import DiscordProvider from "next-auth/providers/discord";
 import { PrismaClient } from ".prisma/client";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import getConfig from "next/config";
 
 const { publicRuntimeConfig } = getConfig();
@@ -41,6 +42,7 @@ export const authOptions = {
       return session;
     },
   },
+  adapter: PrismaAdapter(prisma),
 };
 
 export default NextAuth(authOptions);

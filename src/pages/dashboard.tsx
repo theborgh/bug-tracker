@@ -69,6 +69,10 @@ export default function Dashboard() {
     enabled: !!sessionData?.user.id,
   });
 
+  useEffect(() => {
+    console.log(sessionData);
+  }, [sessionData, sessionData?.user.id]);
+
   if (sessionData === null) {
     return <LoginErrorMessage />;
   }
