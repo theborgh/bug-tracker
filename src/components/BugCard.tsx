@@ -7,7 +7,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
 import PriorityDropdown from "./projectDetails/PriorityDropdown";
 import formatDistance from "date-fns/formatDistance";
 import StatusDropdown from "./projectDetails/StatusDropdown";
-import { Priorities, getNameLetters } from "@/utils/data";
+import {
+  Priorities,
+  getNameLetters,
+  MAX_MARKDOWN_LENGTH,
+  shortenTextIfExceedsLength,
+} from "@/utils/data";
 import AssignBugToDev from "./projectDetails/AssignBugToDev";
 import Link from "next/link";
 
@@ -96,7 +101,9 @@ export function BugCard({
           {commentCount === 1 ? "comment" : "comments"}
         </p>
       </div>
-      <p className="mb-4 text-sm text-white text-opacity-75">{description}</p>
+      <p className="mb-4 text-sm text-white text-opacity-75">
+        {shortenTextIfExceedsLength(description, MAX_MARKDOWN_LENGTH)}
+      </p>
       <div className="flex items-center justify-between">
         <StatusDropdown
           bugId={id}
@@ -140,21 +147,18 @@ export function BugCard({
 export type SimpleBugCardProps = {
   id: string;
   title: string;
-  author: string;
   description: string;
   updatedAt: Date;
   priority: string;
-  commentCount: number;
   status: Status;
 };
 
 export function SimpleBugCard({
+  id,
   title,
-  author,
   description,
   updatedAt,
   priority,
-  commentCount,
   status,
 }: SimpleBugCardProps) {
   return (
@@ -174,14 +178,19 @@ export function SimpleBugCard({
           />
         </div>
         <p className="mb-2 mt-2 text-sm text-white text-opacity-75">
-          {description}
+          {shortenTextIfExceedsLength(description, MAX_MARKDOWN_LENGTH)}
         </p>
-        <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
+        <p className="mb-3 mt-0.5 text-xs font-light text-white text-opacity-75">
           last updated{" "}
           {formatDistance(new Date(updatedAt), new Date(), { addSuffix: true })}
         </p>
-        <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
-          Status: {status}
+        <p className="mb-1 mt-2 text-xs font-light text-white text-opacity-75">
+          <StatusDropdown
+            bugId={id}
+            status={status}
+            projectOwnerId=""
+            handleBugStatusChange={() => {}}
+          />
         </p>
       </div>
     </div>

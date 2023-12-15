@@ -150,11 +150,9 @@ export default function Dashboard() {
                   <SimpleBugCard
                     id={bug.id}
                     title={bug.title}
-                    author={bug.author}
                     description={bug.markdown}
                     updatedAt={bug.updatedAt}
                     priority={bug.priority}
-                    commentCount={bug._count?.comments ?? 0}
                     status={bug.status}
                   />
                 </Link>

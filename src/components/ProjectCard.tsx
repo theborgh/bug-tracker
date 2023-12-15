@@ -23,10 +23,12 @@ export default function ProjectCard({
             {name}
           </h3>
         </div>
-        <p className="mb-2 mt-0.5 text-xs font-light text-white text-opacity-75">
+        <p className="mb-1 mt-0.5 text-xs font-light text-white text-opacity-75">
           last updated{" "}
-          {formatDistance(new Date(updatedAt), new Date(), { addSuffix: true })}{" "}
-          &middot; {developers.length} developer{developers.length !== 1 && "s"}
+          {formatDistance(new Date(updatedAt), new Date(), { addSuffix: true })}
+        </p>
+        <p className="mb-2 text-xs font-light text-white text-opacity-75">
+          {developers.length} developer{developers.length !== 1 && "s"}
         </p>
         <div className="flex gap-1">
           {developers.map((developer) => (

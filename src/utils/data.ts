@@ -52,3 +52,12 @@ export function getNameLetters(name: string): string {
       return firstLetter + secondLetter;
   }
 }
+
+export const MAX_MARKDOWN_LENGTH = 100;
+
+export const shortenTextIfExceedsLength = (text: string, maxLength: number = MAX_MARKDOWN_LENGTH) => {
+  if (text.length > maxLength) {
+    return text.slice(0, maxLength) + "...";
+  }
+  return text;
+}
