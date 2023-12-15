@@ -69,6 +69,11 @@ export default function Dashboard() {
     enabled: !!sessionData?.user.id,
   });
 
+  const assignedProjectsNowOwned = assignedProjects?.filter(
+    (proj: ProjectData) =>
+      !ownProjects?.some((p: ProjectData) => p.id === proj.id)
+  );
+
   useEffect(() => {
     console.log(sessionData);
   }, [sessionData, sessionData?.user.id]);
@@ -124,16 +129,12 @@ export default function Dashboard() {
         <div className="flex flex-wrap gap-4">
           {isAssignedProjectsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
-          ) : assignedProjects.length === 0 ? (
+          ) : assignedProjectsNowOwned.length === 0 ? (
             <p className="text-center text-lg px-2">
               You are not assigned to any projects yet.
             </p>
           ) : (
-            assignedProjects
-              ?.filter(
-                (proj: ProjectData) =>
-                  !ownProjects?.some((p: ProjectData) => p.id === proj.id)
-              )
+            assignedProjectsNowOwned
               .sort(
                 (a: any, b: any) =>
                   new Date(b.updatedAt).getTime() -
