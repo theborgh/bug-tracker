@@ -200,10 +200,21 @@ export default function Sidebar({
               <div>
                 {isSidebarLoading ? (
                   <div>Loading...</div>
-                ) : developerOnProjects.length === 0 ? (
+                ) : sidebarData?.developerOnProjects.filter(
+                    (proj: any) =>
+                      !sidebarData?.ownedProjects.some(
+                        (p: any) => p.id === proj.id
+                      )
+                  ).length === 0 ? (
                   <div>You are not assigned to any projects yet.</div>
                 ) : (
-                  developerOnProjects
+                  sidebarData?.developerOnProjects
+                    .filter(
+                      (proj: any) =>
+                        !sidebarData?.ownedProjects.some(
+                          (p: any) => p.id === proj.id
+                        )
+                    )
                     .sort(
                       (a: any, b: any) =>
                         new Date(b.updatedAt).getTime() -
