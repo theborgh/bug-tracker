@@ -91,7 +91,7 @@ export default function Dashboard() {
           {isOwnProjectsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
           ) : ownProjects.length === 0 ? (
-            <p className="text-center text-lg">
+            <p className="text-center text-lg px-2">
               You don&apos;t have any projects yet.{" "}
               <Link
                 href={"/project/newProject"}
@@ -125,7 +125,7 @@ export default function Dashboard() {
           {isAssignedProjectsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
           ) : assignedProjects.length === 0 ? (
-            <p className="text-center text-lg">
+            <p className="text-center text-lg px-2">
               You are not assigned to any projects yet.
             </p>
           ) : (
@@ -157,7 +157,7 @@ export default function Dashboard() {
           {isAssignedBugsLoading ? (
             <ArrowPathIcon className="h-8 w-8 animate-spin text-white" />
           ) : assignedBugs.length === 0 ? (
-            <p className="text-center text-lg">
+            <p className="text-center text-lg px-2">
               You have not been assigned any bugs yet.
             </p>
           ) : (
