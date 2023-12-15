@@ -75,10 +75,6 @@ export default function Dashboard() {
       !ownProjects?.some((p: ProjectData) => p.id === proj.id)
   );
 
-  useEffect(() => {
-    console.log(sessionData);
-  }, [sessionData, sessionData?.user.id]);
-
   if (sessionData === null) {
     return <LoginErrorMessage />;
   }
