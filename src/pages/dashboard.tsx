@@ -7,8 +7,9 @@ import Sidebar from "@/components/Sidebar";
 import LoginErrorMessage from "@/components/LoginErrorMessage";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
-import { Developer, SimpleBugCardProps } from "@/types/appTypes";
+import { BugCardData, Developer, SimpleBugCardProps } from "@/types/appTypes";
 import LoadingMessage from "@/components/LoadingMessage";
+import { sortByAllCriteria } from "@/utils/sorting";
 
 interface ProjectData {
   id: string;
@@ -163,10 +164,8 @@ export default function Dashboard() {
             </p>
           ) : (
             assignedBugs
-              ?.sort(
-                (a: any, b: any) =>
-                  new Date(b.updatedAt).getTime() -
-                  new Date(a.updatedAt).getTime()
+              ?.sort((a: BugCardData, b: BugCardData) =>
+                sortByAllCriteria(a, b, "highest-priority")
               )
               .map((bug: SimpleBugCardProps) => (
                 <Link key={bug.id} href={`/bug/${bug.id}`}>

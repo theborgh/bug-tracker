@@ -348,7 +348,7 @@ export default function ProjectDetails() {
                       projectId={projectData.data?.id || ""}
                       projectTitle={projectData.data?.name || ""}
                     >
-                      Delete project
+                      <span className="hover:opacity-50">Delete project</span>
                     </DeleteProject>
                   </li>
                 </ul>

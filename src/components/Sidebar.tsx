@@ -47,6 +47,11 @@ export default function Sidebar({
     enabled: !!loggedUser?.id,
   });
 
+  const developerOnProjects = sidebarData?.developerOnProjects.filter(
+    (proj: any) =>
+      !sidebarData?.ownedProjects.some((p: any) => p.id === proj.id)
+  );
+
   return (
     <>
       {/* Hamburger menu for mobile */}
@@ -195,16 +200,10 @@ export default function Sidebar({
               <div>
                 {isSidebarLoading ? (
                   <div>Loading...</div>
-                ) : sidebarData?.developerOnProjects.length === 0 ? (
+                ) : developerOnProjects.length === 0 ? (
                   <div>You are not assigned to any projects yet.</div>
                 ) : (
-                  sidebarData?.developerOnProjects
-                    .filter(
-                      (proj: any) =>
-                        !sidebarData?.ownedProjects.some(
-                          (p: any) => p.id === proj.id
-                        )
-                    )
+                  developerOnProjects
                     .sort(
                       (a: any, b: any) =>
                         new Date(b.updatedAt).getTime() -
